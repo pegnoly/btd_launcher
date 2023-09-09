@@ -1,0 +1,21 @@
+<Item href="#n:inline(AdvMapHillFort)" id="item_DEF1B6F9-A65A-406F-B40C-3AC3EECD851032">
+    <AdvMapHillFort>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>0</Rot>
+        <Floor>0</Floor>
+        <Name>BTD_upgrade_hill_fort</Name>
+        <CombatScript />
+        <pointLights />
+        <Shared href="/MapObjects/Hill_Fort.(AdvMapHillFortShared).xdb#xpointer(/AdvMapHillFortShared)" />
+        <CreaturesUpgradesFilter>
+            <ForbiddenBasicUpgradeTiers />
+            <ForbiddenAlterUpgradeTiers />
+            <NotUpgradeable />
+            <ForbiddenUpgrades />
+        </CreaturesUpgradesFilter>
+    </AdvMapHillFort>
+</Item>

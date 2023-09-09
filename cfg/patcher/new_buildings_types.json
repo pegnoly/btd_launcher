@@ -1,0 +1,24 @@
+[
+    {
+      "building_type": "BTD_STATUE_OF_REVELATION",
+      "shared": "/MapObjects/BTD/StatueOfRevelation.(AdvMapBuildingShared).xdb"
+    },
+  
+    {
+      "building_type": "BTD_SUN_RIDER_MONUMENT",
+      "shared": "/MapObjects/BTD/SunRiderMonument/building.(AdvMapBuildingShared).xdb"
+    },
+  
+    {
+      "building_type": "BTD_WARMEN_HOUSE",
+      "shared": "/MapObjects/BTD/WarmenHouse/building.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "building_type": "BTD_KNOWLEDGE_MEGALITH",
+      "shared": "/MapObjects/BTD/KnowledgeMegalith/KnowledgeMegalith.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "building_type": "BTD_DWARVEN_MINE",
+      "shared": "/MapObjects/BTD/DwarfMine/DwarfMine.(AdvMapBuildingShared).xdb"
+    }
+  ]

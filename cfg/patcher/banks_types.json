@@ -1,0 +1,90 @@
+[
+    {
+      "bank_type": "BANK_NAGA_TEMPLE",
+      "shared": "/MapObjects/NEWBANK1.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_DEMOLISH",
+      "shared": "/MapObjects/NagaTemple.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_SUNKEN_TEMPLE",
+      "shared": "/MapObjects/DemonBank.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_UNKEMPT",
+      "shared": "/MapObjects/HumanBank.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_CRYPT",
+      "shared": "/MapObjects/Crypt.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_DRAGON_UTOPIA",
+      "shared": "/MapObjects/Dragon_Utopia.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_DRAGON_UTOPIA",
+      "shared": "/MapObjects/Dragon_Utopia_Snow.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_ELEMENTAL_STOCKPILE",
+      "shared": "/MapObjects/Elemantal_Stockpile.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_ELEMENTAL_STOCKPILE",
+      "shared": "/MapObjects/Elemantal_Stockpile_Snow.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_DWARVEN_TREASURE",
+      "shared": "/MapObjects/DwarvenTreasury.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_DWARVEN_TREASURE",
+      "shared": "/MapObjects/DwarvenTreasury_Snow.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_MAGI_VAULT",
+      "shared": "/MapObjects/MagiVault.xdb"
+    },
+    {
+      "bank_type": "BANK_MAGI_VAULT",
+      "shared": "/MapObjects/MagiVault_Snow.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_PYRAMID",
+      "shared": "/MapObjects/Pyramid.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_TREANT_THICKET",
+      "shared": "/MapObjects/TreantThicket.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_BLOOD_TEMPLE",
+      "shared": "/MapObjects/WitchBank.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_BLOOD_TEMPLE",
+      "shared": "/MapObjects/WitchBank.(AdvMapBuildingShared)(2).xdb"
+    },
+    {
+      "bank_type": "BANK_GARGOYLE_STONEVAULT",
+      "shared": "/MapObjects/GargoyleStonevault.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_GARGOYLE_STONEVAULT",
+      "shared": "/MapObjects/GargoyleStonevault_Snow.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_NAMTARU_TEMPLE",
+      "shared": "/MapObjects/BTD/NewBanks/Namtaru/Namtaru.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_SNOW_APE_CAVE",
+      "shared": "/MapObjects/BTD/NewBanks/SnowApeCave/SnowApeCave.(AdvMapBuildingShared).xdb"
+    },
+    {
+      "bank_type": "BANK_BTDSUNKENTEMPLE",
+      "shared": "/MapObjects/BTDSunkenTemple.(AdvMapBuildingShared).xdb"
+    }
+  ]

@@ -1,0 +1,4784 @@
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A6351680">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_0</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_NONE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A6351681">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_1</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MAGIC_ARROW</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A6351682">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_2</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MAGIC_FIST</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A6351683">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_3</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_LIGHTNING_BOLT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A6351684">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_4</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ICE_BOLT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A6351685">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_5</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_FIREBALL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A6351686">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_6</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_FROST_RING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A6351687">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_7</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_CHAIN_LIGHTNING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A6351688">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_8</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_METEOR_SHOWER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A6351689">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_9</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_IMPLOSION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516810">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_10</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ARMAGEDDON</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516811">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_11</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_CURSE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516812">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_12</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SLOW</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516813">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_13</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DISRUPTING_RAY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516814">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_14</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_PLAGUE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516815">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_15</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_WEAKNESS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516816">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_16</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_WEAKNING_STRIKE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516817">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_17</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_FORGETFULNESS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516818">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_18</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_BERSERK</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516819">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_19</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_BLIND</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516820">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_20</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_HYPNOTIZE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516821">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_21</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_UNHOLY_WORD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516822">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_22</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_UNHOLY_WORD_HIT_EFFECT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516823">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_23</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_BLESS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516824">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_24</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_HASTE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516825">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_25</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_STONESKIN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516826">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_26</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DISPEL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516827">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_27</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DISPEL_FAIL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516828">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_28</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_BLOODLUST</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516829">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_29</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DEFLECT_ARROWS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516830">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_30</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DEFLECT_ARROWS_HIT_EFFECT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516831">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_31</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ANTI_MAGIC</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516832">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_32</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TELEPORT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516833">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_33</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TELEPORT_FINISH_EFFECT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516834">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_34</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_CELESTIAL_SHIELD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516835">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_35</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_HOLY_WORD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516836">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_36</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_HOLY_WORD_HIT_EFFECT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516837">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_37</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ARMAGEDDON_HIT_EFFECT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516838">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_38</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_LAND_MINE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516839">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_39</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_WASP_SWARM</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516840">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_40</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_PHANTOM</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516841">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_41</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EARTHQUAKE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516842">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_42</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ANIMATE_DEAD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516843">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_43</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SUMMON_ELEMENTALS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516844">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_44</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_SUMMON_ELEMENTALS_AIR</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516845">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_45</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_SUMMON_ELEMENTALS_EARTH</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516846">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_46</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_SUMMON_ELEMENTALS_FIRE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516847">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_47</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_SUMMON_ELEMENTALS_WATER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516848">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_48</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RESURRECT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516849">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_49</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SUMMON_BOAT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516850">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_50</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DIMENSION_DOOR</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516851">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_51</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_PORTAL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516852">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_52</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ENCOURAGE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516853">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_53</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_HOLY_CHARGE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516854">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_54</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_PRAYER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516855">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_55</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DEMONIC_STRIKE_CAST</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516856">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_56</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DEMONIC_STRIKE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516857">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_57</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_CONSUME_CORPSE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516858">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_58</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPIRIT_LINK</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516859">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_59</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DEATH_SCREAM</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516860">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_60</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SNIPE_DEAD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516861">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_61</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MULTISHOT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516862">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_62</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_IMBUE_ARROW</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516863">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_63</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_MAGIC_BOND</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516864">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_64</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_MELT_ARTIFACT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516865">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_65</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_COUNTERSPELL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516866">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_66</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_UNSUMMON</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516867">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_67</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_DARK_RITUAL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516868">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_68</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_OFFENCE1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516869">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_69</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_OFFENCE2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516870">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_70</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_OFFENCE3</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516871">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_71</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_ARCHERY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516872">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_72</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_FRENZY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516873">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_73</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_DEFENCE1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516874">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_74</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_DEFENCE2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516875">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_75</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_DEFENCE3</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516876">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_76</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_PROTECTION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516877">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_77</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_EVASION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516878">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_78</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_TOUGHNESS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516879">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_79</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_LUCK1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516880">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_80</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_LUCK2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516881">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_81</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_LUCK3</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516882">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_82</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_RESISTANCE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516883">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_83</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_LUCKY_STRIKE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516884">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_84</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_LEADERSHIP1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516885">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_85</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_LEADERSHIP2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516886">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_86</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_LEADERSHIP3</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516887">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_87</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_WAR_MACHINES1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516888">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_88</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_WAR_MACHINES2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516889">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_89</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_WAR_MACHINES3</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516890">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_90</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_FIRST_AID</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516891">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_91</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_BALLISTA</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516892">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_92</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_CATAPULT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516893">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_93</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_DEMONIC_FIRE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516894">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_94</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_ELVEN_VOLLEY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516895">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_95</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_MATRON_SALVO</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516896">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_96</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_ANCIENT_SMITHY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516897">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_97</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_FIRE_PROTECTION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516898">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_98</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_JOUSTER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A63516899">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_99</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_PEASANTS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168100">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_100</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_ARCHERS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168101">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_101</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_FOOTMEN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168102">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_102</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_GRIFFINS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168103">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_103</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_ARTILLERYMAN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168104">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_104</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_FURIOUS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168105">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_105</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_BOMBARDIER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168106">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_106</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_IMPREGNABLE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168107">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_107</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_FLAGBEARER_OF_DARKNESS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168108">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_108</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_HOUNDS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168109">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_109</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_SUCCUBUSES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168110">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_110</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_BLADE_MASTER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168111">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_111</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_ELVES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168112">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_112</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_UNICORNS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168113">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_113</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_ELVEN_FURY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168114">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_114</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_FOREST_GUARDIAN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168115">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_115</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_ZOMBIES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168116">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_116</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_VAMPIRES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168117">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_117</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_EMPIRIC</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168118">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_118</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_SOULHUNTER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168119">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_119</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_MASTER_OF_ELEMENTS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168120">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_120</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_GREMLINS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168121">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_121</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_GOLEMS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168122">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_122</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_MAGES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168123">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_123</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_PRUDENT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168124">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_124</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_EVASIVE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168125">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_125</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_RIDERS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168126">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_126</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_MATRON_SALVO</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168127">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_127</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_SAVAGE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168128">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_128</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_WITCHES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168129">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_129</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_MINOTAURS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168130">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_130</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_OFFENCE_P1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168131">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_131</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_OFFENCE_M1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168132">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_132</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_DEFENCE_P1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168133">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_133</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_DEFENCE_M1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168134">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_134</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_OFFENCE_DEFENCE_P1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168135">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_135</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_OFFENCE_DEFENCE_M1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168136">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_136</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_OFFENCE_P2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168137">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_137</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_OFFENCE_M2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168138">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_138</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_DEFENCE_P2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168139">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_139</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_DEFENCE_M2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168140">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_140</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_OFFENCE_DEFENCE_P2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168141">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_141</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_OFFENCE_DEFENCE_M2</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168142">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_142</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_LUCK_P1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168143">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_143</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_LUCK_M1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168144">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_144</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_MORALE_P1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168145">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_145</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_MORALE_M1</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168146">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_146</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_ELVEN_CAPITAL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168147">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_147</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_WALLS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168148">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_148</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_TOWERS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168149">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_149</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_UNHOLY_TEMPLE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168150">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_150</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_DARK_GUARDIAN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168151">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_151</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_SPARKLING_FOUNTAIN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168152">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_152</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_DIETY_OF_FIRE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168153">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_153</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_INFERNAL_LOOM</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168154">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_154</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_BATTLE_DIVE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168155">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_155</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_BATTLE_DIVE_FINISH</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168156">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_156</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_LAY_HANDS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168157">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_157</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_RESURRECT_ALLIES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168158">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_158</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_SCATTER_SHOT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168159">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_159</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_GATING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168160">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_160</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_FEAR</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168161">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_161</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_SUMMON_BALOR</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168162">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_162</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_EXPLOSION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168163">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_163</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_EXPLOSION_EFFECT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168164">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_164</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_CHAIN_SHOT_END_EFFECT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168165">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_165</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_MANA_DESTROY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168166">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_166</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_MANA_STEAL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168167">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_167</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_LIFE_DRAIN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168168">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_168</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_MANA_DRAIN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168169">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_169</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_DEATH_CLOUD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168170">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_170</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_HARM_TOUCH</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168171">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_171</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_MANA_FEED</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168172">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_172</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_ENTANGLING_ROOTS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168173">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_173</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_REPAIR</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168174">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_174</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_RANDOM_CAST_DARK</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168175">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_175</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_RANDOM_CAST_DARK_LIGHT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168176">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_176</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_DASH</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168177">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_177</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_DASH_EFFECT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168178">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_178</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_REMOTE_CONTROL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168179">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_179</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_ARMOR_CRUSHING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168180">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_180</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_POISONOUS_ATTACK</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168181">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_181</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_LIZARD_BITE_HIT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168182">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_182</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_REGENRATION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168183">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_183</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_REBIRTH</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168184">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_184</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_FROST_BREATH</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168185">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_185</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_BAD_LUCK</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168186">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_186</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_GOOD_LUCK</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168187">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_187</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_BAD_MORALE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168188">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_188</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_GOOD_MORALE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168189">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_189</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_FIRST_AID_TENT_HEAL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168190">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_190</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_CLERIC_HIT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168191">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_191</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_COMBAT_HIT_00</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168192">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_192</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_COMBAT_HIT_01</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168193">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_193</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_COMBAT_HIT_02</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168194">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_194</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_WAR_MACHINE_HIT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168195">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_195</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_FIRST_AID_HIT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168196">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_196</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_FIRE_HIT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168197">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_197</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_BASH_HIT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168198">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_198</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_SUN_FIRE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168199">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_199</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_SOIL_BURN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168200">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_200</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_AVATAR_OF_DEATH</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168201">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_201</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_FROZEN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168202">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_202</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_FIRE_DAMAGE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168203">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_203</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_SEDUCE_CASTED</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168204">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_204</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_DEMON_HUNTER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168205">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_205</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_FIRE_SHIELD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168206">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_206</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ARTFSET_NECROMANCERS_DEBUFF</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168207">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_207</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_CHILLING_BONES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168208">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_208</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DEBUG_TELEPORT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168209">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_209</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_ENRAGED</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168210">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_210</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_CURSE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168211">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_211</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_DISRUPTING_RAY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168212">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_212</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_SLOW</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168213">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_213</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_FORGETFULNESS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168214">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_214</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_PLAGUE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168215">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_215</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_WEAKNESS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168216">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_216</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_BLESS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168217">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_217</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_DISPEL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168218">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_218</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_STONESKIN</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168219">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_219</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_DEFLECT_ARROWS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168220">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_220</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_BLOODLUST</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168221">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_221</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_MASS_HASTE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168222">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_222</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_CALL_LIGHTNING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168223">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_223</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_MAGIC_ARROW</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168224">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_224</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_MAGIC_FIST</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168225">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_225</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_LIGHTNING_BOLT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168226">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_226</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_ICE_BOLT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168227">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_227</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_FIREBALL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168228">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_228</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_FROST_RING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168229">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_229</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_CHAIN_LIGHTNING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168230">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_230</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_METEOR_SHOWER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168231">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_231</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_IMPLOSION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168232">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_232</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_ARMAGEDDON</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168233">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_233</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_STONE_SPIKES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168234">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_234</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SUMMON_CREATURES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168235">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_235</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_CONJURE_PHOENIX</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168236">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_236</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_FIREWALL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168237">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_237</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_STONE_SPIKES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168238">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_238</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_UBER_CHAIN_LIGHTNING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168239">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_239</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_BOSS_FIREWALL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168240">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_240</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TIME_SHIFT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168241">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_241</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_GUARDIAN_ANGEL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168242">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_242</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_GHOST_DISPELL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168243">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_243</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_GHOST_GUARD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168244">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_244</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_WOUND</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168245">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_245</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_BERSERKER_RAGE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168246">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_246</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_MARK_OF_FIRE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168247">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_247</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_STORMBOLT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168248">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_248</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_MAGMA_SHIELD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168249">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_249</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RUNE_OF_CHARGE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168250">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_250</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RUNE_OF_BERSERKING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168251">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_251</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RUNE_OF_MAGIC_CONTROL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168252">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_252</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RUNE_OF_EXORCISM</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168253">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_253</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RUNE_OF_ELEMENTAL_IMMUNITY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168254">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_254</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RUNE_OF_STUNNING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168255">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_255</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RUNE_OF_BATTLERAGE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168256">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_256</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RUNE_OF_ETHEREALNESS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168257">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_257</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RUNE_OF_REVIVE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168258">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_258</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_RUNE_OF_DRAGONFORM</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168259">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_259</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_REFRESH_RUNE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168260">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_260</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_BORDERGUARD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168261">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_261</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_AXE_MASTER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168262">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_262</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_BEAR_RAIDERS</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168263">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_263</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_MAGISTER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168264">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_264</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SPEC_DEFENDER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168265">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_265</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_DWARVEN_LUCK</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168266">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_266</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_OFFENSIVE_FORMATION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168267">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_267</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_DEFENSIVE_FORMATION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168268">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_268</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_DISTRACT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168269">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_269</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SKILL_ABSOLUTE_PROTECTION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168270">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_270</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_SET_AFIRE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168271">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_271</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_AGILITY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168272">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_272</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_FINE_RUNE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168273">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_273</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_STRONG_RUNE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168274">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_274</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_BATTLE_FRENZY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168275">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_275</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_RUNIC_ATTUNEMENT</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168276">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_276</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_MASTER_OF_INITIATIVE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168277">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_277</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SORROW</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168278">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_278</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_VAMPIRISM</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168279">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_279</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DEEP_FREEZE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168280">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_280</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_REGENERATION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168281">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_281</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_DIVINE_VENGEANCE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168282">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_282</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ARCANE_CRYSTAL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168283">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_283</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_SUMMON_HIVE</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168284">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_284</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_BLADE_BARRIER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168285">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_285</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_UBER_METEOR_SHOWER</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168286">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_286</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_PREPARATION</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168287">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_287</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_EXPLODING_CORPSES</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168288">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_288</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EFFECT_MASTER_OF_LIGHTNING</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168289">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_289</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_TOWN_BLAZING_ANVIL</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168290">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_290</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_WARCRY_RALLING_CRY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168291">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_291</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_WARCRY_CALL_OF_BLOOD</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168292">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_292</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_WARCRY_WORD_OF_THE_CHIEF</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168293">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_293</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_WARCRY_FEAR_MY_ROAR</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168294">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_294</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_WARCRY_BATTLECRY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168295">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_295</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_WARCRY_SHOUT_OF_MANY</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168296">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_296</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ABILITY_VENOM</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168297">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_297</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_ARTFSET_LIONS_DEMORALIZED</SpellID>
+    </AdvMapShrine>
+</Item>
+<Item href="#n:inline(AdvMapShrine)" id="item_A9D916B6-3446-4655-B6CD-8C040A635168298">
+    <AdvMapShrine>
+        <Pos>
+            <x>1</x>
+            <y>1</y>
+            <z>-10</z>
+        </Pos>
+        <Rot>3.14159</Rot>
+        <Floor>0</Floor>
+        <Name>SHRINE_298</Name>
+        <CombatScript/>
+        <pointLights/>
+        <Shared href="/MapObjects/Shrine_Of_Magic_1.(AdvMapShrineShared).xdb#xpointer(/AdvMapShrineShared)"/>
+        <SpellID>SPELL_EMPOWERED_DEEP_FREEZE</SpellID>
+    </AdvMapShrine>
+</Item>

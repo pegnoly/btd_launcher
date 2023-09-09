@@ -1,0 +1,13 @@
+{
+    "day_lights": [
+      "/Lights/_(AmbientLight)/Town/Day_light_Haven01(VicTest).xdb#xpointer(/AmbientLight)",
+      "/Lights/_(AmbientLight)/Town/Day_light_Haven01(PanovTest).xdb#xpointer(/AmbientLight)",
+      "/Lights/_(AmbientLight)/AdvMap/Addon/A1SM3.xdb#xpointer(/AmbientLight)"
+    ],
+  
+    "night_lights": [
+      "/Lights/_(AmbientLight)/Tests/c4m4_wastes.xdb#xpointer(/AmbientLight)",
+      "/Lights/_(AmbientLight)/Arena/dirtArena/DirtArena01 (2).xdb#xpointer(/AmbientLight)",
+      "/Lights/_(AmbientLight)/Town/Stronghold_light.xdb#xpointer(/AmbientLight)"
+    ]
+  }

@@ -1,0 +1,10 @@
+{
+    "/MapObjects/Fortress.(AdvMapTownShared).xdb" : "TOWN_FORTRESS",
+    "/MapObjects/Academy.(AdvMapTownShared).xdb": "TOWN_ACADEMY",
+    "/MapObjects/Dungeon.(AdvMapTownShared).xdb": "TOWN_DUNGEON",
+    "/MapObjects/Heaven.(AdvMapTownShared).xdb": "TOWN_HEAVEN",
+    "/MapObjects/Inferno.(AdvMapTownShared).xdb": "TOWN_INFERNO",
+    "/MapObjects/Necromancy.(AdvMapTownShared).xdb": "TOWN_NECROMANCY",
+    "/MapObjects/Orc_Stronghold.(AdvMapTownShared).xdb": "TOWN_STRONGHOLD",
+    "/MapObjects/Preserve.(AdvMapTownShared).xdb": "TOWN_PRESERVE"
+}

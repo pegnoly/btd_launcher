@@ -1,0 +1,32 @@
+{
+    "Duel" : {
+        "Ru" : {
+            "title": "Дуэльный режим BTD",
+            "desc": "дуэль описание"
+        },
+        "En": {
+            "title": "BTD Duel mode",
+            "desc": "duel description"
+        }
+    },
+    "RMG" : {
+        "Ru" : {
+            "title": "BTD RMG - ",
+            "desc": "игра на глобальной карте на сгенерированном шаблоне. В отличиe от стандартной версии игры исправлены баги и проблемы баланса, а также добавлено множество механик и опций для улучшения и разнообразия геймплея."
+        },
+        "En" : {
+            "title": "BTD RMG",
+            "desc": "rmg description"
+        }
+    },
+    "Blitz" : {
+        "Ru" : {
+            "title": "BTD RMG(блиц-мод)",
+            "desc": "блиц описание"
+        },
+        "En" : {
+            "title": "BTD RMG(blitz-mode)",
+            "desc": "blitz description"
+        }
+    }
+}
