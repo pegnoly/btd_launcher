@@ -27,7 +27,6 @@ export default defineConfig(async () => ({
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
-        patcher: resolve(__dirname, "patcher_window.html"),
       }
     }
   },

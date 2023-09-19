@@ -1,4 +1,4 @@
-use std::{path::PathBuf};
+use std::path::PathBuf;
 use crate::map::{Template, TemplateType};
 
 use super::{WriteAdditional, ProcessText};

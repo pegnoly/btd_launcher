@@ -61,7 +61,7 @@ pub async fn show_patcher(app: AppHandle, patcher_manager: State<'_, PatcherMana
 pub fn pick_map(app: AppHandle, path_manager: State<PathManager>) {
     let file_dialog = FileDialogBuilder::new()
         .add_filter("hommV maps", &["h5m"])
-        .set_directory(path_manager.get_maps_path());
+        .set_directory(path_manager.maps());
     file_dialog.pick_file(move |file_path| {
         match file_path {
             Some(file) => {
@@ -142,7 +142,10 @@ pub async fn patch_map(
     patcher_manager: State<'_, PatcherManager>, 
 ) -> Result<(), ()> {
     let mut map_holder = patcher_manager.map.lock().await;
-    let base_creator = BaseCreator{};
+    let base_creator = BaseCreator::new(
+        map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
+        patcher_manager.config_path.join("patcher\\adds\\")
+    );
     let teams = map_holder.as_ref().unwrap().teams_info.clone();
     let mut players_patcher = PlayersPatcher::new(teams.clone());
     let mut building_modifyable = BuildingModifyable::new(
@@ -186,6 +189,7 @@ pub async fn patch_map(
             &map_holder.as_ref().unwrap().get_write_dir(String::from("game_mechanics")),
             &patcher_manager.config_path.join("patcher\\adds\\Summon_Creatures.xdb")
         ))
+        .with(&base_creator)
         .run();
     let pp = Patcher::new()
         .with_root(map_holder.as_ref().unwrap().map_tag()).unwrap()

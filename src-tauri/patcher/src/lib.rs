@@ -83,9 +83,7 @@ impl<'a> Patcher<'a> {
     pub fn run(&mut self) {
         let mut output: Vec<u8> = Vec::new();
         let mut writer = Writer::new(&mut output);
-        if self.path.unwrap().ends_with(".xdb") {
-            writer.write_event(Event::Decl(BytesDecl::new("1.0", Some("UTF-8"), None))).unwrap();
-        }
+        writer.write_event(Event::Decl(BytesDecl::new("1.0", Some("UTF-8"), None))).unwrap();
         self.process(&mut writer);
         let mut out_file = fs::File::create(self.path.unwrap()).unwrap();
         out_file.write_all(&output).unwrap();
@@ -167,7 +165,7 @@ impl<'a> TextProcessor<'a> {
         "def save_utf16file(*args, **kwargs):
             with open(kwargs['path'], encoding='utf16', mode='w') as out:
                 out.write(kwargs['text'])";
-        let mut file = fs::File::create(self.path.unwrap()).unwrap();
+        fs::File::create(self.path.unwrap()).unwrap();
         pyo3::prepare_freethreaded_python();
         Python::with_gil(|py| {
             let fun: Py<PyAny> = PyModule::from_code(py, &code, "", "")

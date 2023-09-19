@@ -5,19 +5,25 @@
 use std::io;
 use std::io::Write;
 use std::io::Read;
+use std::sync::Arc;
 use std::{process::Command, path::PathBuf, collections::HashMap, env, fs};
 //use database::DbManager;
 use drive::DriveManager;
+use file_management::init_updater;
+use file_management::start_update_threads;
 use patch_management::ActivityInfo;
 use patch_management::PatcherManager;
 use patcher::TemplatesInfoModel;
 use reqwest::Error;
-//use startup::StartupManager;
+use sqlx::Sqlite;
+use startup::DatabaseManager;
+use tauri::AppHandle;
+use update_manager::DownloaderState;
+use crate::startup::StartupManager;
 use tauri::{State, Manager};
 use tokio::sync::{mpsc, Mutex};
 
-use file_management::{PathManagerBuilder, PathManager};
-use text::GameMode;
+use file_management::PathManager;
 
 use patcher::{Patcher};
 
@@ -27,97 +33,39 @@ pub mod drive;
 pub mod database;
 pub mod startup;
 pub mod patch_management;
+mod update_manager;
 
 #[derive(Debug, serde::Serialize, Clone)]
 pub struct FrontendCfg {
     pub cfg_dir: String
 }
 
+use update_manager::Downloader;
+use update_manager::SingleValuePayload;
 use walkdir::WalkDir;
 
 #[tokio::main]
 async fn main() {
     // path manager
-    let pmb = PathManagerBuilder {
-        source: env::current_dir().unwrap(),
-        homm: None,
-        data: None,
-        maps: None,
-        cfg: None
-    }
-    .with_homm_path()
-    .with_data_path()
-    .with_maps_path()
-    .with_cfg_path()
-    .build();
-    
-    // let test_path = pmb.get_maps_path().join("test/");
-    // let mut zip_file = std::fs::File::create(
-    //     pmb.get_maps_path().join("test_archive.h5m")
-    // ).unwrap();
-    // let mut map_zipped = zip::ZipWriter::new(zip_file);
-    // for entry in WalkDir::new(&test_path) {
-    //     match entry {
-    //         Ok(e) => {
-    //             let path = e.path();
-    //             println!("path: {:?}", path);
-    //             if path.is_file() {
-    //                 let file_name = path.strip_prefix(&test_path).unwrap().to_str().unwrap();
-    //                 let mut curr_file = std::fs::File::open(&path).unwrap();
-    //                 let mut s = String::new();
-    //                 curr_file.read_to_string(&mut s);
-    //                 map_zipped.start_file(file_name, Default::default());
-    //                 map_zipped.write_all(s.as_bytes());
-    //             }
-    //         }
-    //         Err(err) => {}
-    //     }
-    // }
-    // map_zipped.finish().unwrap();
-
-    // patcher 
-    // let patcher = PatcherBuilder::with_config(
-    //     pmb.get_source_path()
-    //     .ancestors()
-    //     .find(|p| {
-    //         p.ends_with("btd_launcher")
-    //     }).unwrap().join("cfg\\patcher\\")
-    // ).build();
+    let path_manager = PathManager::new();
     // google drive manager
-    let mut drive_manager = DriveManager::build(pmb.get_cfg_path()).await;
-    drive_manager.test().await;
-    // file manager
-    let mut rmg_files_info = file_management::FileMoveInfo {
-        files: vec![],
-        game_path: pmb.get_data_path().to_path_buf(),
-        launcher_path: pmb.get_source_path().join("examples/rmg_files/")
-    };
-    rmg_files_info.init();
-    let duel_files_info = file_management::FileMoveInfo {
-        files: vec![],
-        game_path: pmb.get_maps_path().to_path_buf(),
-        launcher_path: pmb.get_source_path().join("examples/duel_files/")
-    };
-    let file_manager = file_management::FileManager {
-        files_info: HashMap::from([
-            (GameMode::RMG, rmg_files_info),
-            (GameMode::Duel, duel_files_info)
-        ]).into()
-    };
-    // texts manager
-    let t = text::TextManagerBuilder::create(PathBuf::from("D:\\Users\\pgn\\btd_launcher\\src-tauri\\src\\locales.json"));
-    let cfg_path = pmb.get_cfg_path().to_str().unwrap().to_string();
-    //
-    let mut templates_file = std::fs::File::open(pmb.get_cfg_path().join("patcher/templates.json")).unwrap();
+    let mut drive_manager = DriveManager::build(path_manager.cfg()).await;
+    // downloader
+    let downloader = Downloader::new();
+    let pool = sqlx::SqlitePool::connect(path_manager.cfg().join("test.db").to_str().unwrap()).await.unwrap();
+    //start_update_threads(&pool, &downloader, &drive_manager, &path_manager).await;
+    let mut templates_file = std::fs::File::open(path_manager.cfg().join("patcher/templates.json")).unwrap();
     let mut templates_string = String::new();
     templates_file.read_to_string(&mut templates_string).unwrap();
     let templates: TemplatesInfoModel = serde_json::from_str(&templates_string).unwrap();
-    let config_path = pmb.get_cfg_path().to_owned();
+    let config_path = path_manager.cfg().to_owned();
     tauri::Builder::default()
-        .manage(t)
-        .manage(pmb)
+        .manage(path_manager)
         .manage(drive_manager)
-        .manage(file_manager)
+        .manage(downloader)
+        .manage(DatabaseManager{pool: pool})
+        .manage(StartupManager { app_started: std::sync::Mutex::new(false), download_thread_started: std::sync::Mutex::new(false) })
+        //.manage(file_manager)
         .manage(PatcherManager {
             activity: ActivityInfo{active: false}.into(),
             map: None.into(),
@@ -125,12 +73,11 @@ async fn main() {
             config_path: config_path
         })
         .invoke_handler(tauri::generate_handler![
-            check,
-            check2,
-            text::set_desc_with_locale,
-            file_management::set_active_mode,
-            file_management::disable_current_mode,
-            drive::check_for_update,
+            test,
+            check_can_activate_download,
+            // file_management::move_files_to_game,
+            // file_management::remove_files_from_game,
+            //drive::check_for_update,
             patch_management::show_patcher,
             patch_management::pick_map,
             patch_management::unpack_map,
@@ -139,7 +86,10 @@ async fn main() {
             patch_management::set_night_lights_setting,
             patch_management::set_weeks_only_setting,
             patch_management::patch_map,
-            patch_management::zip_map
+            patch_management::zip_map,
+            startup::start_game,
+            //update_manager::start_update_process,
+            update_manager::download_update
         ])
         .setup(|app|{
             let test_event = app.listen_global("test", |event| {
@@ -149,12 +99,10 @@ async fn main() {
             let patcher_visibility_changed = main_window.listen("patcher_visibility_changed", |event|{});
             let id1 = main_window.listen("map_picked", |event|{});
             let id2 = main_window.listen("map_unpacked", |event|{});
-            let cfg = app.listen_global("started", |event| {
-                println!("App started")
-            });
-            app.app_handle().emit_to("main", "started", FrontendCfg{
-                cfg_dir: cfg_path
-            });
+            let updater_visibility_changed = main_window.listen("updater_visibility_changed", |event|{});
+            let updated_file_changed_handler = main_window.listen("updated_file_changed", |event|{});
+            let download_progress_changed_handler = main_window.listen("download_progress_changed", |event|{});
+            let download_state_changed_handler = main_window.listen("download_state_changed", |event|{});
             Ok(())
         })
         .run(tauri::generate_context!())
@@ -162,12 +110,49 @@ async fn main() {
 }
 
 #[tauri::command]
-fn check()  {
-    let mut cmd = Command::new("D:\\Users\\pgn\\btd_launcher\\src-tauri\\src\\Skillwheel_BTD");
-    cmd.output().unwrap();
+async fn test(
+    startup: State<'_, StartupManager>,
+    db: State<'_, DatabaseManager>,
+    drive: State<'_, DriveManager>, 
+    downloader: State<'_, Downloader>, 
+    path_manager: State<'_, PathManager>
+) -> Result<(), ()> {
+    if *startup.app_started.lock().unwrap() == true {
+        println!("Already started");
+        return Ok(())
+    }
+    println!("Let's go!");
+    *startup.app_started.lock().unwrap() = true;
+    start_update_threads(&db.pool, &downloader, &drive, &path_manager).await;
+    Ok(())
 }
 
 #[tauri::command]
-fn check2(path_manager: State<PathManager>) {
-    fs::copy(path_manager.get_source_path().join("examples\\test.txt"), path_manager.get_data_path().join("test.txt"));
+async fn check_can_activate_download(
+    app: AppHandle,
+    startup: State<'_, StartupManager>,
+    downloader: State<'_, Downloader>
+) -> Result<(), ()> {
+    if *startup.download_thread_started.lock().unwrap() == true {
+        return Ok(())
+    }
+    *startup.download_thread_started.lock().unwrap() = true;
+    let downloader_state = Arc::clone(&downloader.state);
+    tokio::spawn(async move {
+        loop {
+            let mut state = downloader_state.lock().await;
+            match *state {
+                DownloaderState::ReadyToDownload => {
+                    app.emit_to("main", "download_state_changed", SingleValuePayload{value: false});
+                    *state = DownloaderState::Waiting;
+                    println!("State changed: {:?}", *state);
+
+                }
+                _ => {
+                    std::thread::sleep(std::time::Duration::from_secs(5));
+                }
+            }
+        }
+    });
+    Ok(())
 }

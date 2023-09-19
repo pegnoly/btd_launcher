@@ -1,8 +1,19 @@
-use super::PatchCreatable;
-
+use super::{PatchCreatable, WriteAdditional};
+use std::path::PathBuf;
 pub struct BaseCreator {
+    write_dir: String,
+    path: PathBuf
 }
 
+impl BaseCreator {
+    pub fn new(dir: String, path: PathBuf) -> Self {
+        BaseCreator { 
+            write_dir: dir, 
+            path: path 
+        }
+    }
+}
+ 
 impl PatchCreatable for BaseCreator {
     fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>, label: &str) {
         match label {
@@ -23,5 +34,14 @@ impl PatchCreatable for BaseCreator {
             }
             _=> {}
         }
+    }
+}
+
+impl WriteAdditional for BaseCreator {
+    fn try_write(&self) {
+        let path_to = PathBuf::from(&self.write_dir).join("MapScript.lua");
+        std::fs::copy(&self.path.join("MapScript.lua"), &path_to).unwrap();
+        let path_to = PathBuf::from(&self.write_dir).join("MapScript.xdb");
+        std::fs::copy(&self.path.join("MapScript.xdb"), &path_to).unwrap();
     }
 }

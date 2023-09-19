@@ -46,6 +46,6 @@ impl GenerateLuaCode for TreasurePatcher {
         }
         output.push_str("}");
         let mut out_file = fs::File::create(path.join("treasures.lua")).unwrap();
-        out_file.write_all(&mut output.as_bytes());
+        out_file.write_all(&mut output.as_bytes()).unwrap();
     }
 }

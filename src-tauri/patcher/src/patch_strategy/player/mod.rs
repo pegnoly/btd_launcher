@@ -1,5 +1,4 @@
 use quick_xml::Writer;
-use serde::{Serialize, Deserialize};
 use homm5_types::player::Player;
 use super::PatchModifyable;
 use crate::map::MapTeamsCount;
@@ -33,10 +32,13 @@ impl PatchModifyable for PlayersPatcher {
                         p.to_owned()
                     })
                     .collect();
-                    writer.write_event(quick_xml::events::Event::Start(quick_xml::events::BytesStart::new("players"))).unwrap();
-                    for player in patched_players {
-                        writer.write_serializable("Item", &player).unwrap();
-                    }
+                writer.create_element("players")
+                    .write_inner_content(|w|{
+                        for player in patched_players {
+                            w.write_serializable("Item", &player).unwrap();
+                        }
+                        Ok(())
+                    }).unwrap();
             }
             Err(_e) => {
                 println!("Error catched when patching players teams");

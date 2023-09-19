@@ -1,182 +1,222 @@
-use std::{path::{PathBuf, Path}, env, fs, collections::HashMap, sync::Mutex, time::SystemTime};
+use std::{path::{PathBuf, Path}, env, fs, collections::HashMap, sync::Arc, time::SystemTime};
 use chrono::{DateTime, Utc};
-use google_drive3::api::File;
+use google_drive3::api::{File, Drive};
+use sqlx::{Connection, SqliteConnection, pool::PoolConnection, Sqlite};
 use tauri::State;
+use serde::{Serialize, Deserialize};
 
-use crate::text::GameMode;
+use crate::{drive::DriveManager, update_manager::{Downloader, Downloadable, DownloaderState}};
 
+// Contains all useful paths of the application
 #[derive(Default, Debug)]
 pub struct PathManager {
-    source: PathBuf,
+    // path of launcher executable
+    main: PathBuf,
+    // path of the game
     homm: PathBuf,
+    // path of data game folder
     data: PathBuf,
+    // path of Maps game folder
     maps: PathBuf,
-    cfg: PathBuf
+    // path of modes launcher folder
+    modes: PathBuf,
+    // path of cfg launcher folder
+    cfg: PathBuf,
+
+    // mapping of google drive folder ids and launcher paths to download files to
+    file_movement_info: HashMap<String, PathBuf>
 }
 
 impl PathManager {
-    pub fn get_data_path(&self) -> &PathBuf {
-        &self.data
+    pub fn main(&self) -> &PathBuf {
+        &self.main
     }
 
-    pub fn get_source_path(&self) -> &PathBuf {
-        &self.source
-    }
-
-    pub fn get_maps_path(&self) -> &PathBuf {
-        &self.maps
-    }
-
-    pub fn get_homm_path(&self) -> &PathBuf {
+    pub fn homm(&self) -> &PathBuf {
         &self.homm
     }
 
-    pub fn get_cfg_path(&self) -> &PathBuf {
+    pub fn data(&self) -> &PathBuf {
+        &self.data
+    }
+
+    pub fn maps(&self) -> &PathBuf {
+        &self.maps
+    }
+
+    pub fn modes(&self) -> &PathBuf {
+        &self.modes
+    }
+
+    pub fn cfg(&self) -> &PathBuf {
         &self.cfg
     }
+
+    pub fn move_path(&self, folder_id: &str) -> Option<&PathBuf> {
+        self.file_movement_info.get(folder_id)
+    }
 }
 
+impl PathManager {
+    pub fn new() -> Self {
+        let main_path = std::env::current_dir().unwrap().ancestors()
+            .find(|p|p.ends_with("btd_launcher")).unwrap().to_path_buf();
+        let homm_path = main_path.parent().unwrap().to_path_buf();
+        let data_path = homm_path.join("data\\");
+        let maps_path = homm_path.join("Maps\\");
+        let modes_path = main_path.join("modes\\");
+        let cfg_path = main_path.join("cfg\\");
 
-#[derive(Default)]
-pub struct PathManagerBuilder {
-    pub source: PathBuf,
-    pub homm: Option<PathBuf>,
-    pub data: Option<PathBuf>,
-    pub maps: Option<PathBuf>,
-    pub cfg: Option<PathBuf>
-}
+        let files_map = HashMap::from([
+            (String::from("14PMMPq6bB0vhKc5keLSFJIiI4830xY0G"), cfg_path.join("docs\\")),
+            (String::from("1F16RpBLixOow6Wcm3huk3SdaAzy8QzA4"), data_path.clone()),
+            (String::from("1uQKwpJnQw2uxq9dx3eTa2NXl8mrbkDkg"), modes_path.join("duel\\")),
+            (String::from("1GCF1-yo7xcFxqAYmLzkoMWGVc2GrYpF2"), modes_path.join("rmg\\")), // rmg files
+            (String::from("1UUu65mhj8h9Z9bLG7hOS-JEbKKeAy8qu"), cfg_path.join("patcher\\")), // patcher default configs
+            (String::from("14dumXKCIPUD3qVeG9kFOiCtuFr9mcHQS"), cfg_path.join("patcher\\adds\\")) // patcher additional files
+        ]);
 
-impl PathManagerBuilder {
-    pub fn with_homm_path(&mut self) -> &mut Self {
-        println!("Source path: {:?}", self.source);
-        self.homm = Some(self.source.ancestors().
-                find(|p|p.ends_with("btd_launcher")).unwrap().
-                parent().unwrap().to_path_buf());
-        println!("Homm path: {:?}", self.homm);
-        self
-    }
-
-    pub fn with_cfg_path(&mut self) -> &mut Self {
-        self.cfg = Some(
-            self.source
-            .ancestors()
-            .find(|p|{
-                p.ends_with("btd_launcher")
-            }).unwrap()
-            .join("cfg\\")
-        );
-        print!("cfg path: {:?}", self.cfg);
-        self
-    }
-
-    pub fn with_data_path(&mut self) -> &mut Self {
-        self.data = Some(self.homm.as_ref().unwrap().join("data\\"));
-        self
-    }
-
-    pub fn with_maps_path(&mut self) -> &mut Self {
-        self.maps = Some(self.homm.as_ref().unwrap().join("Maps\\"));
-        self
-    }
-
-    pub fn build(&mut self) -> PathManager {
         PathManager { 
-            source: self.source.clone(), 
-            homm: self.homm.as_ref().unwrap().clone(), 
-            data: self.data.as_ref().unwrap().clone(), 
-            maps: self.maps.as_ref().unwrap().clone(),
-            cfg: self.cfg.as_ref().unwrap().clone()
+            main: main_path, 
+            homm: homm_path, 
+            data: data_path, 
+            maps: maps_path, 
+            modes: modes_path, 
+            cfg: cfg_path, 
+            file_movement_info: files_map
         }
     }
 }
 
-pub struct FileManager {
-    pub files_info: tokio::sync::Mutex<HashMap<GameMode, FileMoveInfo>>
-}
-
-#[derive(Debug)]
-pub struct FileMetadata {
-    pub short_name: String,
-    pub modified_time: DateTime<Utc>
-}
-
-pub struct FileMoveInfo {
-    pub files: Vec<FileMetadata>,
-    pub game_path: PathBuf,
-    pub launcher_path: PathBuf
-}
-
-impl FileMoveInfo {
-    // first of all i can init files to store their metadata to make update queries easier
-    // here i'm checking all files in launcher mode folder
-    pub fn init(&mut self) {
-        for dir_entry in fs::read_dir(&self.launcher_path).unwrap() {
-            match dir_entry {
-                Ok(entry) => {
-                    let metadata = entry.metadata();
-                    match metadata {
-                        Ok(meta) => {
-                            if meta.is_file() == true {
-                                let mode_file_metadata = FileMetadata {
-                                    short_name: entry.file_name().to_string_lossy().to_string(),
-                                    modified_time: meta.modified().unwrap().into()
-                                };
-                                println!("file metadata: {:?}", mode_file_metadata);
-                                self.files.push(mode_file_metadata);
+pub async fn init_updater(path_manager: &PathManager, drive_manager: &DriveManager) {
+    let connection = sqlx::sqlite::SqliteConnection::connect(
+        path_manager.cfg().join("test.db").to_str().unwrap()).await;
+    match connection {
+        Ok(mut connect) => {
+            let response = drive_manager.hub.lock().await
+                .files()
+                .list()
+                .param("fields", "files(id, name, mimeType, parents, modifiedTime)")
+                .q("'1F16RpBLixOow6Wcm3huk3SdaAzy8QzA4' in parents or 
+                    '14PMMPq6bB0vhKc5keLSFJIiI4830xY0G' in parents or
+                    '1uQKwpJnQw2uxq9dx3eTa2NXl8mrbkDkg' in parents or 
+                    '1GCF1-yo7xcFxqAYmLzkoMWGVc2GrYpF2' in parents or 
+                    '1UUu65mhj8h9Z9bLG7hOS-JEbKKeAy8qu' in parents or
+                    '14dumXKCIPUD3qVeG9kFOiCtuFr9mcHQS' in parents")
+                .doit().await;
+            match response {
+                Ok(res) => {
+                    for file in res.1.files.unwrap() {
+                        //println!("file: {:?}", &file);
+                        let query_result = sqlx::query("INSERT INTO files (drive_id, name, parent, modified) VALUES (?, ?, ?, ?)")
+                            .bind(file.id.as_ref().unwrap())
+                            .bind(file.name.as_ref().unwrap())
+                            .bind(file.parents.as_ref().unwrap().last().unwrap())
+                            .bind(file.modified_time.as_ref().unwrap().timestamp())
+                            .execute(&mut connect).await;
+                        match query_result {
+                            Ok(result) => {
+                                println!("query result: {:?}", result)
                             }
+                            Err(query_error) => println!("query error: {:?}", query_error.to_string())
                         }
-                        Err(me) => println!("Error when parsing metadata of dir entry")
                     }
                 }
-                Err(e) => println!("Error when trying to init file move info struct")
+                Err(res_error) => println!("response error: {:?}", res_error.to_string())
             }
-        }
+        }   
+        Err(connection_error) => {}
     }
-    // i think list of moved files must be stored here
-    pub fn set_active(&mut self) {
-        for file in &self.files {
-            let curr_path = self.launcher_path.join(&file.short_name);
-            let copy_path = self.game_path.join(&file.short_name);
-            fs::copy(curr_path, copy_path);
-        }
-        // TODO serialize mod files here
-    }
+}
 
-    pub fn set_inactive(&self) {
-        for file in &self.files {
-            let expexted_path = self.game_path.join(&file.short_name);
-            if expexted_path.exists() {
-                fs::remove_file(expexted_path);
+pub async fn start_update_threads(
+    pool: &sqlx::Pool<Sqlite>, 
+    downloader: &Downloader, 
+    drive: &DriveManager, 
+    path_manager: &PathManager
+) {
+    for folder in [
+        "1F16RpBLixOow6Wcm3huk3SdaAzy8QzA4", 
+        "14PMMPq6bB0vhKc5keLSFJIiI4830xY0G",
+        "1uQKwpJnQw2uxq9dx3eTa2NXl8mrbkDkg",
+        "1GCF1-yo7xcFxqAYmLzkoMWGVc2GrYpF2",
+        "1UUu65mhj8h9Z9bLG7hOS-JEbKKeAy8qu",
+        "14dumXKCIPUD3qVeG9kFOiCtuFr9mcHQS"
+    ] {
+        let connection = pool.clone();
+        let downloadables = Arc::clone(&downloader.downloadables);
+        let downloader_state = Arc::clone(&downloader.state);
+        let hub = Arc::clone(&drive.hub);
+        tokio::spawn(async move {
+            loop {
+                let responce = hub.lock().await
+                    .files()
+                    .list()
+                    .param("fields", "files(id, name, mimeType, parents, modifiedTime)")
+                    .q(format!("'{}' in parents", folder).as_str())
+                    .doit().await;
+                match responce {
+                    Ok(res) => {
+                        let query: Result<Vec<Downloadable>, sqlx::Error> = sqlx::query_as(
+                            "SELECT * FROM files WHERE parent = ?")
+                            .bind(folder)
+                            .fetch_all(&connection).await;
+                        match query {
+                            Ok(query_result) => {
+                                // first select those are not in downloadables yet 
+                                let mut downloadables_locked = downloadables.lock().await;
+                                let files = res.1.files.unwrap();
+                                let possible_files: Vec<&File> = files.iter()
+                                    .filter(|f| {
+                                        query_result.iter()
+                                            .any(|q| {
+                                                (*f.id.as_ref().unwrap() == q.drive_id) && 
+                                                (f.modified_time.as_ref().unwrap().timestamp() == q.modified)
+                                            }) == false
+                                    }).collect();
+                                //println!("possible files: {:?}", possible_files);
+                                for file in possible_files {
+                                    if downloadables_locked.iter().any(|d| d.drive_id == *file.id.as_ref().unwrap()) == false {
+                                        downloadables_locked.push(Downloadable { 
+                                            drive_id: file.id.as_ref().unwrap().to_owned(), 
+                                            name: file.name.as_ref().unwrap().to_owned(), 
+                                            parent: String::from(folder), 
+                                            modified: file.modified_time.as_ref().unwrap().timestamp() 
+                                        });
+                                        println!("Downloadable added: {:?}", file.name);
+                                        let mut state =  downloader_state.lock().await;
+                                        if *state == DownloaderState::NothingToDownload {
+                                            *state = DownloaderState::ReadyToDownload;
+                                        }
+                                    }
+                                }
+                            }
+                            Err(query_error) => println!("query_error: {}", query_error.to_string())
+                        }
+                    }
+                    Err(error) => {}
+                }
             }
-        }
+        });
     }
-
-    pub fn files(&self) -> &Vec<FileMetadata> {
-        &self.files
-    }
-
-    pub fn is_actual_file(&self, name: &String) -> bool {
-        self.files.iter()
-            .any(|fm| {
-                fm.short_name.cmp(name) == core::cmp::Ordering::Equal
-            })
-    }
-
-    //pub fn is_time_modified(&self)
 }
 
-#[tauri::command]
-pub async fn set_active_mode(file_manager: State<'_, FileManager>, new_mode: GameMode) -> Result<(), ()> {
-    let mut manager_locked = file_manager.files_info.lock().await;
-    let new_mode_info = manager_locked.get_mut(&new_mode).unwrap();
-    new_mode_info.set_active();
-    Ok(())
-}
+// #[tauri::command]
+// pub async fn move_files_to_game(file_manager: State<'_, FileManager>, file_type: FileType) -> Result<(), ()> {
+//     let mut manager_locked = file_manager.files_info;
+//     let new_mode_info = manager_locked.iter_mut().find(
+//         |m| m.file_type == file_type
+//     ).unwrap();
+//     new_mode_info.set_active();
+//     Ok(())
+// }
 
-#[tauri::command]
-pub async fn disable_current_mode(file_manager: State<'_, FileManager>, prev_mode: GameMode) -> Result<(), ()> {
-    let manager_locked = file_manager.files_info.lock().await;
-    let curr_mode_info = manager_locked.get(&prev_mode).unwrap();
-    curr_mode_info.set_inactive();
-    Ok(())
-}
+// #[tauri::command]
+// pub async fn remove_files_from_game(file_manager: State<'_, FileManager>, file_type: FileType) -> Result<(), ()> {
+//     let mut manager_locked = file_manager.files_info.lock().await;
+//     let curr_mode_info = manager_locked.iter_mut().find(
+//         |m| m.file_type == file_type
+//     ).unwrap();
+//     curr_mode_info.set_inactive();
+//     Ok(())
+// }
