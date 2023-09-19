@@ -73,7 +73,8 @@ impl PathManager {
             (String::from("1uQKwpJnQw2uxq9dx3eTa2NXl8mrbkDkg"), modes_path.join("duel\\")),
             (String::from("1GCF1-yo7xcFxqAYmLzkoMWGVc2GrYpF2"), modes_path.join("rmg\\")), // rmg files
             (String::from("1UUu65mhj8h9Z9bLG7hOS-JEbKKeAy8qu"), cfg_path.join("patcher\\")), // patcher default configs
-            (String::from("14dumXKCIPUD3qVeG9kFOiCtuFr9mcHQS"), cfg_path.join("patcher\\adds\\")) // patcher additional files
+            (String::from("14dumXKCIPUD3qVeG9kFOiCtuFr9mcHQS"), cfg_path.join("patcher\\adds\\")), // patcher additional files
+            (String::from("1ow6R6AZCK6Ukwa02MeKUA8J0G99hNYEL"), cfg_path.join("version\\"))
         ]);
 
         PathManager { 
@@ -89,10 +90,20 @@ impl PathManager {
 }
 
 pub async fn init_updater(path_manager: &PathManager, drive_manager: &DriveManager) {
-    let connection = sqlx::sqlite::SqliteConnection::connect(
-        path_manager.cfg().join("test.db").to_str().unwrap()).await;
+    let db_path = path_manager.cfg().join("test.db");
+    std::fs::File::create(&db_path).unwrap();
+    let connection = sqlx::sqlite::SqliteConnection::connect(db_path.to_str().unwrap()).await;
     match connection {
         Ok(mut connect) => {
+            let query = sqlx::query("
+            CREATE TABLE files (
+                id	INTEGER NOT NULL UNIQUE,
+                drive_id	TEXT,
+                name	TEXT,
+                parent	TEXT,
+                modified	INTEGER,
+                PRIMARY KEY(id AUTOINCREMENT)
+            )").execute(&mut connect).await;
             let response = drive_manager.hub.lock().await
                 .files()
                 .list()
@@ -102,12 +113,13 @@ pub async fn init_updater(path_manager: &PathManager, drive_manager: &DriveManag
                     '1uQKwpJnQw2uxq9dx3eTa2NXl8mrbkDkg' in parents or 
                     '1GCF1-yo7xcFxqAYmLzkoMWGVc2GrYpF2' in parents or 
                     '1UUu65mhj8h9Z9bLG7hOS-JEbKKeAy8qu' in parents or
-                    '14dumXKCIPUD3qVeG9kFOiCtuFr9mcHQS' in parents")
+                    '14dumXKCIPUD3qVeG9kFOiCtuFr9mcHQS' in parents or
+                    '1ow6R6AZCK6Ukwa02MeKUA8J0G99hNYEL' in parents")
                 .doit().await;
             match response {
                 Ok(res) => {
                     for file in res.1.files.unwrap() {
-                        //println!("file: {:?}", &file);
+                        println!("file: {:?}", &file.name);
                         let query_result = sqlx::query("INSERT INTO files (drive_id, name, parent, modified) VALUES (?, ?, ?, ?)")
                             .bind(file.id.as_ref().unwrap())
                             .bind(file.name.as_ref().unwrap())
@@ -126,78 +138,6 @@ pub async fn init_updater(path_manager: &PathManager, drive_manager: &DriveManag
             }
         }   
         Err(connection_error) => {}
-    }
-}
-
-pub async fn start_update_threads(
-    pool: &sqlx::Pool<Sqlite>, 
-    downloader: &Downloader, 
-    drive: &DriveManager, 
-    path_manager: &PathManager
-) {
-    for folder in [
-        "1F16RpBLixOow6Wcm3huk3SdaAzy8QzA4", 
-        "14PMMPq6bB0vhKc5keLSFJIiI4830xY0G",
-        "1uQKwpJnQw2uxq9dx3eTa2NXl8mrbkDkg",
-        "1GCF1-yo7xcFxqAYmLzkoMWGVc2GrYpF2",
-        "1UUu65mhj8h9Z9bLG7hOS-JEbKKeAy8qu",
-        "14dumXKCIPUD3qVeG9kFOiCtuFr9mcHQS"
-    ] {
-        let connection = pool.clone();
-        let downloadables = Arc::clone(&downloader.downloadables);
-        let downloader_state = Arc::clone(&downloader.state);
-        let hub = Arc::clone(&drive.hub);
-        tokio::spawn(async move {
-            loop {
-                let responce = hub.lock().await
-                    .files()
-                    .list()
-                    .param("fields", "files(id, name, mimeType, parents, modifiedTime)")
-                    .q(format!("'{}' in parents", folder).as_str())
-                    .doit().await;
-                match responce {
-                    Ok(res) => {
-                        let query: Result<Vec<Downloadable>, sqlx::Error> = sqlx::query_as(
-                            "SELECT * FROM files WHERE parent = ?")
-                            .bind(folder)
-                            .fetch_all(&connection).await;
-                        match query {
-                            Ok(query_result) => {
-                                // first select those are not in downloadables yet 
-                                let mut downloadables_locked = downloadables.lock().await;
-                                let files = res.1.files.unwrap();
-                                let possible_files: Vec<&File> = files.iter()
-                                    .filter(|f| {
-                                        query_result.iter()
-                                            .any(|q| {
-                                                (*f.id.as_ref().unwrap() == q.drive_id) && 
-                                                (f.modified_time.as_ref().unwrap().timestamp() == q.modified)
-                                            }) == false
-                                    }).collect();
-                                //println!("possible files: {:?}", possible_files);
-                                for file in possible_files {
-                                    if downloadables_locked.iter().any(|d| d.drive_id == *file.id.as_ref().unwrap()) == false {
-                                        downloadables_locked.push(Downloadable { 
-                                            drive_id: file.id.as_ref().unwrap().to_owned(), 
-                                            name: file.name.as_ref().unwrap().to_owned(), 
-                                            parent: String::from(folder), 
-                                            modified: file.modified_time.as_ref().unwrap().timestamp() 
-                                        });
-                                        println!("Downloadable added: {:?}", file.name);
-                                        let mut state =  downloader_state.lock().await;
-                                        if *state == DownloaderState::NothingToDownload {
-                                            *state = DownloaderState::ReadyToDownload;
-                                        }
-                                    }
-                                }
-                            }
-                            Err(query_error) => println!("query_error: {}", query_error.to_string())
-                        }
-                    }
-                    Err(error) => {}
-                }
-            }
-        });
     }
 }
 

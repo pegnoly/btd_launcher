@@ -113,7 +113,7 @@ export type SingleValuePayload<T> = {
   value: T
 }
 
-invoke("test");
+invoke("start_updater");
 invoke("check_can_activate_download");
 
 export default function App() {

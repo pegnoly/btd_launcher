@@ -10,7 +10,6 @@ use std::{process::Command, path::PathBuf, collections::HashMap, env, fs};
 //use database::DbManager;
 use drive::DriveManager;
 use file_management::init_updater;
-use file_management::start_update_threads;
 use patch_management::ActivityInfo;
 use patch_management::PatcherManager;
 use patcher::TemplatesInfoModel;
@@ -50,10 +49,11 @@ async fn main() {
     let path_manager = PathManager::new();
     // google drive manager
     let mut drive_manager = DriveManager::build(path_manager.cfg()).await;
+    // dev
+    //init_updater(&path_manager, &drive_manager).await;
     // downloader
     let downloader = Downloader::new();
     let pool = sqlx::SqlitePool::connect(path_manager.cfg().join("test.db").to_str().unwrap()).await.unwrap();
-    //start_update_threads(&pool, &downloader, &drive_manager, &path_manager).await;
     let mut templates_file = std::fs::File::open(path_manager.cfg().join("patcher/templates.json")).unwrap();
     let mut templates_string = String::new();
     templates_file.read_to_string(&mut templates_string).unwrap();
@@ -73,7 +73,6 @@ async fn main() {
             config_path: config_path
         })
         .invoke_handler(tauri::generate_handler![
-            test,
             check_can_activate_download,
             // file_management::move_files_to_game,
             // file_management::remove_files_from_game,
@@ -89,6 +88,7 @@ async fn main() {
             patch_management::zip_map,
             startup::start_game,
             //update_manager::start_update_process,
+            update_manager::start_updater,
             update_manager::download_update
         ])
         .setup(|app|{
@@ -109,40 +109,29 @@ async fn main() {
         .expect("error while running tauri application");
 }
 
-#[tauri::command]
-async fn test(
-    startup: State<'_, StartupManager>,
-    db: State<'_, DatabaseManager>,
-    drive: State<'_, DriveManager>, 
-    downloader: State<'_, Downloader>, 
-    path_manager: State<'_, PathManager>
-) -> Result<(), ()> {
-    if *startup.app_started.lock().unwrap() == true {
-        println!("Already started");
-        return Ok(())
-    }
-    println!("Let's go!");
-    *startup.app_started.lock().unwrap() = true;
-    start_update_threads(&db.pool, &downloader, &drive, &path_manager).await;
-    Ok(())
-}
 
 #[tauri::command]
 async fn check_can_activate_download(
     app: AppHandle,
     startup: State<'_, StartupManager>,
-    downloader: State<'_, Downloader>
+    drive: State<'_, DriveManager>,
+    db: State<'_, DatabaseManager>,
+    downloader: State<'_, Downloader>,
 ) -> Result<(), ()> {
     if *startup.download_thread_started.lock().unwrap() == true {
         return Ok(())
     }
     *startup.download_thread_started.lock().unwrap() = true;
     let downloader_state = Arc::clone(&downloader.state);
+    let downloadables = Arc::clone(&downloader.downloadables);
+    let hub = Arc::clone(&drive.hub);
+    let pool = db.pool.clone();
     tokio::spawn(async move {
         loop {
             let mut state = downloader_state.lock().await;
             match *state {
                 DownloaderState::ReadyToDownload => {
+                    update_manager::collect_files_for_update(&downloadables, &hub, &pool).await;
                     app.emit_to("main", "download_state_changed", SingleValuePayload{value: false});
                     *state = DownloaderState::Waiting;
                     println!("State changed: {:?}", *state);
