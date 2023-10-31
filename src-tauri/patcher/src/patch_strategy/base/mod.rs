@@ -1,3 +1,5 @@
+use quick_xml::{events::attributes::Attribute, name::QName};
+
 use super::{PatchCreatable, WriteAdditional};
 use std::path::PathBuf;
 pub struct BaseCreator {
@@ -23,9 +25,9 @@ impl PatchCreatable for BaseCreator {
                 writer.write_event(quick_xml::events::Event::End(quick_xml::events::BytesEnd::new("CustomTeams"))).unwrap(); 
             },
             "MapScript" => {
-                let mut elem = quick_xml::events::BytesStart::new("MapScript");
-                elem.push_attribute(("href", "MapScript.xdb#xpointer(/Script)"));
-                writer.write_event(quick_xml::events::Event::Start(elem)).unwrap();
+                writer.create_element("MapScript")
+                    .with_attribute(("href", "MapScript.xdb#xpointer(/Script)"))
+                    .write_empty().unwrap();
             },
             "RMGmap" => {
                 writer.write_event(quick_xml::events::Event::Start(quick_xml::events::BytesStart::new("RMGmap"))).unwrap();

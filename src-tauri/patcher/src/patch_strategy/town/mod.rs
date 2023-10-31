@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use crate::map::{TemplateType, Template};
+use crate::map::template::{TemplateType, Template};
 use homm5_types::town::{TownBuilding, TownBuildingType, TownBuildingLevel, TownType, AdvMapTown};
 use quick_xml::Writer;
 
@@ -51,16 +51,26 @@ fn create_building(_type: TownBuildingType, initial_upgrade: TownBuildingLevel, 
 
 pub struct TownPatcher<'a> {
     town_shareds: HashMap<String, TownType>,
-    template: &'a Template
+    template: &'a Template,
+    // TODO remove this to getter type of patches.
+    pub neutral_town_name: String,
+    capture_victory_enabled: bool,
+    town_specs: HashMap<String, String>
 }
 
 impl<'a> TownPatcher<'a> {
-    pub fn new(town_types_path: PathBuf, template: &'a Template) -> Self {
+    pub fn new(town_types_path: PathBuf, town_specs_path: PathBuf, template: &'a Template, capture_victory: bool) -> Self {
         let towns_se = std::fs::read_to_string(town_types_path).unwrap();
         let towns_de: HashMap<String, TownType> = serde_json::from_str(&towns_se).unwrap();
+        //
+        let specs_se = std::fs::read_to_string(town_specs_path).unwrap();
+        let specs_de: HashMap<String, String> = serde_json::from_str(&specs_se).unwrap();
         TownPatcher { 
             town_shareds: towns_de,
-            template: template
+            template: template,
+            neutral_town_name: String::new(),
+            capture_victory_enabled: capture_victory,
+            town_specs: specs_de
         }
     }
 }
@@ -74,6 +84,21 @@ impl<'a> PatchModifyable for TownPatcher<'a> {
         let town_info: Result<AdvMapTown, quick_xml::DeError> = quick_xml::de::from_str(&actual_string);
         match town_info {
             Ok(mut town) => {
+                // TODO move this to getter patch.
+                if self.capture_victory_enabled == true && town.player_id == "PLAYER_NONE" {
+                    let no_xdb_town_spec = town.specialization.href.as_ref().unwrap()
+                        .replace("#xpointer(/TownSpecialization)", "")
+                        .trim_start_matches("/")
+                        .to_lowercase();
+                    let possible_town_name = self.town_specs.get(&no_xdb_town_spec);
+                    match possible_town_name {
+                        Some(town_name) => {
+                            self.neutral_town_name = town_name.clone();
+                        },
+                        None => {}
+
+                    }
+                }
                 let no_xpointer_shared = town.shared.href.as_ref().unwrap().replace("#xpointer(/AdvMapTownShared)", "");
                 let town_type = self.town_shareds.get(&no_xpointer_shared).unwrap();
                 town.buildings.items = vec![];

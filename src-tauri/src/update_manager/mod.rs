@@ -6,6 +6,7 @@ use tauri::{AppHandle, State, Manager};
 use google_drive3::{DriveHub, oauth2, hyper, hyper_rustls::{HttpsConnector, HttpsConnectorBuilder}, chrono, FieldMask};
 use oauth2::{hyper::client::HttpConnector, service_account_impersonator};
 use crate::drive;
+use crate::file_management::{FileLoadType, FileLoadInfo};
 use crate::startup::DatabaseManager;
 use crate::{file_management::PathManager, drive::DriveManager, startup::StartupManager};
 
@@ -63,7 +64,7 @@ pub async fn start_updater(
     Ok(())
 }
 
-const VERSION_FILE_ID: &'static str = "10xoUedjY58M5qeR72_PNrBuyufje7C5w";
+const VERSION_FILE_ID: &'static str = "1aAsc5Uxlp6AJ5nsQaZvVxHRmI9QtYYdB";
 
 pub async fn start_update_thread(
     pool: &sqlx::Pool<sqlx::Sqlite>, 
@@ -88,7 +89,7 @@ pub async fn start_update_thread(
                         .files()
                         .list()
                         .param("fields", "files(id, name, mimeType, parents, modifiedTime)")
-                        .q("name = 'version.txt'")
+                        .q("('1qe4fPi--iWa_UOgYI9L4G6fyrBA_n2Jd' in parents) and (name = 'version.txt')")
                         .doit().await;
                     match responce {
                         Ok(res) => {
@@ -97,6 +98,7 @@ pub async fn start_update_thread(
                             if file.modified_time.as_ref().unwrap().timestamp() > version.modified {
                                 let mut state =  downloader_state.lock().await;
                                 if *state == DownloaderState::NothingToDownload {
+                                    println!("smth ready to download");
                                     *state = DownloaderState::ReadyToDownload;
                                 }
                             }
@@ -113,17 +115,15 @@ pub async fn start_update_thread(
 pub async fn collect_files_for_update(
     downloader: &Arc<tokio::sync::Mutex<Vec<Downloadable>>>,
     hub: &Arc<tokio::sync::Mutex<DriveHub<HttpsConnector<HttpConnector>>>>,
-    pool: &sqlx::Pool<sqlx::Sqlite>
+    pool: &sqlx::Pool<sqlx::Sqlite>,
+    pm: &HashMap<String, FileLoadInfo>
 ) {
-    for folder in [
-        "1F16RpBLixOow6Wcm3huk3SdaAzy8QzA4", 
-        "14PMMPq6bB0vhKc5keLSFJIiI4830xY0G",
-        "1uQKwpJnQw2uxq9dx3eTa2NXl8mrbkDkg",
-        "1GCF1-yo7xcFxqAYmLzkoMWGVc2GrYpF2",
-        "1UUu65mhj8h9Z9bLG7hOS-JEbKKeAy8qu",
-        "14dumXKCIPUD3qVeG9kFOiCtuFr9mcHQS",
-        "1ow6R6AZCK6Ukwa02MeKUA8J0G99hNYEL"
-    ] {
+    let keys = pm.keys();
+    let mut folders = vec![];
+    keys.for_each(|k| {
+        folders.push(k.clone())
+    });
+    for folder_id in folders {
         let connection = pool.clone();
         let downloadables = Arc::clone(&downloader);
         let hub = Arc::clone(&hub);
@@ -132,13 +132,13 @@ pub async fn collect_files_for_update(
                 .files()
                 .list()
                 .param("fields", "files(id, name, mimeType, parents, modifiedTime)")
-                .q(format!("'{}' in parents", folder).as_str())
+                .q(&format!("'{}' in parents", folder_id))
                 .doit().await;
             match responce {
                 Ok(res) => {
                     let query: Result<Vec<Downloadable>, sqlx::Error> = sqlx::query_as(
                         "SELECT * FROM files WHERE parent = ?")
-                        .bind(folder)
+                        .bind(&folder_id)
                         .fetch_all(&connection).await;
                     match query {
                         Ok(query_result) => {
@@ -158,7 +158,7 @@ pub async fn collect_files_for_update(
                                 downloadables_locked.push(Downloadable { 
                                     drive_id: file.id.as_ref().unwrap().to_owned(), 
                                     name: file.name.as_ref().unwrap().to_owned(), 
-                                    parent: String::from(folder), 
+                                    parent: String::from(&folder_id), 
                                     modified: file.modified_time.as_ref().unwrap().timestamp() 
                                 });
                                 println!("Downloadable added: {:?}", file.name);
@@ -204,8 +204,18 @@ pub async fn download_update(
                     chunk_len = 1;
                 }
                 let mut downloaded = 0f32;
-                let download_dir = path_manager.move_path(&downloadable.parent).unwrap();
-                let mut new_file = std::fs::File::create(download_dir.join(&downloadable.name)).unwrap();
+                let download_info = path_manager.move_path(&downloadable.parent).unwrap();
+                let mut download_dir = PathBuf::new();
+                match download_info._type {
+                    FileLoadType::Data => {
+                        download_dir = path_manager.data().clone();
+                    },
+                    FileLoadType::Config => {
+                        download_dir = path_manager.cfg().clone();
+                    }
+                    _=> {}
+                }
+                let mut new_file = std::fs::File::create(download_dir.join(&download_info.path).join(&downloadable.name)).unwrap();
                 for chunk in x.chunks(chunk_len) {
                     let mut content = std::io::Cursor::new(chunk);
                     std::io::copy(&mut content, &mut new_file); 

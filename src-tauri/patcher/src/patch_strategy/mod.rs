@@ -6,6 +6,7 @@ pub mod player;
 pub mod town;
 pub mod treasure;
 pub mod misc;
+pub mod win_condition;
 
 pub trait PatchModifyable {
     /// Deserializes xml text to homm5 data struct and applies modifications to them.
@@ -18,6 +19,11 @@ pub trait PatchCreatable {
     /// Responsive to create new xml elements.
     /// writer: quick-xml Writer to write xml events into
     fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>, label: &str);
+}
+
+// TODO! impl this to only get information from map. But somehow i want to get rid of duplications(get map structure one time and perfom all possible operations on one instance)
+pub trait PatchGetter {
+    fn try_get(&mut self);
 }
 
 pub trait GenerateLuaCode {

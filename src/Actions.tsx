@@ -88,7 +88,10 @@ export function Actions(mode: Info) {
                     </Button>
                     <Button 
                         className={classes.button}
-                        onClick={(e) => invoke("start_update_process")}>
+                        onClick={(e) => {
+                                invoke("start_game")
+                            }
+                        }>
                         Запустить игру
                     </Button>
                 </Stack>

@@ -1,9 +1,9 @@
 use std::{path::PathBuf, collections::HashMap, fs, io::Write};
 use serde::{Serialize, Deserialize};
-use crate::map::{Template, TemplateType};
+use crate::map::template::{Template, TemplateType};
 
 use super::{GenerateLuaCode, PatchModifyable, PatchCreatable};
-use homm5_types::{building::{AdvMapBuilding, AdvMapShrine, NewBuildingType, BankType, AdvMapHillFort}, common::FileRef};
+use homm5_types::{building::{AdvMapBuilding, AdvMapShrine, AdvMapStatic, NewBuildingType, BankType, AdvMapHillFort}, common::FileRef};
 use quick_xml::{Writer, events::{Event, BytesStart, BytesEnd}};
 
 /// BuildingPatcher is a modifyable patcher that detects objects of AdvMapBuilding type, 
@@ -44,9 +44,22 @@ pub(self) struct PredefinedHillFort {
     pub(self)  fort: AdvMapHillFort 
 } 
 
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename = "Item")]
+pub(self) struct PredefinedStatic {
+    #[serde(rename = "@href")]
+    pub(self)  href: Option<String>,
+    #[serde(rename = "@id")]
+    pub(self)  id: Option<String>,
+    #[serde(rename = "AdvMapStatic")]
+    pub(self)  object: AdvMapStatic 
+} 
+
+
 pub struct BuildingCreatable {
     predefined_shrines: Vec<PredefinedShrine>,
-    predefined_hill_fort: PredefinedHillFort
+    predefined_hill_fort: PredefinedHillFort,
+    predefined_statics: Vec<PredefinedStatic>
 }
 
 impl BuildingCreatable {
@@ -55,9 +68,12 @@ impl BuildingCreatable {
         let shrines_de: Vec<PredefinedShrine> = quick_xml::de::from_str(&shrines_se).unwrap();
         let fort_se = std::fs::read_to_string(&path.join("hill_fort.xml")).unwrap();
         let fort_de: PredefinedHillFort = quick_xml::de::from_str(&fort_se).unwrap();
+        let statics_se = std::fs::read_to_string(&path.join("statics.xml")).unwrap();
+        let statics_de: Vec<PredefinedStatic> = quick_xml::de::from_str(&statics_se).unwrap();
         BuildingCreatable { 
             predefined_shrines: shrines_de,
-            predefined_hill_fort: fort_de
+            predefined_hill_fort: fort_de,
+            predefined_statics: statics_de
         }
     }
 }
@@ -79,6 +95,15 @@ impl PatchCreatable for BuildingCreatable {
         writer.write_event(Event::Start(elem)).unwrap();
         writer.write_serializable("AdvMapHillFort", &self.predefined_hill_fort.fort).unwrap();
         writer.write_event(Event::End(BytesEnd::new("Item"))).unwrap();
+        //
+        for object in &self.predefined_statics {
+            writer.create_element("Item")
+                .with_attributes(vec![("href", object.href.as_ref().unwrap().as_str()), ("id", object.id.as_ref().unwrap().as_str())])
+                .write_inner_content(|w|{
+                    w.write_serializable("AdvMapStatic", &object.object).unwrap();
+                    Ok(())
+                }).unwrap();
+        }
     }
 }
 

@@ -1,0 +1,300 @@
+<Item>
+    <Name/>
+    <CaptionFileRef href="objective-caption-text-0.txt"/>
+    <ObscureCaptionFileRef href=""/>
+    <DescriptionFileRef href="objective-desc-text-0.txt"/>
+    <ProgressCommentsFileRef/>
+    <Kind>OBJECTIVE_KIND_DEFEAT_ALL</Kind>
+    <Parameters/>
+    <Timeout>-1</Timeout>
+    <Holdout>-1</Holdout>
+    <CheckDelay>0</CheckDelay>
+    <Dependencies/>
+    <InstantVictory>true</InstantVictory>
+    <TargetGlance>
+        <Target>
+            <Type>ADV_TARGET_NONE</Type>
+            <Name/>
+            <Coords>
+                <FloorID>0</FloorID>
+                <cell>
+                    <x>0</x>
+                    <y>0</y>
+                </cell>
+            </Coords>
+        </Target>
+        <Radius>0</Radius>
+        <Duration>0</Duration>
+    </TargetGlance>
+    <Award>
+        <Type>AWARD_NONE</Type>
+        <Experience>0</Experience>
+        <Resources>
+            <Wood>0</Wood>
+            <Ore>0</Ore>
+            <Mercury>0</Mercury>
+            <Crystal>0</Crystal>
+            <Sulfur>0</Sulfur>
+            <Gem>0</Gem>
+            <Gold>0</Gold>
+        </Resources>
+        <Attribute>HERO_ATTRIB_DEFENCE</Attribute>
+        <AttributeAmount>0</AttributeAmount>
+        <ArtifactID>ARTIFACT_NONE</ArtifactID>
+        <SpellID>SPELL_NONE</SpellID>
+        <ArmySlot>
+            <Creature>CREATURE_UNKNOWN</Creature>
+            <Count>0</Count>
+        </ArmySlot>
+        <SpellPoints>0</SpellPoints>
+        <Morale>0</Morale>
+        <Luck>0</Luck>
+        <SkillWithMastery>
+            <Mastery>MASTERY_NONE</Mastery>
+            <SkillID>HERO_SKILL_NONE</SkillID>
+        </SkillWithMastery>
+    </Award>
+    <TakeContribution>false</TakeContribution>
+    <CanUncomplete>false</CanUncomplete>
+    <IsInitialyActive>true</IsInitialyActive>
+    <IsInitialyVisible>true</IsInitialyVisible>
+    <IsHidden>false</IsHidden>
+    <Ignore>false</Ignore>
+    <ShowCompleted>true</ShowCompleted>
+    <NeedComplete>true</NeedComplete>
+    <StateChangeTrigger>
+        <Action>
+            <FunctionName/>
+        </Action>
+    </StateChangeTrigger>
+    <SoundActivated/>
+    <SoundComplete/>
+    <SoundFailed/>
+    <AllowMultipleActivations>false</AllowMultipleActivations>
+    <AllowMultipleCompletions>false</AllowMultipleCompletions>
+</Item>
+<Item>
+    <Name>WIN_CONDITION_FINAL_BATTLE</Name>
+    <CaptionFileRef href="final_battle_name.txt" />
+    <ObscureCaptionFileRef href="" />
+    <DescriptionFileRef href="final_battle_desc.txt"/>
+    <ProgressCommentsFileRef />
+    <Kind>OBJECTIVE_KIND_MANUAL</Kind>
+    <Parameters />
+    <Timeout>-1</Timeout>
+    <Holdout>-1</Holdout>
+    <CheckDelay>-1</CheckDelay>
+    <Dependencies />
+    <InstantVictory>false</InstantVictory>
+    <TargetGlance>
+        <Target>
+            <Type>ADV_TARGET_NONE</Type>
+            <Name />
+            <Coords>
+                <FloorID>0</FloorID>
+                <cell>
+                    <x>0</x>
+                    <y>0</y>
+                </cell>
+            </Coords>
+        </Target>
+        <Radius>10</Radius>
+        <Duration>5000</Duration>
+    </TargetGlance>
+    <Award>
+        <Type>AWARD_NONE</Type>
+        <Experience>0</Experience>
+        <Resources>
+            <Wood>0</Wood>
+            <Ore>0</Ore>
+            <Mercury>0</Mercury>
+            <Crystal>0</Crystal>
+            <Sulfur>0</Sulfur>
+            <Gem>0</Gem>
+            <Gold>0</Gold>
+        </Resources>
+        <Attribute>HERO_ATTRIB_DEFENCE</Attribute>
+        <AttributeAmount>0</AttributeAmount>
+        <ArtifactID>ARTIFACT_NONE</ArtifactID>
+        <SpellID>SPELL_NONE</SpellID>
+        <ArmySlot>
+            <Creature>CREATURE_UNKNOWN</Creature>
+            <Count>0</Count>
+        </ArmySlot>
+        <SpellPoints>0</SpellPoints>
+        <Morale>0</Morale>
+        <Luck>0</Luck>
+        <SkillWithMastery>
+            <Mastery>MASTERY_NONE</Mastery>
+            <SkillID>HERO_SKILL_NONE</SkillID>
+        </SkillWithMastery>
+    </Award>
+    <TakeContribution>false</TakeContribution>
+    <CanUncomplete>false</CanUncomplete>
+    <IsInitialyActive>false</IsInitialyActive>
+    <IsInitialyVisible>false</IsInitialyVisible>
+    <IsHidden>false</IsHidden>
+    <Ignore>false</Ignore>
+    <ShowCompleted>false</ShowCompleted>
+    <NeedComplete>false</NeedComplete>
+    <StateChangeTrigger>
+        <Action>
+            <FunctionName />
+        </Action>
+    </StateChangeTrigger>
+    <SoundActivated />
+    <SoundComplete />
+    <SoundFailed />
+    <AllowMultipleActivations>true</AllowMultipleActivations>
+    <AllowMultipleCompletions>true</AllowMultipleCompletions>
+</Item>
+<Item>
+    <Name>WIN_CONDITION_ECONOMIC</Name>
+    <CaptionFileRef href="economic_name.txt" />
+    <ObscureCaptionFileRef href="" />
+    <DescriptionFileRef href="economic_desc.txt"/>
+    <ProgressCommentsFileRef />
+    <Kind>OBJECTIVE_KIND_MANUAL</Kind>
+    <Parameters />
+    <Timeout>-1</Timeout>
+    <Holdout>-1</Holdout>
+    <CheckDelay>-1</CheckDelay>
+    <Dependencies />
+    <InstantVictory>false</InstantVictory>
+    <TargetGlance>
+        <Target>
+            <Type>ADV_TARGET_NONE</Type>
+            <Name />
+            <Coords>
+                <FloorID>0</FloorID>
+                <cell>
+                    <x>0</x>
+                    <y>0</y>
+                </cell>
+            </Coords>
+        </Target>
+        <Radius>10</Radius>
+        <Duration>5000</Duration>
+    </TargetGlance>
+    <Award>
+        <Type>AWARD_NONE</Type>
+        <Experience>0</Experience>
+        <Resources>
+            <Wood>0</Wood>
+            <Ore>0</Ore>
+            <Mercury>0</Mercury>
+            <Crystal>0</Crystal>
+            <Sulfur>0</Sulfur>
+            <Gem>0</Gem>
+            <Gold>0</Gold>
+        </Resources>
+        <Attribute>HERO_ATTRIB_DEFENCE</Attribute>
+        <AttributeAmount>0</AttributeAmount>
+        <ArtifactID>ARTIFACT_NONE</ArtifactID>
+        <SpellID>SPELL_NONE</SpellID>
+        <ArmySlot>
+            <Creature>CREATURE_UNKNOWN</Creature>
+            <Count>0</Count>
+        </ArmySlot>
+        <SpellPoints>0</SpellPoints>
+        <Morale>0</Morale>
+        <Luck>0</Luck>
+        <SkillWithMastery>
+            <Mastery>MASTERY_NONE</Mastery>
+            <SkillID>HERO_SKILL_NONE</SkillID>
+        </SkillWithMastery>
+    </Award>
+    <TakeContribution>false</TakeContribution>
+    <CanUncomplete>false</CanUncomplete>
+    <IsInitialyActive>false</IsInitialyActive>
+    <IsInitialyVisible>false</IsInitialyVisible>
+    <IsHidden>false</IsHidden>
+    <Ignore>false</Ignore>
+    <ShowCompleted>false</ShowCompleted>
+    <NeedComplete>false</NeedComplete>
+    <StateChangeTrigger>
+        <Action>
+            <FunctionName />
+        </Action>
+    </StateChangeTrigger>
+    <SoundActivated />
+    <SoundComplete />
+    <SoundFailed />
+    <AllowMultipleActivations>true</AllowMultipleActivations>
+    <AllowMultipleCompletions>true</AllowMultipleCompletions>
+</Item>
+<Item>
+    <Name>WIN_CONDITION_CAPTURE_OBJECT</Name>
+    <CaptionFileRef href="capture_object_name.txt" />
+    <ObscureCaptionFileRef href="" />
+    <DescriptionFileRef href="capture_object_desc.txt"/>
+    <ProgressCommentsFileRef />
+    <Kind>OBJECTIVE_KIND_MANUAL</Kind>
+    <Parameters />
+    <Timeout>-1</Timeout>
+    <Holdout>-1</Holdout>
+    <CheckDelay>-1</CheckDelay>
+    <Dependencies />
+    <InstantVictory>false</InstantVictory>
+    <TargetGlance>
+        <Target>
+            <Type>ADV_TARGET_NONE</Type>
+            <Name />
+            <Coords>
+                <FloorID>0</FloorID>
+                <cell>
+                    <x>0</x>
+                    <y>0</y>
+                </cell>
+            </Coords>
+        </Target>
+        <Radius>10</Radius>
+        <Duration>5000</Duration>
+    </TargetGlance>
+    <Award>
+        <Type>AWARD_NONE</Type>
+        <Experience>0</Experience>
+        <Resources>
+            <Wood>0</Wood>
+            <Ore>0</Ore>
+            <Mercury>0</Mercury>
+            <Crystal>0</Crystal>
+            <Sulfur>0</Sulfur>
+            <Gem>0</Gem>
+            <Gold>0</Gold>
+        </Resources>
+        <Attribute>HERO_ATTRIB_DEFENCE</Attribute>
+        <AttributeAmount>0</AttributeAmount>
+        <ArtifactID>ARTIFACT_NONE</ArtifactID>
+        <SpellID>SPELL_NONE</SpellID>
+        <ArmySlot>
+            <Creature>CREATURE_UNKNOWN</Creature>
+            <Count>0</Count>
+        </ArmySlot>
+        <SpellPoints>0</SpellPoints>
+        <Morale>0</Morale>
+        <Luck>0</Luck>
+        <SkillWithMastery>
+            <Mastery>MASTERY_NONE</Mastery>
+            <SkillID>HERO_SKILL_NONE</SkillID>
+        </SkillWithMastery>
+    </Award>
+    <TakeContribution>false</TakeContribution>
+    <CanUncomplete>false</CanUncomplete>
+    <IsInitialyActive>false</IsInitialyActive>
+    <IsInitialyVisible>false</IsInitialyVisible>
+    <IsHidden>false</IsHidden>
+    <Ignore>false</Ignore>
+    <ShowCompleted>false</ShowCompleted>
+    <NeedComplete>false</NeedComplete>
+    <StateChangeTrigger>
+        <Action>
+            <FunctionName />
+        </Action>
+    </StateChangeTrigger>
+    <SoundActivated />
+    <SoundComplete />
+    <SoundFailed />
+    <AllowMultipleActivations>true</AllowMultipleActivations>
+    <AllowMultipleCompletions>true</AllowMultipleCompletions>
+</Item>
