@@ -113,7 +113,7 @@ export type SingleValuePayload<T> = {
   value: T
 }
 
-invoke("test");
+invoke("start_updater");
 invoke("check_can_activate_download");
 
 export default function App() {
@@ -132,8 +132,8 @@ export default function App() {
   }
 
   const patcherVisibilityChangedListener = listen("patcher_visibility_changed", (event) => {
-    let visibility = event.payload as PatcherVisibility;
-    setPatcherVisibility(visibility.visible);
+    let visibility = event.payload as SingleValuePayload<boolean>;
+    setPatcherVisibility(visibility.value);
   })
 
   const updaterVisibilityChangedListener = listen("updater_visibility_changed", (event) => {

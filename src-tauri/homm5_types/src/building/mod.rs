@@ -97,3 +97,27 @@ pub struct AdvMapHillFort {
     #[serde(rename = "CreaturesUpgradesFilter")]
     pub creatures_upgrades_filter: CreaturesUpgradesFilter
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct AdvMapStatic {
+    #[serde(rename = "Pos")]
+    pub pos: Option<Pos>,
+    #[serde(rename = "Rot")]
+    pub rot: f32,
+    #[serde(rename = "Floor")]
+    pub floor: u16,
+    #[serde(rename = "Name")]
+    pub name: String,
+    #[serde(rename = "CombatScript")]
+    pub combat_script: String,
+    #[serde(rename = "pointLights")]
+    pub point_lights: String,
+    #[serde(rename = "Shared")]
+    pub shared: FileRef,
+    #[serde(rename = "IsRemovable")]
+    pub is_removable: bool,
+    #[serde(rename = "TerrainAligned")]
+    pub terrain_aligned: bool,
+    #[serde(rename = "ScalePercent")]
+    pub scale_percent: u16
+}

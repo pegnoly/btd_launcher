@@ -18,6 +18,9 @@ import checkBoxChecked from "./assets/check_box_checked.png"
 import { PatcherVisibility } from "../App";
 import { createContext } from "react";
 
+import PatcherSettings from "./settings/main";
+import { type } from "os";
+
 const patcherStyles = createStyles((theme) => ({
   back: {
       width: 500,
@@ -104,7 +107,8 @@ enum TemplateType {
 
 interface Template {
   name: string,
-  desc: string
+  desc: string,
+  settings_desc: string
 }
 
 interface MapInfo {
@@ -124,7 +128,11 @@ type PlayersInfo = {
   count: number
 }
 
-const playersInfoContext = createContext<[{}]>([{}]);
+export type TemplateInfo = {
+  template: string
+}
+
+export const templateContext = createContext<string>("")
 
 export default function Patcher(isVisible: PatcherVisibility) {
 
@@ -135,14 +143,11 @@ export default function Patcher(isVisible: PatcherVisibility) {
   const [currentTemplate, setTemplate] = useState<string>("");
   const [currentPlayersCount, setPlayersCount] = useState<number>(0);
   const [templateDesc, setTemplateDesc] = useState<string>("");
+  const [templateSettingsDesc, setTemplateSettingsDesc] = useState<string>("");
 
   // team selector props
   const [playersInfo, setPlayersInfo] = useState<string []>([]);
   const [teamsVariants, setTeamsVariants] = useState<string []>([]);
-
-  // map settings check boxes
-  const [nightLightsChecked, setNightLightsChecked] = useState<boolean>(false);
-  const [weeksOnlyChecked, setWeeksOnlyChecked] = useState<boolean>(false);
 
   let mapPickedListener = listen("map_picked", (event) => {
     let name = (event.payload as MapName).name;
@@ -156,6 +161,7 @@ export default function Patcher(isVisible: PatcherVisibility) {
     setTemplate(map.template.name);
     setPlayersCount(map.players_count);
     setTemplateDesc(map.template.desc);
+    setTemplateSettingsDesc(map.template.settings_desc);
     let playersData: string [] = [];
     let teamsData: string [] = [];
     for(let i = 1; i <= map.players_count; i++) {
@@ -191,18 +197,19 @@ export default function Patcher(isVisible: PatcherVisibility) {
               left: 175,
             }} 
             onClick={MapPickButtonClick}>Выберите карту</Button>
-          <div style={{position: "relative", top: 175, left: 95, width: 300}}>
+          <div style={{position: "relative", top: 175, left: 50, width: 400}}>
             <Text style={{fontFamily: 'Balsamiq Sans, cursive'}} align="center">Шаблон</Text>
             <Text style={{fontFamily: 'Balsamiq Sans, cursive'}} align="center" color="green">{currentTemplate}</Text>
             <Text style={{fontFamily: 'Balsamiq Sans, cursive'}} size={12} align="center" color="yellow">{templateDesc}</Text>
+            <Text style={{fontFamily: 'Balsamiq Sans, cursive', position: "relative", top: 10}} size={12} align="center" color="yellow">{templateSettingsDesc}</Text>
             <Button 
               name="patcherStartup"
               disabled={!mapPicked}
               className={classes.button}
               style={{
                 position: "absolute",
-                top: 140,
-                left: 80
+                top: 165,
+                left: 125
               }}
               onClick={patchButtonClick}>Обработать
             </Button>
@@ -236,20 +243,9 @@ export default function Patcher(isVisible: PatcherVisibility) {
                         top: -30,
                         zIndex: 99
                       }}>
-                        <div style={{position: "relative", left: 35, top: 40}}>
-                          <Checkbox size="xs" labelPosition="left" label="Использовать ночное освещение карты"
-                            checked={nightLightsChecked}
-                            onChange={(event) => {
-                              setNightLightsChecked(event.currentTarget.checked);
-                              invoke("set_night_lights_setting", {useNightLights: event.currentTarget.checked});
-                            }}/>
-                          <Checkbox size="xs" labelPosition="left" label="Отключить эффекты недель"
-                            checked={weeksOnlyChecked}
-                            onChange={(event) => {
-                              setWeeksOnlyChecked(event.currentTarget.checked);
-                              invoke("set_weeks_only_setting", {weeksOnly: event.currentTarget.checked});
-                            }}/>
-                        </div>
+                        <templateContext.Provider value={currentTemplate}>
+                          <PatcherSettings/>
+                        </templateContext.Provider>
                     </div>
                   </Collapse>
                 </div>

@@ -20,9 +20,9 @@ impl QuestPatcher {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub(self) struct PlayerSpecific {
+pub struct PlayerSpecific {
     #[serde(rename = "Item")]
-    pub(self) objectives: Vec<homm5_types::quest::QuestsList>
+    pub objectives: Vec<homm5_types::quest::QuestsList>
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -53,6 +53,6 @@ impl PatchModifyable for QuestPatcher {
             ]
         };
         writer.write_serializable("PlayerSpecific", &player_specific).unwrap();
-        writer.write_event(Event::End(BytesEnd::new("Secondary"))).unwrap();
+        writer.write_event(Event::End(BytesEnd::new("Primary"))).unwrap();
     }
 }

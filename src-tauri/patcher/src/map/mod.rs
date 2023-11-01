@@ -5,34 +5,13 @@
 //! - Teams information that used to confugure teams count and assign players to them.
 //! - Additional settings that applies some minor changes to gameplay or visual of map.
 
+pub mod template;
+
 use std::{path::PathBuf, collections::HashMap, io::{Read, BufReader}};
 use quick_xml::{Reader, events::Event};
 use serde::{Serialize, Deserialize};
-use strum_macros::EnumString;
-
-use crate::{TemplatesInfoModel, TemplateTransferable};
-
-/// Types of currently presented templates.
-#[derive(EnumString, PartialEq, Eq, Hash, Clone, Copy, Debug, Serialize, Deserialize)]
-pub enum TemplateType {
-    Common,
-    Outcast,
-    Blitz
-}
-
-/// Template is actually is a type and a string that used to recognize this type in map file.
-#[derive(Debug, Deserialize, Serialize, Clone)]
-pub struct Template {
-    #[serde(rename = "type")]
-    pub _type: TemplateType,
-    pub name: String
-}
-
-impl Default for Template {
-    fn default() -> Self {
-        Template { _type: TemplateType::Common, name: String::new() }
-    }
-}
+use self::template::{Template, TemplateTransferable, TemplatesInfoModel};
+use crate::patch_strategy::win_condition::MapWinCondition;
 
 /// Currently presented map settings(mb also better to turn this into enum?)
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
@@ -74,7 +53,8 @@ pub struct Map {
     pub template: Template,
     pub teams_info: Vec<usize>,
     pub settings: MapSettings,
-    write_dirs: HashMap<String, String> // possible directories to write specific files into
+    write_dirs: HashMap<String, String>, // possible directories to write specific files into,
+    pub conds: HashMap<String, MapWinCondition>
 }
 
 impl Map {
@@ -89,7 +69,10 @@ impl Map {
             template: Template::default(),
             teams_info: vec![0, 0, 0, 0, 0, 0, 0, 0, 0],
             settings: MapSettings::default(),
-            write_dirs: HashMap::new()
+            write_dirs: HashMap::new(),
+            conds: HashMap::from([
+                ("default".to_string(), MapWinCondition::Default),
+            ])
         }
     }
 
@@ -181,15 +164,35 @@ impl Map {
         match s {
             Some(template) => {
                 self.template = template.clone();
+                let mut settings_desc = String::new();
+                if template.settings.is_some() {
+                    for setting in template.settings.as_ref().unwrap() {
+                        settings_desc += &possible_templates.settings_descs.get(setting).unwrap().to_string();
+                    }
+                }
                 Some(TemplateTransferable { 
                     name: template.name.clone(), 
-                    desc: possible_templates.descs.get(&template._type).unwrap().to_owned() 
+                    desc: possible_templates.descs.get(&template._type).unwrap().to_owned(),
+                    settings_desc
                 })
             }
             None => {
                 None
             }
         }
+    }
+
+    pub fn set_win_condition(&mut self, label: &str, cond: MapWinCondition) {
+        self.conds.insert(label.to_string(), cond);
+    }
+
+    pub fn remove_win_condition(&mut self, label: &str) {
+        self.conds.remove(label);
+        println!("Conditions after remove: {:?}", &self.conds);
+    }
+
+    pub fn has_win_condition(&self, label: &str) -> bool {
+        self.conds.get(label).is_some()
     }
 
 }

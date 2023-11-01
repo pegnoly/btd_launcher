@@ -2,7 +2,7 @@ extern crate google_drive3 as drive3;
 use std::{default::Default, path::PathBuf, sync::{Arc, Mutex}};
 use chrono::{DateTime, Utc};
 use drive3::{DriveHub, oauth2, hyper, hyper_rustls::{HttpsConnector, HttpsConnectorBuilder}, chrono, FieldMask};
-use oauth2::{hyper::client::HttpConnector, service_account_impersonator};
+use oauth2::{hyper::client::HttpConnector, service_account_impersonator, ServiceAccountKey};
 use tauri::{State, Manager};
 use yup_oauth2::ServiceAccountAuthenticator;
 use reqwest::Client;
@@ -17,27 +17,59 @@ pub struct DriveManager {
 }
 
 impl DriveManager {
-    pub async fn build(config_path: &PathBuf) -> Self {
-        let s = yup_oauth2::read_application_secret(
-            config_path.
-            join("auth\\client_secret_59722361664-ptmtbg21sef4fvpffk7djnt5ogd4rf2s.apps.googleusercontent.com.json")).
-            await.unwrap(); 
-        let auth = yup_oauth2::InstalledFlowAuthenticator::builder(
-            s, 
-            yup_oauth2::InstalledFlowReturnMethod::HTTPRedirect
-        )
-            .persist_tokens_to_disk(config_path.join("auth\\tokencashe.json"))
-            .build()
-            .await.unwrap();
-        let hub = DriveHub::new(
-            hyper::Client::builder().build(
-                HttpsConnectorBuilder::new().with_native_roots().https_or_http().enable_http1().build()
-            ),
-            auth
-        );
-        DriveManager {
-            hub: Arc::new(tokio::sync::Mutex::new(hub))
+    pub async fn build(config_path: &PathBuf) -> Option<Self> {
+        let s1 = yup_oauth2::read_service_account_key(config_path.join("auth\\btd-main-25fe7725174f.json"))
+            .await;
+        match s1 {
+            Ok(key) => {
+                let auth_result = yup_oauth2::ServiceAccountAuthenticator::builder(
+                    key
+                ).build().await;
+                match auth_result {
+                    Ok(auth) => {
+                        let hub = DriveHub::new(
+                            hyper::Client::builder().build(
+                                HttpsConnectorBuilder::new().with_native_roots().https_or_http().enable_http1().build()
+                            ),
+                            auth
+                        );
+                        println!("auth ok");
+                        Some(DriveManager {
+                            hub: Arc::new(tokio::sync::Mutex::new(hub))
+                        })
+                    },
+                    Err(ee) => {
+                        println!("Error with service account auth, {}", ee.to_string());
+                        None
+                    }
+                }
+            },
+            Err(e) => {
+                println!("Error with service account key, {}", e.to_string());
+                None
+            }
         }
+
+        // let s = yup_oauth2::read_application_secret(
+        //     config_path.
+        //     join("auth\\client_secret_59722361664-ptmtbg21sef4fvpffk7djnt5ogd4rf2s.apps.googleusercontent.com.json")).
+        //     await.unwrap(); 
+        // let auth = yup_oauth2::InstalledFlowAuthenticator::builder(
+        //     s, 
+        //     yup_oauth2::InstalledFlowReturnMethod::HTTPRedirect
+        // )
+        //     .persist_tokens_to_disk(config_path.join("auth\\tokencashe.json"))
+        //     .build()
+        //     .await.unwrap();
+        // let hub = DriveHub::new(
+        //     hyper::Client::builder().build(
+        //         HttpsConnectorBuilder::new().with_native_roots().https_or_http().enable_http1().build()
+        //     ),
+        //     auth
+        // );
+        // DriveManager {
+        //     hub: Arc::new(tokio::sync::Mutex::new(hub))
+        // }
     }
 
     pub async fn test(&mut self) {

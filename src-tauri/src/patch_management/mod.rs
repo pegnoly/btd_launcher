@@ -1,12 +1,13 @@
 use tauri::{Manager, State, AppHandle, api::dialog::FileDialogBuilder, App};
-use patcher::{Patcher, TemplateTransferable, TemplatesInfoModel,
-    map::{Unpacker, Map, Template}, 
+use patcher::{Patcher,
+    map::{Unpacker, Map, template::{Template, TemplateTransferable, TemplatesInfoModel}}, 
     patch_strategy::{
         base::BaseCreator, 
         building::{BuildingModifyable, BuildingCreatable}, 
         treasure::TreasurePatcher, 
         player::{PlayersPatcher, TeamsGenerator}, light::LightPatcher, quest::QuestPatcher,
-        town::TownPatcher, misc::{MoonCalendarWriter, OutcastFilesWriter, MapNameChanger}
+        town::TownPatcher, misc::{MoonCalendarWriter, OutcastFilesWriter, MapNameChanger, UndergroundTerrainCreator},
+        win_condition::{MapWinCondition, FinalBattleTime, WinConditionWriter, WinConditionFinalBattleFileProcessor, ResourceWinInfo, EconomicWinConditionTextProcessor, CaptureObjectWinConditionTextProcessor}
     }, CodeGenerator, FileWriter, TextProcessor
 };
 use serde::{Serialize, Deserialize};
@@ -16,7 +17,7 @@ use std::{path::PathBuf, collections::HashMap, f64::consts::E, io::Read, cell::{
 use std::ops::Range;
 use std::io::Write;
 
-use crate::file_management::PathManager;
+use crate::{file_management::PathManager, update_manager::SingleValuePayload};
 
 // frontend communication structs.
 #[derive(Serialize, Clone)]
@@ -52,8 +53,17 @@ pub async fn show_patcher(app: AppHandle, patcher_manager: State<'_, PatcherMana
     let mut activity = patcher_manager.activity.lock().await;
     if activity.active == false {
         activity.active = true;
-        app.app_handle().emit_to("main", "patcher_visibility_changed", PatcherVisibility {visible: false}).unwrap();
+        app.app_handle().emit_to("main", "patcher_visibility_changed", SingleValuePayload {
+            value: false
+        }).unwrap();
     }
+    else {
+        activity.active = false;
+        app.app_handle().emit_to("main", "patcher_visibility_changed", SingleValuePayload {
+            value: true
+        }).unwrap();
+    }
+
     Ok(())
 }
 
@@ -130,6 +140,58 @@ pub async fn set_weeks_only_setting(
     Ok(())
 }
 
+
+#[tauri::command]
+pub async fn update_final_battle_setting(
+    patcher_manager: State<'_, PatcherManager>,
+    is_enabled: bool,
+    final_battle_time: Option<FinalBattleTime>
+) -> Result<(), ()> {
+    let mut map_holder = patcher_manager.map.lock().await;
+    if is_enabled == true {
+        map_holder.as_mut().unwrap().set_win_condition("final", MapWinCondition::Final(final_battle_time.unwrap()));
+        println!("New final battle timing is {:?}", &map_holder.as_ref().unwrap().conds.get("final"));
+    }
+    else {
+        map_holder.as_mut().unwrap().remove_win_condition("final");
+    }
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn update_economic_victory_setting(
+    patcher_manager: State<'_, PatcherManager>,
+    is_enabled: bool,
+    resource_info: Option<ResourceWinInfo>
+) -> Result<(), ()> {
+    let mut map_holder = patcher_manager.map.lock().await;
+    if is_enabled == true {
+        map_holder.as_mut().unwrap().set_win_condition("economic", MapWinCondition::Economic(resource_info.unwrap()));
+        println!("New economic win info is {:?}", &map_holder.as_ref().unwrap().conds.get("economic"));
+    }
+    else {
+        map_holder.as_mut().unwrap().remove_win_condition("economic");
+    }
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn update_capture_object_setting(
+    patcher_manager: State<'_, PatcherManager>,
+    is_enabled: bool,
+    delay: Option<u8>
+) -> Result<(), ()> {
+    let mut map_holder = patcher_manager.map.lock().await;
+    if is_enabled == true {
+        map_holder.as_mut().unwrap().set_win_condition("capture", MapWinCondition::Capture(delay.unwrap()));
+        println!("New capture info is {:?}", &map_holder.as_ref().unwrap().conds.get("capture"));
+    }
+    else {
+        map_holder.as_mut().unwrap().remove_win_condition("capture");
+    }
+    Ok(())
+}
+
 #[derive(serde::Deserialize)]
 pub struct MapPackable {
     pub name: String,
@@ -158,8 +220,21 @@ pub async fn patch_map(
     let mut treasure_patcher = TreasurePatcher::new();
     let mut town_patcher = TownPatcher::new(
         patcher_manager.config_path.join("patcher\\town_types.json"), 
-        map_holder.as_ref().unwrap().template()
+        patcher_manager.config_path.join("patcher\\town_specs.json"),
+        map_holder.as_ref().unwrap().template(),
+        map_holder.as_ref().unwrap().has_win_condition("capture")
     );
+    let underground_terrain_creator = UndergroundTerrainCreator{
+        is_active: true,
+        terrain_path: patcher_manager.config_path.join("patcher\\adds\\terrains\\"),
+        write_dir: map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
+    };
+    let mut win_condition_writer = WinConditionWriter {
+        conditions: &map_holder.as_ref().unwrap().conds,
+        quest_path: &patcher_manager.config_path.join("patcher\\win_condition_quests.xml"),
+        write_dir: &map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
+        quest_info_path: &patcher_manager.config_path.join("patcher\\adds\\win_conditions\\"),
+    };
     let p = Patcher::new()
         .with_root(map_holder.as_ref().unwrap().map_xdb()).unwrap()
         .with_creatable("AmbientLight", &light_patcher, false)
@@ -168,15 +243,19 @@ pub async fn patch_map(
         .with_creatable("CustomTeams", &base_creator, true)
         .with_creatable("RMGmap", &base_creator, true)
         .with_creatable("objects", &BuildingCreatable::new(patcher_manager.config_path.join("patcher\\")), false)
+        .with_creatable("HasUnderground", &underground_terrain_creator, true)
+        .with_creatable("UndergroundTerrainFileName", &underground_terrain_creator, true)
         .with_modifyable("AdvMapTreasure", &mut treasure_patcher)
         .with_modifyable("AdvMapBuilding", &mut building_modifyable)
         .with_modifyable("AdvMapTown", &mut town_patcher)
         .with_modifyable("players", &mut players_patcher)
         .with_modifyable("Secondary", &mut QuestPatcher::new(patcher_manager.config_path.join("patcher\\test_quest.xml")))
+        .with_modifyable("Primary", &mut win_condition_writer)
         .run();
     let g = CodeGenerator::new()
         .with(&building_modifyable)
         .with(&treasure_patcher)
+        .with(&win_condition_writer)
         .run(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().to_path_buf());
     let f = FileWriter::new()
         .with(&MoonCalendarWriter::new(
@@ -190,9 +269,13 @@ pub async fn patch_map(
             &patcher_manager.config_path.join("patcher\\adds\\Summon_Creatures.xdb")
         ))
         .with(&base_creator)
+        .with(&underground_terrain_creator)
+        .with(&win_condition_writer)
         .run();
+    // map-tag patch
     let pp = Patcher::new()
         .with_root(map_holder.as_ref().unwrap().map_tag()).unwrap()
+        .with_creatable("HasUnderground", &underground_terrain_creator, true)
         .with_modifyable("teams", &mut TeamsGenerator::new(teams.clone()))
         .run();
     let t = TextProcessor::new(map_holder.as_ref().unwrap().map_name())
@@ -202,6 +285,23 @@ pub async fn patch_map(
         name: map_holder.as_ref().unwrap().name.clone(),
         dir: map_holder.as_ref().unwrap().dir.clone()
     };
+    // win condition quests processing
+    let fbtp = TextProcessor::new(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().join("final_battle_desc.txt"))
+        .with(&WinConditionFinalBattleFileProcessor {
+            final_battle_time: map_holder.as_ref().unwrap().conds.get("final")
+        })
+        .run();
+    let etp = TextProcessor::new(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().join("economic_desc.txt"))
+        .with(&EconomicWinConditionTextProcessor {
+            resource_info: map_holder.as_ref().unwrap().conds.get("economic")
+        })
+        .run();
+    let cotp = TextProcessor::new(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().join("capture_object_desc.txt"))
+        .with(&CaptureObjectWinConditionTextProcessor {
+            delay_info: map_holder.as_ref().unwrap().conds.get("capture"),
+            town_name: &town_patcher.neutral_town_name,
+        })
+        .run();
     zip_map(m);
     Ok(())
 }

@@ -2,7 +2,7 @@ pub mod patch_strategy;
 mod macros;
 pub mod map;
 
-use map::{Template, TemplateType};
+use map::template::{Template, TemplateType, TemplateAdditionalSetting};
 use patch_strategy::{GenerateLuaCode, PatchModifyable, PatchCreatable, WriteAdditional, ProcessText};
 
 use std::collections::HashMap;
@@ -17,18 +17,6 @@ use quick_xml::reader::Reader;
 
 use pyo3::prelude::*;
 use pyo3::types::{PyAny, PyModule, IntoPyDict};
-
-#[derive(serde::Serialize, Clone)]
-pub struct TemplateTransferable {
-    pub name: String,
-    pub desc: String
-}
-
-#[derive(serde::Deserialize, serde::Serialize, Debug)]
-pub struct TemplatesInfoModel {
-    pub templates: Vec<Template>,
-    pub descs: HashMap<TemplateType, String>
-}
 
 pub struct Patcher<'a> {
     path: Option<&'a PathBuf>,

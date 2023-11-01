@@ -1,7 +1,6 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(dead_code, unused_imports, unused_variables, unused)]
-
 use std::io;
 use std::io::Write;
 use std::io::Read;
@@ -10,10 +9,9 @@ use std::{process::Command, path::PathBuf, collections::HashMap, env, fs};
 //use database::DbManager;
 use drive::DriveManager;
 use file_management::init_updater;
-use file_management::start_update_threads;
 use patch_management::ActivityInfo;
 use patch_management::PatcherManager;
-use patcher::TemplatesInfoModel;
+use patcher::map::template::TemplatesInfoModel;
 use reqwest::Error;
 use sqlx::Sqlite;
 use startup::DatabaseManager;
@@ -50,10 +48,10 @@ async fn main() {
     let path_manager = PathManager::new();
     // google drive manager
     let mut drive_manager = DriveManager::build(path_manager.cfg()).await;
+    //init_updater(&path_manager, &drive_manager.as_ref().unwrap()).await;
     // downloader
     let downloader = Downloader::new();
-    let pool = sqlx::SqlitePool::connect(path_manager.cfg().join("test.db").to_str().unwrap()).await.unwrap();
-    //start_update_threads(&pool, &downloader, &drive_manager, &path_manager).await;
+    let pool = sqlx::SqlitePool::connect(path_manager.cfg().join("update\\local.db").to_str().unwrap()).await.unwrap();
     let mut templates_file = std::fs::File::open(path_manager.cfg().join("patcher/templates.json")).unwrap();
     let mut templates_string = String::new();
     templates_file.read_to_string(&mut templates_string).unwrap();
@@ -61,7 +59,7 @@ async fn main() {
     let config_path = path_manager.cfg().to_owned();
     tauri::Builder::default()
         .manage(path_manager)
-        .manage(drive_manager)
+        .manage(drive_manager.unwrap())
         .manage(downloader)
         .manage(DatabaseManager{pool: pool})
         .manage(StartupManager { app_started: std::sync::Mutex::new(false), download_thread_started: std::sync::Mutex::new(false) })
@@ -73,7 +71,6 @@ async fn main() {
             config_path: config_path
         })
         .invoke_handler(tauri::generate_handler![
-            test,
             check_can_activate_download,
             // file_management::move_files_to_game,
             // file_management::remove_files_from_game,
@@ -85,10 +82,14 @@ async fn main() {
             patch_management::update_player_team_info,
             patch_management::set_night_lights_setting,
             patch_management::set_weeks_only_setting,
+            patch_management::update_final_battle_setting,
+            patch_management::update_economic_victory_setting,
+            patch_management::update_capture_object_setting,
             patch_management::patch_map,
             patch_management::zip_map,
             startup::start_game,
             //update_manager::start_update_process,
+            update_manager::start_updater,
             update_manager::download_update
         ])
         .setup(|app|{
@@ -109,40 +110,35 @@ async fn main() {
         .expect("error while running tauri application");
 }
 
-#[tauri::command]
-async fn test(
-    startup: State<'_, StartupManager>,
-    db: State<'_, DatabaseManager>,
-    drive: State<'_, DriveManager>, 
-    downloader: State<'_, Downloader>, 
-    path_manager: State<'_, PathManager>
-) -> Result<(), ()> {
-    if *startup.app_started.lock().unwrap() == true {
-        println!("Already started");
-        return Ok(())
-    }
-    println!("Let's go!");
-    *startup.app_started.lock().unwrap() = true;
-    start_update_threads(&db.pool, &downloader, &drive, &path_manager).await;
-    Ok(())
-}
 
 #[tauri::command]
 async fn check_can_activate_download(
     app: AppHandle,
     startup: State<'_, StartupManager>,
-    downloader: State<'_, Downloader>
+    drive: State<'_, DriveManager>,
+    db: State<'_, DatabaseManager>,
+    downloader: State<'_, Downloader>,
+    path_manager: State<'_, PathManager>
 ) -> Result<(), ()> {
     if *startup.download_thread_started.lock().unwrap() == true {
         return Ok(())
     }
     *startup.download_thread_started.lock().unwrap() = true;
     let downloader_state = Arc::clone(&downloader.state);
+    let downloadables = Arc::clone(&downloader.downloadables);
+    let hub = Arc::clone(&drive.hub);
+    let files_map = Arc::clone(&path_manager.move_info());
+    let pool = db.pool.clone();
     tokio::spawn(async move {
         loop {
             let mut state = downloader_state.lock().await;
             match *state {
                 DownloaderState::ReadyToDownload => {
+                    update_manager::collect_files_for_update(
+                        &downloadables, 
+                        &hub, 
+                        &pool,
+                        &*files_map.lock().await).await;
                     app.emit_to("main", "download_state_changed", SingleValuePayload{value: false});
                     *state = DownloaderState::Waiting;
                     println!("State changed: {:?}", *state);
