@@ -5,7 +5,7 @@ use sqlx::{Connection, SqliteConnection, pool::PoolConnection, Sqlite};
 use tauri::State;
 use serde::{Serialize, Deserialize};
 
-use crate::{drive::DriveManager, update_manager::{Downloader, Downloadable, DownloaderState}};
+use crate::{drive::DriveManager, update_manager::{Downloader, Downloadable, DownloaderState}, game_mode::GameMode};
 
 // Contains all useful paths of the application
 #[derive(Default, Debug)]
@@ -24,7 +24,7 @@ pub struct PathManager {
     cfg: PathBuf,
 
     // mapping of google drive folder ids and launcher paths to download files to
-    file_movement_info: std::sync::Arc<tokio::sync::Mutex<HashMap<String, FileLoadInfo>>>,
+    pub file_movement_info: std::sync::Arc<tokio::sync::Mutex<HashMap<String, FileLoadInfo>>>,
     file_movement_info_synced: HashMap<String, FileLoadInfo>
 }
 
@@ -59,19 +59,53 @@ impl PathManager {
     pub fn move_path<'a>(&'a self, folder_id: &'a String) -> Option<&FileLoadInfo> {
         self.file_movement_info_synced.get(folder_id)
     }
+
+    pub fn folders(&self) -> Vec<String> {
+        let t = self.file_movement_info_synced.clone().into_keys();
+        Vec::from_iter(t)
+    }
 }
 
+// Where to load files
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum FileLoadType {
-    Data,
-    Config
+    // into game folders
+    Game,
+    // into launcher folders(into configs now but mb i'll make some separations here)
+    Launcher
 }
 
+// Where to move files when game mode is changed
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum FileMoveType {
+    // to data game folder
+    #[serde(rename = "MOVE_TYPE_DATA")]
+    Data,
+    // to Maps game folder
+    #[serde(rename = "MOVE_TYPE_MAPS")]
+    Maps,
+}
+
+// stores information about possible file to game movement
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct MovableFile {
+    // type of movement destination
+    #[serde(rename = "type")]
+    pub _type: FileMoveType,
+    // game mode file belongs to
+    pub mode: GameMode
+}
+
+// stores information required by updater to download file correctly
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct FileLoadInfo {
-    #[serde(rename = "type")]
-    pub _type: FileLoadType,
-    pub path: String
+    // gives information about root of download path
+    pub load: FileLoadType,
+    // gives concrete folder to download
+    pub path: String,
+    // if file is part of game mode, this can be used to move it to game folder also
+    #[serde(rename = "movable")]
+    pub move_info: Option<MovableFile>
 }
 
 impl PathManager {
@@ -86,6 +120,7 @@ impl PathManager {
 
         let drive_folders_string = std::fs::read_to_string(cfg_path.join("update\\drive_folders.json")).unwrap();
         let files_map: HashMap<String, FileLoadInfo> = serde_json::from_str(&drive_folders_string).unwrap();
+        println!("files map: {:?}", &files_map);
 
         PathManager { 
             main: main_path, 
@@ -147,23 +182,3 @@ pub async fn init_updater(path_manager: &PathManager, drive_manager: &DriveManag
         Err(connection_error) => {}
     }
 }
-
-// #[tauri::command]
-// pub async fn move_files_to_game(file_manager: State<'_, FileManager>, file_type: FileType) -> Result<(), ()> {
-//     let mut manager_locked = file_manager.files_info;
-//     let new_mode_info = manager_locked.iter_mut().find(
-//         |m| m.file_type == file_type
-//     ).unwrap();
-//     new_mode_info.set_active();
-//     Ok(())
-// }
-
-// #[tauri::command]
-// pub async fn remove_files_from_game(file_manager: State<'_, FileManager>, file_type: FileType) -> Result<(), ()> {
-//     let mut manager_locked = file_manager.files_info.lock().await;
-//     let curr_mode_info = manager_locked.iter_mut().find(
-//         |m| m.file_type == file_type
-//     ).unwrap();
-//     curr_mode_info.set_inactive();
-//     Ok(())
-// }

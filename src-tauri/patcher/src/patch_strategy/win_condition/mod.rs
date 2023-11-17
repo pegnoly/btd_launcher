@@ -1,7 +1,7 @@
 use quick_xml::events::{Event, BytesStart, BytesEnd, BytesText};
 use strum_macros::EnumString;
 use std::{io::Write, collections::HashMap, path::PathBuf};
-use crate::{GenerateLuaCode, WriteAdditional, ProcessText, PatchModifyable, FileWriter};
+use crate::{GenerateLuaCode, WriteAdditional, ProcessText, PatchModifyable};
 use super::quest::PlayerSpecific;
 use homm5_types::quest::Quest;
 use serde::{Deserialize, Serialize};
@@ -36,7 +36,6 @@ impl<'a> GenerateLuaCode for WinConditionWriter<'a> {
                 MapWinCondition::Capture(d) => {
                     text += &format!("[\"capture\"] = {{delay = {}}},\n", d);
                 }
-                _=> {}
             }
         }
         text.push_str("}");
@@ -46,7 +45,7 @@ impl<'a> GenerateLuaCode for WinConditionWriter<'a> {
 }
 
 impl<'a> PatchModifyable for WinConditionWriter<'a> {
-    fn try_modify(&mut self, text: &String, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
+    fn try_modify(&mut self, _text: &String, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
         let quest_se = std::fs::read_to_string(&self.quest_path).unwrap();
         let quest_de: Vec<Quest> = quick_xml::de::from_str(&quest_se).unwrap();
         writer.write_event(Event::Start(BytesStart::new("Primary"))).unwrap();

@@ -1,3 +1,4 @@
+use std::collections::hash_map::Keys;
 use std::path;
 use std::{collections::HashMap, path::PathBuf};
 
@@ -5,10 +6,12 @@ use std::sync::{Mutex, Arc};
 use tauri::{AppHandle, State, Manager};
 use google_drive3::{DriveHub, oauth2, hyper, hyper_rustls::{HttpsConnector, HttpsConnectorBuilder}, chrono, FieldMask};
 use oauth2::{hyper::client::HttpConnector, service_account_impersonator};
+use tokio::io::AsyncWriteExt;
 use crate::drive;
-use crate::file_management::{FileLoadType, FileLoadInfo};
+use crate::file_management::{FileLoadInfo, FileMoveType, FileLoadType};
 use crate::startup::DatabaseManager;
-use crate::{file_management::PathManager, drive::DriveManager, startup::StartupManager};
+use crate::{file_management::PathManager, drive::DriveManager, startup::StartupManager, game_mode::{GameModeManager, GameMode}};
+use futures_util::StreamExt;
 
 #[derive(Debug, sqlx::FromRow)]
 pub struct Downloadable {
@@ -46,35 +49,21 @@ pub struct SingleValuePayload<T>
     pub value: T
 }
 
-#[tauri::command]
-pub async fn start_updater(
-    startup: State<'_, StartupManager>,
-    db: State<'_, DatabaseManager>,
-    drive: State<'_, DriveManager>, 
-    downloader: State<'_, Downloader>, 
-    path_manager: State<'_, PathManager>
-) -> Result<(), ()> {
-    if *startup.app_started.lock().unwrap() == true {
-        println!("Already started");
-        return Ok(())
-    }
-    println!("Let's go!");
-    *startup.app_started.lock().unwrap() = true;
-    start_update_thread(&db.pool, &downloader, &drive, &path_manager).await;
-    Ok(())
-}
-
 const VERSION_FILE_ID: &'static str = "1aAsc5Uxlp6AJ5nsQaZvVxHRmI9QtYYdB";
 
+#[tauri::command]
 pub async fn start_update_thread(
-    pool: &sqlx::Pool<sqlx::Sqlite>, 
-    downloader: &Downloader, 
-    drive: &DriveManager, 
-    path_manager: &PathManager
-) {
-    let connection = pool.clone();
+    db: State<'_, DatabaseManager>, 
+    downloader: State<'_, Downloader>, 
+    drive: State<'_, DriveManager>, 
+    path_manager: State<'_, PathManager>,
+    app: AppHandle
+) -> Result<(), ()> {
+    let connection = db.pool.clone();
     let downloader_state = Arc::clone(&downloader.state);
+    let downloadables = Arc::clone(&downloader.downloadables);
     let hub = Arc::clone(&drive.hub);
+    let folders = Arc::clone(&path_manager.file_movement_info);
     tokio::spawn(async move {
         loop {
             let version_info: Result<Downloadable, sqlx::Error> = sqlx::query_as(
@@ -98,8 +87,10 @@ pub async fn start_update_thread(
                             if file.modified_time.as_ref().unwrap().timestamp() > version.modified {
                                 let mut state =  downloader_state.lock().await;
                                 if *state == DownloaderState::NothingToDownload {
+                                    collect_files_for_update(&downloadables, &hub, &connection, &folders).await;
                                     println!("smth ready to download");
                                     *state = DownloaderState::ReadyToDownload;
+                                    app.emit_to("main", "download_state_changed", SingleValuePayload{value: false});
                                 }
                             }
                         }
@@ -110,20 +101,17 @@ pub async fn start_update_thread(
             }
         }
     });
+    Ok(())
 }
 
 pub async fn collect_files_for_update(
     downloader: &Arc<tokio::sync::Mutex<Vec<Downloadable>>>,
     hub: &Arc<tokio::sync::Mutex<DriveHub<HttpsConnector<HttpConnector>>>>,
     pool: &sqlx::Pool<sqlx::Sqlite>,
-    pm: &HashMap<String, FileLoadInfo>
+    folders: &Arc<tokio::sync::Mutex<HashMap<String, FileLoadInfo>>>
 ) {
-    let keys = pm.keys();
-    let mut folders = vec![];
-    keys.for_each(|k| {
-        folders.push(k.clone())
-    });
-    for folder_id in folders {
+    let folders_locked = folders.lock().await.clone();
+    for folder_id in folders_locked.into_keys() {
         let connection = pool.clone();
         let downloadables = Arc::clone(&downloader);
         let hub = Arc::clone(&hub);
@@ -132,7 +120,7 @@ pub async fn collect_files_for_update(
                 .files()
                 .list()
                 .param("fields", "files(id, name, mimeType, parents, modifiedTime)")
-                .q(&format!("'{}' in parents", folder_id))
+                .q(&format!("(mimeType != 'application/vnd.google-apps.folder') and ('{}' in parents)", folder_id))
                 .doit().await;
             match responce {
                 Ok(res) => {
@@ -158,7 +146,7 @@ pub async fn collect_files_for_update(
                                 downloadables_locked.push(Downloadable { 
                                     drive_id: file.id.as_ref().unwrap().to_owned(), 
                                     name: file.name.as_ref().unwrap().to_owned(), 
-                                    parent: String::from(&folder_id), 
+                                    parent: folder_id.to_string(), 
                                     modified: file.modified_time.as_ref().unwrap().timestamp() 
                                 });
                                 println!("Downloadable added: {:?}", file.name);
@@ -173,21 +161,25 @@ pub async fn collect_files_for_update(
     }
 }
 
+const API_KEY: &'static str = "AIzaSyA8TYClVgAHc-842t8_AZyvK5zldpZiakA";
+
 #[tauri::command]
 pub async fn download_update(
     app: AppHandle,
     downloader: State<'_, Downloader>,
     path_manager: State<'_, PathManager>,
-    db: State<'_, DatabaseManager>
+    db: State<'_, DatabaseManager>,
+    drive: State<'_, DriveManager>,
+    mode_manager: State<'_, GameModeManager>
 ) -> Result<(), ()> {
     let downloadables_copied = Arc::clone(&downloader.downloadables);
     let connection = db.pool.clone();
+    let current_game_mode = mode_manager.current_mode.lock().await.clone();
     app.emit_to("main", "updated_file_changed", SingleValuePayload {
         value: "Подключение...".to_string()
     });
-    app.emit_to("main", "updater_visibility_changed", SingleValuePayload {value: false} );
     for downloadable in downloadables_copied.lock().await.iter() {
-        let target = format!("https://drive.google.com/uc?/export=download&id={}", &downloadable.drive_id);
+        let target = format!("https://www.googleapis.com/drive/v3/files/{}?alt=media&key={}", &downloadable.drive_id, API_KEY);
         let responce = reqwest::get(target).await;
         match responce {
             Ok(res) => {
@@ -199,23 +191,20 @@ pub async fn download_update(
                 });
                 let x = res.bytes().await.unwrap();
                 let len = x.len();
-                let mut chunk_len = len / 1000;
+                let mut chunk_len = len / 100;
                 if chunk_len <= 0 {
                     chunk_len = 1;
                 }
                 let mut downloaded = 0f32;
                 let download_info = path_manager.move_path(&downloadable.parent).unwrap();
-                let mut download_dir = PathBuf::new();
-                match download_info._type {
-                    FileLoadType::Data => {
-                        download_dir = path_manager.data().clone();
-                    },
-                    FileLoadType::Config => {
-                        download_dir = path_manager.cfg().clone();
-                    }
+                let mut download_root = &PathBuf::default();
+                match download_info.load {
+                    FileLoadType::Game => download_root = path_manager.homm(),
+                    FileLoadType::Launcher => download_root = path_manager.cfg(),
                     _=> {}
                 }
-                let mut new_file = std::fs::File::create(download_dir.join(&download_info.path).join(&downloadable.name)).unwrap();
+                let download_dir = download_root.join(&download_info.path).join(&downloadable.name);
+                let mut new_file = std::fs::File::create(&download_dir).unwrap();
                 for chunk in x.chunks(chunk_len) {
                     let mut content = std::io::Cursor::new(chunk);
                     std::io::copy(&mut content, &mut new_file); 
@@ -224,9 +213,37 @@ pub async fn download_update(
                         value: (downloaded / (len as f32)) as f32
                     });
                 }
-                let query = sqlx::query("UPDATE files SET modified = ? WHERE drive_id = ?")
-                    .bind(downloadable.modified).bind(&downloadable.drive_id)
+                let query = sqlx::query(
+                    "INSERT INTO files (drive_id, name, parent, modified) VALUES (?, ?, ?, ?) 
+                     ON CONFLICT(drive_id) 
+                     DO UPDATE SET modified = ?")
+                    .bind(&downloadable.drive_id).bind(&downloadable.name).bind(&downloadable.parent).bind(&downloadable.modified)
+                    .bind(&downloadable.modified)
                     .execute(&connection).await;
+                match query {
+                    Ok(query_result) => {
+                        println!("Query ok, {:?}", &query_result);
+                    },
+                    Err(query_error) => {
+                        println!("Query error, {:?}", &query_error.to_string());
+                    }
+                }
+                // move logic 
+                if download_info.move_info.is_some() && (download_info.move_info.as_ref().unwrap().mode == current_game_mode)  {
+                    println!("Moving files cause some of them are of active game mode, {:?}", &current_game_mode);
+                    match download_info.move_info.as_ref().unwrap()._type {
+                        FileMoveType::Data => {
+                            let move_path = path_manager.data().join(&downloadable.name);
+                            println!("Moving {:?}", &move_path);
+                            std::fs::copy(&download_dir, move_path);
+                        },
+                        FileMoveType::Maps => {
+                            let move_path = path_manager.maps().join(&downloadable.name);
+                            println!("Moving {:?}", &move_path);
+                            std::fs::copy(&download_dir, move_path);
+                        }
+                    }
+                }
             },
             Err(err) => {
                 println!("error while downloading {:?}", err);
@@ -234,10 +251,10 @@ pub async fn download_update(
         }
     }
     downloader.downloadables.lock().await.clear();
+    mode_manager.update_file_move_info(&path_manager);
     println!("Download ended!");
     std::thread::sleep(std::time::Duration::from_secs(5));
     app.emit_to("main", "download_state_changed", SingleValuePayload { value: true });
-    app.emit_to("main", "updater_visibility_changed", SingleValuePayload {value: true });
     let mut state = downloader.state.lock().await;
     *state = DownloaderState::NothingToDownload;
     println!("state: {:?}", &state);

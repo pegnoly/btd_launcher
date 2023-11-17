@@ -1,5 +1,5 @@
 use std::path::PathBuf;
-use crate::{map::template::{Template, TemplateType}, FileWriter};
+use crate::map::template::{Template, TemplateType};
 
 use super::{WriteAdditional, ProcessText, PatchCreatable};
 

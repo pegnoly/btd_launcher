@@ -2,7 +2,6 @@ pub mod patch_strategy;
 mod macros;
 pub mod map;
 
-use map::template::{Template, TemplateType, TemplateAdditionalSetting};
 use patch_strategy::{GenerateLuaCode, PatchModifyable, PatchCreatable, WriteAdditional, ProcessText};
 
 use std::collections::HashMap;

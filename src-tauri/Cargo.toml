@@ -21,16 +21,17 @@ strum = "0.25.0"
 strum_macros = "0.25"
 google-drive3 = "5.0.2"
 yup-oauth2 = "8.3.0"
-reqwest = "0.11.18"
+reqwest = { version = "0.11.18", features = ["stream"] }
 tokio = { version = "1.29.1", features = ["process"] }
 chrono = "0.4.26"
 patcher = {path = "../src-tauri/patcher"}
+scaner = {path = "../src-tauri/scaner"}
 homm5_types = {path = "../src-tauri/homm5_types"}
 zip = "0.6.6"
 walkdir = "2.3.3"
 sqlx = { version = "0.7.1", features = ["sqlite", "runtime-tokio"] }
-windows = { version = "0.51.1", features = ["Win32_UI_Shell", "Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }
 opener = "0.6.1"
+futures-util = "0.3.29"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

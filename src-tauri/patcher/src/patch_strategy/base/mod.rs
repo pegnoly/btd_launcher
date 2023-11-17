@@ -1,5 +1,3 @@
-use quick_xml::{events::attributes::Attribute, name::QName};
-
 use super::{PatchCreatable, WriteAdditional};
 use std::path::PathBuf;
 pub struct BaseCreator {

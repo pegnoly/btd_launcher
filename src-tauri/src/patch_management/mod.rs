@@ -68,26 +68,26 @@ pub async fn show_patcher(app: AppHandle, patcher_manager: State<'_, PatcherMana
 }
 
 #[tauri::command]
-pub fn pick_map(app: AppHandle, path_manager: State<PathManager>) {
+pub async fn pick_map(app: AppHandle, path_manager: State<'_, PathManager>) -> Result<(), String> {
     let file_dialog = FileDialogBuilder::new()
         .add_filter("hommV maps", &["h5m"])
         .set_directory(path_manager.maps());
     file_dialog.pick_file(move |file_path| {
         match file_path {
             Some(file) => {
-                app.app_handle().emit_to("main", "map_picked", MapDisplayableName {name : file.to_str().unwrap().to_string()});
+                app.app_handle().emit_to("main", "map_picked", SingleValuePayload {value : file.to_str().unwrap().to_string()});
             }
             None => {}
         }
     });
+    Err("smth gone wrong while picking map".to_string())
 }
 
 #[tauri::command]
 pub async fn unpack_map(
-    app: AppHandle, 
     patcher_manager: State<'_, PatcherManager>, 
     map_path: String
-) -> Result<(), ()> {
+) -> Result<MapDisplayableInfo, ()> {
     let mut map = Unpacker::unpack_map(&PathBuf::from(map_path));
     map.init_write_dirs();
     let mut map_holder = patcher_manager.map.lock().await;
@@ -95,15 +95,14 @@ pub async fn unpack_map(
     *map_holder = Some(map);
     let template = map_holder.as_mut().unwrap().detect_template(&templates_holder).unwrap();
     let players_count = map_holder.as_ref().unwrap().detect_teams_count();
+    println!("players count is: {}", players_count.unwrap());
     for i in 1..players_count.unwrap() + 1 {
         map_holder.as_mut().unwrap().teams_info[i] = i;
     }
-    app.app_handle().emit_to("main", "map_unpacked",
-        MapDisplayableInfo {
-            players_count: players_count.unwrap() as u8,
-            template: template
-        });
-    Ok(())
+    Ok(MapDisplayableInfo {
+        template: template,
+        players_count: players_count.unwrap() as u8,
+    })
 }
 
 #[tauri::command]

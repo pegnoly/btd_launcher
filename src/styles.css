@@ -107,3 +107,8 @@ button {
     background-color: #0f0f0f69;
   }
 }
+
+@font-face {
+  font-family: Gabriela;
+  src: url(fonts/Gabriela-Regular.ttf);
+}

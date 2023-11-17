@@ -9,6 +9,7 @@ use std::{process::Command, path::PathBuf, collections::HashMap, env, fs};
 //use database::DbManager;
 use drive::DriveManager;
 use file_management::init_updater;
+use game_mode::GameModeManager;
 use patch_management::ActivityInfo;
 use patch_management::PatcherManager;
 use patcher::map::template::TemplatesInfoModel;
@@ -32,6 +33,8 @@ pub mod database;
 pub mod startup;
 pub mod patch_management;
 mod update_manager;
+mod game_mode;
+mod scan_management;
 
 #[derive(Debug, serde::Serialize, Clone)]
 pub struct FrontendCfg {
@@ -48,6 +51,7 @@ async fn main() {
     let path_manager = PathManager::new();
     // google drive manager
     let mut drive_manager = DriveManager::build(path_manager.cfg()).await;
+    let game_mode_manager = GameModeManager::new(&path_manager);
     //init_updater(&path_manager, &drive_manager.as_ref().unwrap()).await;
     // downloader
     let downloader = Downloader::new();
@@ -60,10 +64,10 @@ async fn main() {
     tauri::Builder::default()
         .manage(path_manager)
         .manage(drive_manager.unwrap())
+        .manage(game_mode_manager)
         .manage(downloader)
         .manage(DatabaseManager{pool: pool})
         .manage(StartupManager { app_started: std::sync::Mutex::new(false), download_thread_started: std::sync::Mutex::new(false) })
-        //.manage(file_manager)
         .manage(PatcherManager {
             activity: ActivityInfo{active: false}.into(),
             map: None.into(),
@@ -72,13 +76,9 @@ async fn main() {
         })
         .invoke_handler(tauri::generate_handler![
             check_can_activate_download,
-            // file_management::move_files_to_game,
-            // file_management::remove_files_from_game,
-            //drive::check_for_update,
             patch_management::show_patcher,
             patch_management::pick_map,
             patch_management::unpack_map,
-            //patch_management::get_player_team_info,
             patch_management::update_player_team_info,
             patch_management::set_night_lights_setting,
             patch_management::set_weeks_only_setting,
@@ -88,14 +88,18 @@ async fn main() {
             patch_management::patch_map,
             patch_management::zip_map,
             startup::start_game,
-            //update_manager::start_update_process,
-            update_manager::start_updater,
-            update_manager::download_update
+            startup::start_telegram_dialog,
+            startup::open_discord_dialog,
+            startup::start_qiwi_pay,
+            startup::start_alerts,
+            update_manager::start_update_thread,
+            update_manager::download_update,
+            game_mode::show_manual,
+            game_mode::show_wheel,
+            game_mode::switch_mode,
+            scan_management::scan_files
         ])
         .setup(|app|{
-            let test_event = app.listen_global("test", |event| {
-                println!("testing event with payload {:?}", event.payload().unwrap())
-            });
             let main_window = app.get_window("main").unwrap();
             let patcher_visibility_changed = main_window.listen("patcher_visibility_changed", |event|{});
             let id1 = main_window.listen("map_picked", |event|{});
@@ -104,6 +108,7 @@ async fn main() {
             let updated_file_changed_handler = main_window.listen("updated_file_changed", |event|{});
             let download_progress_changed_handler = main_window.listen("download_progress_changed", |event|{});
             let download_state_changed_handler = main_window.listen("download_state_changed", |event|{});
+            let file_transfer_ended_handler = main_window.listen("file_transfer_ended", |event|{});
             Ok(())
         })
         .run(tauri::generate_context!())
@@ -115,34 +120,20 @@ async fn main() {
 async fn check_can_activate_download(
     app: AppHandle,
     startup: State<'_, StartupManager>,
-    drive: State<'_, DriveManager>,
-    db: State<'_, DatabaseManager>,
     downloader: State<'_, Downloader>,
-    path_manager: State<'_, PathManager>
 ) -> Result<(), ()> {
     if *startup.download_thread_started.lock().unwrap() == true {
         return Ok(())
     }
     *startup.download_thread_started.lock().unwrap() = true;
     let downloader_state = Arc::clone(&downloader.state);
-    let downloadables = Arc::clone(&downloader.downloadables);
-    let hub = Arc::clone(&drive.hub);
-    let files_map = Arc::clone(&path_manager.move_info());
-    let pool = db.pool.clone();
     tokio::spawn(async move {
         loop {
             let mut state = downloader_state.lock().await;
             match *state {
                 DownloaderState::ReadyToDownload => {
-                    update_manager::collect_files_for_update(
-                        &downloadables, 
-                        &hub, 
-                        &pool,
-                        &*files_map.lock().await).await;
                     app.emit_to("main", "download_state_changed", SingleValuePayload{value: false});
-                    *state = DownloaderState::Waiting;
                     println!("State changed: {:?}", *state);
-
                 }
                 _ => {
                     std::thread::sleep(std::time::Duration::from_secs(5));

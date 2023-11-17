@@ -67,9 +67,9 @@ impl DriveManager {
         //     ),
         //     auth
         // );
-        // DriveManager {
+        // Some(DriveManager {
         //     hub: Arc::new(tokio::sync::Mutex::new(hub))
-        // }
+        // })
     }
 
     pub async fn test(&mut self) {
