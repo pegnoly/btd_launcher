@@ -1,7 +1,7 @@
 import { createStyles } from "@mantine/core";
 import { Box, Button, Text, Grid } from "@mantine/core";
 import { event, invoke } from "@tauri-apps/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {useDisclosure} from "@mantine/hooks";
 
 import patcherBack from "../assets/patcher_back.png"
@@ -12,6 +12,7 @@ import PatcherSettings from "./settings/main";
 import TeamSelector from "./team_selector/main";
 import { listen } from "@tauri-apps/api/event";
 import { SingleValuePayload } from "../../App";
+import { AppState, useAppStateContext } from "../../contexts/AppState";
 
 export const patcherStyles = createStyles((theme) => ({
     map_info_div: {
@@ -37,8 +38,7 @@ export const patcherStyles = createStyles((theme) => ({
       backgroundSize: 'hover',
       backgroundColor: "transparent",
       border: 'none',
-      //backgroundRepeat: "no-repeat",
-      //fontFamily: "Pacifico, cursive",
+      fontFamily: "Pacifico",
       fontSize: 13.5,
       color: "ActiveCaption",
       ":hover": {
@@ -63,7 +63,7 @@ export const patcherStyles = createStyles((theme) => ({
       }
     },
     button_text: {
-        //fontFamily: 'Balsamiq Sans, cursive'
+        fontFamily: 'Balsamiq Sans, cursive'
     },
     select: {
       backgroundColor: "brown",
@@ -97,6 +97,7 @@ type Template = {
 }
 
 type MapProps = {
+    file_name: string;
     players_count: number;
     template: Template;
 }
@@ -111,6 +112,8 @@ export default function PatcherMain(props: PatcherMainProps) {
     const [templateDesc, setTemplateDesc] = useState<string>("");
     const [templateSettingsDesc, setTemplateSettingsDesc] = useState<string>("");
 
+    const appStateContext = useAppStateContext();
+
     async function mapPickButtonClicked(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         await invoke("pick_map")
             .catch((error) => console.log("error occured while picking map: ", error));
@@ -122,7 +125,6 @@ export default function PatcherMain(props: PatcherMainProps) {
     });
 
     async function startMapUnpack(path: string) { 
-        setMapName(path);
         await invoke("unpack_map", {mapPath: path})
             .then((mapInfo) => {
                 setCurrentState(PatchState.MapPicked);
@@ -132,6 +134,8 @@ export default function PatcherMain(props: PatcherMainProps) {
     }
 
     function setUnpackedMapProps(mapInfo: MapProps) {
+        console.log("map props: ", mapInfo);
+        setMapName(mapInfo.file_name);
         setTemplate(mapInfo.template.name);
         setPlayersCount(mapInfo.players_count);
         setTemplateDesc(mapInfo.template.desc);
@@ -139,8 +143,23 @@ export default function PatcherMain(props: PatcherMainProps) {
     }
 
     async function patchButtonClick() {
-        invoke("patch_map").then(); // msg that everything ok here and state changes here
+        setCurrentState(PatchState.Patching);
+        appStateContext?.setState(AppState.Busy);
+        invoke("patch_map").then(() => {
+            setCurrentState(PatchState.Inactive);
+            appStateContext?.setState(AppState.Default);
+        }); // msg that everything ok here and state changes here
     }
+
+    useEffect(() => {
+        if (currentState == PatchState.Inactive) {
+            setMapName("");
+            setPlayersCount(0);
+            setTemplate("");
+            setTemplateDesc("");
+            setTemplateSettingsDesc("");
+        }
+    }, [currentState])
 
     return (
         <Box 
@@ -158,6 +177,7 @@ export default function PatcherMain(props: PatcherMainProps) {
                 bottom: -50
             }}>
             <Button 
+                disabled={!(currentState == PatchState.Inactive)}
                 className={classes.button}
                 name="mapPicker"
                 style={{

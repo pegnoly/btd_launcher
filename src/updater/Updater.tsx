@@ -33,7 +33,7 @@ export default function Updater() {
 
     const updateStateChanged = listen("download_state_changed", (event) => {
         let disabled = event.payload as SingleValuePayload<boolean>;
-        setUpdaterWindowDisabled(disabled.value);
+        //setUpdaterWindowDisabled(disabled.value);
         if (disabled.value == true) {
             appStateContext?.setState(AppState.Default);
             setUpdateState(UpdateState.NotReady);

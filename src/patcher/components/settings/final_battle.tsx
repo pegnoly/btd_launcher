@@ -8,43 +8,19 @@ class FinalBattleTiming {
     day: number = 1;
 }
 
-const monthNumber: number = 12;
+const MONTH_COUNT: number = 12;
 
 function generateMonths() {
     let options = [];
-    for (let index = 1; index <= monthNumber; index++) {
+    for (let index = 1; index <= MONTH_COUNT; index++) {
         options.push(<option key={index}>{index.toString()}</option>)
     }    
     return options;
 }
 
 export function FinalBattleElement() {
-    const [checked, setChecked] = useState<boolean>(() => {
-        let json = localStorage.getItem("patcher_final_battle_checked");
-        if (json != null) {
-            return JSON.parse(json) as boolean
-        }
-        else {
-            return false;
-        }
-    });
-    const [timing, setTiming] = useState<FinalBattleTiming>(() => {
-        let json = localStorage.getItem("patcher_final_battle_timing");
-        if (json != null) {
-            return JSON.parse(json) as FinalBattleTiming
-        }
-        else {
-            return new FinalBattleTiming();
-        }
-    });
-
-    useEffect(() => {
-        localStorage.setItem("patcher_final_battle_checked", JSON.stringify(checked));
-    }, [checked]);
-
-    useEffect(() => {
-        localStorage.setItem("patcher_final_battle_timing", JSON.stringify(timing));
-    }, [timing]);
+    const [checked, setChecked] = useState<boolean>(false);
+    const [timing, setTiming] = useState<FinalBattleTiming>(new FinalBattleTiming());
 
     return (
         <>

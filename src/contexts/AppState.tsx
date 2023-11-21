@@ -1,4 +1,4 @@
-import { useState, createContext, PropsWithChildren, useContext } from "react";
+import { useState, createContext, PropsWithChildren, useContext, useEffect } from "react";
 
 export enum AppState {
     Default,
@@ -13,6 +13,7 @@ export type AppStateType = {
 export const AppStateContext = createContext<AppStateType | undefined>(undefined);
 const AppStateProvider = ({children} : PropsWithChildren<{}>) => {
     const [state, setState] = useState<AppStateType['state']>(AppState.Default);
+
     return(
         <AppStateContext.Provider value={{state, setState}}>
             {children}

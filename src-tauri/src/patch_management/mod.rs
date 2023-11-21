@@ -22,7 +22,7 @@ use crate::{file_management::PathManager, update_manager::SingleValuePayload};
 // frontend communication structs.
 #[derive(Serialize, Clone)]
 pub struct MapDisplayableInfo {
-    //pub file_name: String,
+    pub file_name: String,
     pub template: TemplateTransferable,
     pub players_count: u8,
 }
@@ -68,41 +68,47 @@ pub async fn show_patcher(app: AppHandle, patcher_manager: State<'_, PatcherMana
 }
 
 #[tauri::command]
-pub async fn pick_map(app: AppHandle, path_manager: State<'_, PathManager>) -> Result<(), String> {
+pub async fn pick_map(
+    app: AppHandle, 
+    path_manager: State<'_, PathManager>
+) -> Result<(), ()> {
     let file_dialog = FileDialogBuilder::new()
         .add_filter("hommV maps", &["h5m"])
         .set_directory(path_manager.maps());
     file_dialog.pick_file(move |file_path| {
         match file_path {
             Some(file) => {
-                app.app_handle().emit_to("main", "map_picked", SingleValuePayload {value : file.to_str().unwrap().to_string()});
+                app.emit_to("main", "map_picked", SingleValuePayload {value: file.to_str().unwrap().to_string()});
             }
             None => {}
         }
     });
-    Err("smth gone wrong while picking map".to_string())
+    Ok(())
 }
 
 #[tauri::command]
 pub async fn unpack_map(
+    app: AppHandle,
     patcher_manager: State<'_, PatcherManager>, 
     map_path: String
 ) -> Result<MapDisplayableInfo, ()> {
-    let mut map = Unpacker::unpack_map(&PathBuf::from(map_path));
+    let mut map = Unpacker::unpack_map(&PathBuf::from(&map_path));
     map.init_write_dirs();
     let mut map_holder = patcher_manager.map.lock().await;
     let mut templates_holder = patcher_manager.templates_model.lock().await;
     *map_holder = Some(map);
     let template = map_holder.as_mut().unwrap().detect_template(&templates_holder).unwrap();
-    let players_count = map_holder.as_ref().unwrap().detect_teams_count();
-    println!("players count is: {}", players_count.unwrap());
-    for i in 1..players_count.unwrap() + 1 {
+    let tag_info = map_holder.as_ref().unwrap().detect_tag_info().unwrap();
+    for i in 1..&tag_info.players_count + 1 {
         map_holder.as_mut().unwrap().teams_info[i] = i;
     }
-    Ok(MapDisplayableInfo {
-        template: template,
-        players_count: players_count.unwrap() as u8,
-    })
+    map_holder.as_mut().unwrap().size = tag_info.size as usize;
+    Ok((MapDisplayableInfo {
+            file_name: map_path.rsplit("\\").last().unwrap().to_string(),
+            players_count: tag_info.players_count as u8,
+            template: template
+        }
+    ))
 }
 
 #[tauri::command]
@@ -205,7 +211,7 @@ pub async fn patch_map(
     let mut map_holder = patcher_manager.map.lock().await;
     let base_creator = BaseCreator::new(
         map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
-        patcher_manager.config_path.join("patcher\\adds\\")
+        patcher_manager.config_path.join("patcher\\adds\\common\\")
     );
     let teams = map_holder.as_ref().unwrap().teams_info.clone();
     let mut players_patcher = PlayersPatcher::new(teams.clone());
@@ -224,9 +230,9 @@ pub async fn patch_map(
         map_holder.as_ref().unwrap().has_win_condition("capture")
     );
     let underground_terrain_creator = UndergroundTerrainCreator{
-        is_active: true,
+        is_active: map_holder.as_ref().unwrap().has_win_condition("final"),
         terrain_path: patcher_manager.config_path.join("patcher\\adds\\terrains\\"),
-        write_dir: map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
+        write_dir: map_holder.as_ref().unwrap().get_write_dir(String::from("main"))
     };
     let mut win_condition_writer = WinConditionWriter {
         conditions: &map_holder.as_ref().unwrap().conds,
@@ -260,12 +266,12 @@ pub async fn patch_map(
         .with(&MoonCalendarWriter::new(
             map_holder.as_ref().unwrap().settings.only_neutral_weeks,
             map_holder.as_ref().unwrap().get_write_dir(String::from("game_mechanics")),
-            patcher_manager.config_path.join("patcher\\adds\\Default.xdb")
+            patcher_manager.config_path.join("patcher\\adds\\moon_calendar\\Default.xdb")
         ))
         .with(&OutcastFilesWriter::new(
             map_holder.as_ref().unwrap().template(),
             &map_holder.as_ref().unwrap().get_write_dir(String::from("game_mechanics")),
-            &patcher_manager.config_path.join("patcher\\adds\\Summon_Creatures.xdb")
+            &patcher_manager.config_path.join("patcher\\adds\\outcast\\Summon_Creatures.xdb")
         ))
         .with(&base_creator)
         .with(&underground_terrain_creator)

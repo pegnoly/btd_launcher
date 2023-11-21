@@ -51,10 +51,16 @@ pub struct Map {
     pub map_name: PathBuf,
     pub map_desc: PathBuf,
     pub template: Template,
+    pub size: usize,
     pub teams_info: Vec<usize>,
     pub settings: MapSettings,
     write_dirs: HashMap<String, String>, // possible directories to write specific files into,
     pub conds: HashMap<String, MapWinCondition>
+}
+
+pub struct MapTagInfo {
+    pub size: u16,
+    pub players_count: usize
 }
 
 impl Map {
@@ -67,6 +73,7 @@ impl Map {
             map_name: PathBuf::default(),
             map_desc: PathBuf::default(),
             template: Template::default(),
+            size: 0,
             teams_info: vec![0, 0, 0, 0, 0, 0, 0, 0, 0],
             settings: MapSettings::default(),
             write_dirs: HashMap::new(),
@@ -113,7 +120,7 @@ impl Map {
         &self.template
     }
 
-    pub fn detect_teams_count(&self) -> Option<usize>  {
+    pub fn detect_tag_info(&self) -> Option<MapTagInfo>  {
         let mut s = String::new();
         let mut file = std::fs::File::open(self.map_tag()).unwrap();
         file.read_to_string(&mut s).unwrap();
@@ -121,22 +128,27 @@ impl Map {
         let mut reader = Reader::from_str(&s);
         reader.trim_text(true);
         reader.expand_empty_elements(true);
+        let mut map_tag_info = MapTagInfo {size: 0, players_count: 0};
         loop {
             match reader.read_event_into(&mut buf) {
                 Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
-                Ok(Event::Eof) => break None,
+                Ok(Event::Eof) => break,
                 Ok(Event::Start(e)) => {
                     match e.name().as_ref() {
+                        b"TileX" => {
+                            let text = reader.read_text(e.to_end().name()).unwrap().to_string();
+                            map_tag_info.size = text.parse().unwrap();
+                        }
                         b"teams" => {
                             let text = reader.read_text(e.to_end().name()).unwrap().to_string();
                             let teams_de: Result<MapTeamsCount, quick_xml::DeError> = quick_xml::de::from_str(format!("<teams>{}</teams>", &text).as_str());
                             match teams_de {
                                 Ok(teams_info) => {
-                                    break Some(teams_info.teams.len())
+                                    map_tag_info.players_count = teams_info.teams.len();
                                 }
                                 Err(de_error) => {
                                     println!("Error deserializing map teams info: {:?}", de_error);
-                                    break None
+                                    break
                                 }
                             }
                         }
@@ -147,6 +159,7 @@ impl Map {
             }
             buf.clear();
         }
+        Some(map_tag_info)
     }
 
     pub fn detect_template(&mut self, possible_templates: &TemplatesInfoModel) -> Option<TemplateTransferable> {

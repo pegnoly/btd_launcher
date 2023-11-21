@@ -16,8 +16,8 @@ class EconomicVictoryProps {
 
 export function EconomicVictoryElement() {
 
-    const [checked, setChecked] = useLocalStorage<boolean>({key: "patcher_economic_checked", defaultValue: false});
-    const [economicProps, setEconomicProps] = useLocalStorage<EconomicVictoryProps>({key: "patcher_economic_props", defaultValue: new EconomicVictoryProps()});
+    const [checked, setChecked] = useState<boolean>(false);
+    const [economicProps, setEconomicProps] = useState<EconomicVictoryProps>(new EconomicVictoryProps());
 
     function sendResInfoToBackend(type: ResourceType, count: number) {
         invoke("update_economic_victory_setting", {isEnabled: true, resourceInfo: {_type: type, count: count}});
@@ -57,7 +57,7 @@ export function EconomicVictoryElement() {
             <div hidden={!checked}>
                 <Grid>
                     <Grid.Col span={5}>
-                        <Text align="center" size={10}>Тип ресурсов</Text>
+                        <Text align="center" size={10} style={{position: "relative", left: 15}}>Тип ресурсов</Text>
                         <select style={{
                                 width: 120, 
                                 height: 20, 
@@ -69,11 +69,11 @@ export function EconomicVictoryElement() {
                             onChange={
                                 (e) => {
                                     let resType: ResourceType = ResourceType[e.target.value as keyof typeof ResourceType];
-                                    setEconomicProps({
-                                        ...economicProps,
-                                        resType: resType,
-                                    })
-                                    resourcesInfo[resType].update(resType == ResourceType.Gold ? economicProps.goldCount: economicProps.resCount);
+                                    resourcesInfo[resType].update(resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount);
+                                    setEconomicProps(prev => ({
+                                        ...prev,
+                                        resType: resType
+                                    }))
                                 }
                             }>
                             <option value={ResourceType.Gold}>Золото</option>
@@ -81,7 +81,7 @@ export function EconomicVictoryElement() {
                         </select>
                     </Grid.Col>
                     <Grid.Col span={5}>
-                        <Text align="center" size={10}>Число ресурсов</Text>
+                        <Text align="center" size={10} style={{position: "relative", left: 15}}>Число ресурсов</Text>
                         <select 
                             style={{
                                 width: 55, 

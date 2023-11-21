@@ -19,7 +19,7 @@ export default function ModeSwitcher() {
     })
 
     return(
-        <div data-tauri-drag-region style={{
+        <div style={{
             position: "absolute",
             top: -250,
             left: 335
