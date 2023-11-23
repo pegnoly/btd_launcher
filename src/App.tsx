@@ -65,50 +65,10 @@ const useStyles = createStyles((theme) => ({
   grid_main: {
     position: "relative",
   },
-  duel_button: {
-    // backgroundImage:
-    //   'url("https://i.ibb.co/G2cHnWG/Screenshot-2.png")',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  },
-  main_desc: {
-    fontFamily: 'Josefin Sans, sans-serif'
-  },
-  actions_div: {
-    position: "relative",
-    top: 450,
-    right: -40,
-    height: 459
-  }
 }))
-
-let currentGameMode: Info = {
-  mode: GameMode.Duel,
-  locale: Locale.Ru
-};
-
-export type RenderProps = {
-  s: string
-}
-
-type AppConfig = {
-  configDir: string
-}
-
-let currentConfig: AppConfig = {
-  configDir: ""
-}
-
-export type PatcherVisibility = {
-  visible: boolean
-}
 
 export type SingleValuePayload<T> = {
   value: T
-}
-
-function gameModeChanged(s: GameMode) {
-  invoke("switch_mode", {newMode: s})
 }
 
 export default function App() {
@@ -135,7 +95,7 @@ export default function App() {
             </Grid.Col>
           </Grid>
         </div>
-        <Donates data-tauri-drag-region />
+        {/* <Donates data-tauri-drag-region /> */}
       </Box>
     </MantineProvider>
   );

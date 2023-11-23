@@ -90,7 +90,7 @@ pub async fn start_update_thread(
                                     collect_files_for_update(&downloadables, &hub, &connection, &folders).await;
                                     println!("smth ready to download");
                                     *state = DownloaderState::ReadyToDownload;
-                                    app.emit_to("main", "download_state_changed", SingleValuePayload{value: false});
+                                    app.emit_to("main", "download_state_changed", SingleValuePayload{value: true});
                                 }
                             }
                         }
@@ -254,7 +254,7 @@ pub async fn download_update(
     mode_manager.update_file_move_info(&path_manager);
     println!("Download ended!");
     std::thread::sleep(std::time::Duration::from_secs(5));
-    app.emit_to("main", "download_state_changed", SingleValuePayload { value: true });
+    app.emit_to("main", "download_state_changed", SingleValuePayload { value: false });
     let mut state = downloader.state.lock().await;
     *state = DownloaderState::NothingToDownload;
     println!("state: {:?}", &state);

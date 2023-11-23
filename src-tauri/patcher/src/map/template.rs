@@ -4,10 +4,12 @@ use std::collections::HashMap;
 
 /// Types of currently presented templates.
 #[derive(EnumString, PartialEq, Eq, Hash, Clone, Copy, Debug, Serialize, Deserialize)]
+#[strum(serialize_all = "UPPERCASE")]
 pub enum TemplateType {
     Common,
     Outcast,
-    Blitz
+    Blitz,
+    Crypt
 }
 
 #[derive(EnumString, PartialEq, Eq, Hash, Clone, Copy, Debug, Serialize, Deserialize)]
@@ -34,7 +36,7 @@ impl Default for Template {
     }
 }
 
-#[derive(serde::Serialize, Clone)]
+#[derive(serde::Serialize, Clone, Debug)]
 pub struct TemplateTransferable {
     pub name: String,
     pub desc: String,

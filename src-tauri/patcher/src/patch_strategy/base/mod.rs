@@ -1,5 +1,7 @@
-use super::{PatchCreatable, WriteAdditional};
-use std::path::PathBuf;
+use crate::map::template::TemplateType;
+use super::{PatchCreatable, WriteAdditional, GenerateLuaCode};
+use std::{path::PathBuf, io::Write};
+
 pub struct BaseCreator {
     write_dir: String,
     path: PathBuf
@@ -43,5 +45,16 @@ impl WriteAdditional for BaseCreator {
         std::fs::copy(&self.path.join("MapScript.lua"), &path_to).unwrap();
         let path_to = PathBuf::from(&self.write_dir).join("MapScript.xdb");
         std::fs::copy(&self.path.join("MapScript.xdb"), &path_to).unwrap();
+    }
+}
+
+pub struct TemplateInfoGenerator<'a> {
+    pub template: &'a TemplateType
+}
+
+impl<'a> GenerateLuaCode for TemplateInfoGenerator<'a> {
+    fn to_lua(&self, path: &std::path::PathBuf) {
+        let mut file = std::fs::File::create(path.join("template_info.lua")).unwrap();
+        file.write_all(format!("MCCS_TEMPLATE_TYPE = TEMPLATE_TYPE_{:?}", self.template).as_bytes()).unwrap();
     }
 }

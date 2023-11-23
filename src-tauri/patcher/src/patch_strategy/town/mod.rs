@@ -86,6 +86,7 @@ impl<'a> PatchModifyable for TownPatcher<'a> {
             Ok(mut town) => {
                 // TODO move this to getter patch.
                 if self.capture_victory_enabled == true && town.player_id == "PLAYER_NONE" {
+                    town.name = "wc_capture_town".to_string();
                     let no_xdb_town_spec = town.specialization.href.as_ref().unwrap()
                         .replace("#xpointer(/TownSpecialization)", "")
                         .trim_start_matches("/")
@@ -96,7 +97,6 @@ impl<'a> PatchModifyable for TownPatcher<'a> {
                             self.neutral_town_name = town_name.clone();
                         },
                         None => {}
-
                     }
                 }
                 let no_xpointer_shared = town.shared.href.as_ref().unwrap().replace("#xpointer(/AdvMapTownShared)", "");

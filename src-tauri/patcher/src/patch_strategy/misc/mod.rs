@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, collections::HashMap};
 use crate::map::template::{Template, TemplateType};
 
 use super::{WriteAdditional, ProcessText, PatchCreatable};
@@ -80,9 +80,30 @@ impl ProcessText for MapNameChanger {
 
 // add terrain
 pub struct UndergroundTerrainCreator {
-    pub is_active: bool,
-    pub terrain_path: PathBuf,
-    pub write_dir: String
+    is_active: bool,
+    terrain_path: PathBuf,
+    write_dir: String,
+    map_size: usize,
+    size_to_terrain_map: HashMap<usize, String>
+}
+
+impl UndergroundTerrainCreator {
+    pub fn new(is_active: bool, terrain_path: PathBuf, write_dir: String, map_size: usize) -> Self {
+        UndergroundTerrainCreator { 
+            is_active: is_active, 
+            terrain_path: terrain_path, 
+            write_dir: write_dir, 
+            map_size: map_size, 
+            size_to_terrain_map: HashMap::from([
+                (96, "UT_Small.bin".to_string()),
+                (136, "UT_Medium.bin".to_string()),
+                (176, "UT_Large.bin".to_string()),
+                (216, "UT_ExtraLarge.bin".to_string()),
+                (256, "UT_Huge.bin".to_string()),
+                (312, "UT_Impossible.bin".to_string())
+            ]) 
+        } 
+    }
 }
 
 impl PatchCreatable for UndergroundTerrainCreator {
@@ -97,8 +118,9 @@ impl PatchCreatable for UndergroundTerrainCreator {
                 writer.write_event(quick_xml::events::Event::End(quick_xml::events::BytesEnd::new("HasUnderground"))).unwrap(); 
             },
             "UndergroundTerrainFileName" => {
+                let terrain_name = self.size_to_terrain_map.get(&self.map_size).unwrap();
                 writer.create_element("UndergroundTerrainFileName")
-                    .with_attribute(("href", "UndergroundTerrain.bin"))
+                    .with_attribute(("href", terrain_name.as_str()))
                     .write_empty().unwrap();
                 // let mut elem = quick_xml::events::BytesStart::new("UndergroundTerrainFileName");
                 // elem.push_attribute(("href", "UndergroundTerrain.bin"));
@@ -114,8 +136,9 @@ impl WriteAdditional for UndergroundTerrainCreator {
         if self.is_active == false {
             return;
         }
-        let path = PathBuf::from(&self.write_dir).join("UndergroundTerrain.bin");
-        let copy_path = self.terrain_path.join("UndergroundTerrain.bin");
+        let terrain_name = self.size_to_terrain_map.get(&self.map_size).unwrap();
+        let path = PathBuf::from(&self.write_dir).join(terrain_name);
+        let copy_path = self.terrain_path.join(terrain_name);
         std::fs::copy(copy_path, path).unwrap();
     }
 }

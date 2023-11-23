@@ -2,7 +2,7 @@ use tauri::{Manager, State, AppHandle, api::dialog::FileDialogBuilder, App};
 use patcher::{Patcher,
     map::{Unpacker, Map, template::{Template, TemplateTransferable, TemplatesInfoModel}}, 
     patch_strategy::{
-        base::BaseCreator, 
+        base::{BaseCreator, TemplateInfoGenerator}, 
         building::{BuildingModifyable, BuildingCreatable}, 
         treasure::TreasurePatcher, 
         player::{PlayersPatcher, TeamsGenerator}, light::LightPatcher, quest::QuestPatcher,
@@ -20,7 +20,7 @@ use std::io::Write;
 use crate::{file_management::PathManager, update_manager::SingleValuePayload};
 
 // frontend communication structs.
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Clone, Debug)]
 pub struct MapDisplayableInfo {
     pub file_name: String,
     pub template: TemplateTransferable,
@@ -67,6 +67,8 @@ pub async fn show_patcher(app: AppHandle, patcher_manager: State<'_, PatcherMana
     Ok(())
 }
 
+/// Invoked when user clicks on map_pick button of patcher. Creates an open file dialog and send picked map path to frontend.
+/// Actually i think its a good idea to unpack map also here cause frontend interaction is unnessessary here, but can't solve troubles with moving States into closure now.
 #[tauri::command]
 pub async fn pick_map(
     app: AppHandle, 
@@ -86,6 +88,11 @@ pub async fn pick_map(
     Ok(())
 }
 
+/// Invoked when map_picked event is listened on frontend.
+/// Unpacks map files into temp directory.
+/// Assigns unpacked map to patcher manager.
+/// Detects some base information to display it of frontend and this also useful for some patches.
+/// Returns nessessary information about map to display on frontend.
 #[tauri::command]
 pub async fn unpack_map(
     app: AppHandle,
@@ -99,18 +106,20 @@ pub async fn unpack_map(
     *map_holder = Some(map);
     let template = map_holder.as_mut().unwrap().detect_template(&templates_holder).unwrap();
     let tag_info = map_holder.as_ref().unwrap().detect_tag_info().unwrap();
+    //println!("tag info: {:?}", &tag_info);
     for i in 1..&tag_info.players_count + 1 {
         map_holder.as_mut().unwrap().teams_info[i] = i;
     }
     map_holder.as_mut().unwrap().size = tag_info.size as usize;
     Ok((MapDisplayableInfo {
-            file_name: map_path.rsplit("\\").last().unwrap().to_string(),
+            file_name: map_path.split("\\").last().unwrap().to_string(),
             players_count: tag_info.players_count as u8,
             template: template
         }
     ))
 }
 
+/// Invoked when user selects new team for some player.
 #[tauri::command]
 pub async fn update_player_team_info(
     patcher_manager: State<'_, PatcherManager>,
@@ -123,6 +132,7 @@ pub async fn update_player_team_info(
     Ok(())
 }
 
+/// Invoked when user checks use_night_lights setting.
 #[tauri::command]
 pub async fn set_night_lights_setting(
     patcher_manager: State<'_, PatcherManager>,
@@ -134,6 +144,7 @@ pub async fn set_night_lights_setting(
     Ok(())
 }
 
+/// Invoked when user checks set_weeks_only setting.
 #[tauri::command]
 pub async fn set_weeks_only_setting(
     patcher_manager: State<'_, PatcherManager>,
@@ -145,7 +156,7 @@ pub async fn set_weeks_only_setting(
     Ok(())
 }
 
-
+/// Invoked when used somehow modifies final_battle setting.
 #[tauri::command]
 pub async fn update_final_battle_setting(
     patcher_manager: State<'_, PatcherManager>,
@@ -163,6 +174,7 @@ pub async fn update_final_battle_setting(
     Ok(())
 }
 
+/// Invoked when used somehow modifies economic_victory setting.
 #[tauri::command]
 pub async fn update_economic_victory_setting(
     patcher_manager: State<'_, PatcherManager>,
@@ -180,6 +192,7 @@ pub async fn update_economic_victory_setting(
     Ok(())
 }
 
+/// Invoked when user somehow modifies capture_object setting.
 #[tauri::command]
 pub async fn update_capture_object_setting(
     patcher_manager: State<'_, PatcherManager>,
@@ -203,6 +216,9 @@ pub struct MapPackable {
     pub dir: PathBuf
 }
 
+/// Invoked when user activates patch process.
+/// Creates all necessary patches and runs it.
+/// Repacks map after it.
 #[tauri::command]
 pub async fn patch_map(
     app: AppHandle, 
@@ -229,11 +245,12 @@ pub async fn patch_map(
         map_holder.as_ref().unwrap().template(),
         map_holder.as_ref().unwrap().has_win_condition("capture")
     );
-    let underground_terrain_creator = UndergroundTerrainCreator{
-        is_active: map_holder.as_ref().unwrap().has_win_condition("final"),
-        terrain_path: patcher_manager.config_path.join("patcher\\adds\\terrains\\"),
-        write_dir: map_holder.as_ref().unwrap().get_write_dir(String::from("main"))
-    };
+    let underground_terrain_creator = UndergroundTerrainCreator::new(
+        map_holder.as_ref().unwrap().has_win_condition("final"),
+        patcher_manager.config_path.join("patcher\\adds\\terrains\\"),
+        map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
+        map_holder.as_ref().unwrap().size
+    );
     let mut win_condition_writer = WinConditionWriter {
         conditions: &map_holder.as_ref().unwrap().conds,
         quest_path: &patcher_manager.config_path.join("patcher\\win_condition_quests.xml"),
@@ -261,6 +278,7 @@ pub async fn patch_map(
         .with(&building_modifyable)
         .with(&treasure_patcher)
         .with(&win_condition_writer)
+        .with(&TemplateInfoGenerator{template: &map_holder.as_ref().unwrap().template._type})
         .run(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().to_path_buf());
     let f = FileWriter::new()
         .with(&MoonCalendarWriter::new(
@@ -313,6 +331,7 @@ pub async fn patch_map(
 
 use walkdir::WalkDir;
 
+/// Creates patched map file from temp directory.
 #[tauri::command]
 pub fn zip_map(map: MapPackable)  {
     let mut zip_file = std::fs::File::create(

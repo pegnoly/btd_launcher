@@ -17,12 +17,13 @@ function generateTeamsInfo(count: number) {
     for(let i = 1; i <= count; i++) {
         playersData[i] = i.toString();
     }
+    console.log("players data: ", playersData);
     return playersData;
 }
 
 export default function TeamSelector(props: TeamSelectorProps) {
     const [visible, setVisible] = useState<boolean>(false);
-    const [playersInfo, setPlayersInfo] = useState<string []>(generateTeamsInfo(props.playersCount));
+    const [playersInfo, setPlayersInfo] = useState<string []>(() => {return generateTeamsInfo(props.playersCount)});
 
     const {classes} = patcherStyles();
 

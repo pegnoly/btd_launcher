@@ -58,6 +58,7 @@ pub struct Map {
     pub conds: HashMap<String, MapWinCondition>
 }
 
+#[derive(Debug)]
 pub struct MapTagInfo {
     pub size: u16,
     pub players_count: usize
