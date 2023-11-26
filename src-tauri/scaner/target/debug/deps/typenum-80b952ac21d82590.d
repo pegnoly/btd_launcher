@@ -1,0 +1,17 @@
+D:\Homm5Dev\btd_launcher\src-tauri\scaner\target\debug\deps\libtypenum-80b952ac21d82590.rmeta: D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\lib.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\bit.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\int.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\marker_traits.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\operator_aliases.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\private.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\type_operators.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\uint.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\array.rs D:\Homm5Dev\btd_launcher\src-tauri\scaner\target\debug\build\typenum-9859fbcc8ae3103e\out/op.rs D:\Homm5Dev\btd_launcher\src-tauri\scaner\target\debug\build\typenum-9859fbcc8ae3103e\out/consts.rs
+
+D:\Homm5Dev\btd_launcher\src-tauri\scaner\target\debug\deps\typenum-80b952ac21d82590.d: D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\lib.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\bit.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\int.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\marker_traits.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\operator_aliases.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\private.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\type_operators.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\uint.rs D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\array.rs D:\Homm5Dev\btd_launcher\src-tauri\scaner\target\debug\build\typenum-9859fbcc8ae3103e\out/op.rs D:\Homm5Dev\btd_launcher\src-tauri\scaner\target\debug\build\typenum-9859fbcc8ae3103e\out/consts.rs
+
+D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\lib.rs:
+D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\bit.rs:
+D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\int.rs:
+D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\marker_traits.rs:
+D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\operator_aliases.rs:
+D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\private.rs:
+D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\type_operators.rs:
+D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\uint.rs:
+D:\Users\pgn\.cargo\registry\src\index.crates.io-6f17d22bba15001f\typenum-1.17.0\src\array.rs:
+D:\Homm5Dev\btd_launcher\src-tauri\scaner\target\debug\build\typenum-9859fbcc8ae3103e\out/op.rs:
+D:\Homm5Dev\btd_launcher\src-tauri\scaner\target\debug\build\typenum-9859fbcc8ae3103e\out/consts.rs:
+
+# env-dep:OUT_DIR=D:\\Homm5Dev\\btd_launcher\\src-tauri\\scaner\\target\\debug\\build\\typenum-9859fbcc8ae3103e\\out

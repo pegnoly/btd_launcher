@@ -1,6 +1,6 @@
 import { Checkbox, ScrollArea, Stack, Button, MantineProvider } from "@mantine/core";
 import { event, invoke } from "@tauri-apps/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PatchState } from "../main";
 import { FinalBattleElement } from "./final_battle";
 import { EconomicVictoryElement } from "./economic";
@@ -20,6 +20,13 @@ export default function PatcherSettings(props: PatcherSettingsProps) {
     const [visible, setVisible] = useState<boolean>(false);
     const [nightLightsChecked, setNightLightsChecked] = useState<boolean>(false);
     const [weeksOnlyChecked, setWeeksOnlyChecked] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (props.state == PatchState.Inactive) {
+            setNightLightsChecked(false);
+            setWeeksOnlyChecked(false);
+        }
+    }, [props.state])
 
     return (
         <MantineProvider theme={{
@@ -63,8 +70,8 @@ export default function PatcherSettings(props: PatcherSettingsProps) {
                                 setWeeksOnlyChecked(event.currentTarget.checked);
                                 invoke("set_weeks_only_setting", {weeksOnly: event.currentTarget.checked});
                         }}/>
-                        <FinalBattleElement/>
-                        <EconomicVictoryElement/>
+                        <FinalBattleElement template={props.template} state={props.state}/>
+                        <EconomicVictoryElement template={props.template} state={props.state}/>
                         <CaptureElement template={props.template} state={props.state}/>
                     </Stack>
                 </ScrollArea>

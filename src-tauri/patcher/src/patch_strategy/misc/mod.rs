@@ -1,4 +1,6 @@
 use std::{path::PathBuf, collections::HashMap};
+use quick_xml::events::BytesText;
+
 use crate::map::template::{Template, TemplateType};
 
 use super::{WriteAdditional, ProcessText, PatchCreatable};
@@ -113,14 +115,12 @@ impl PatchCreatable for UndergroundTerrainCreator {
         }
         match label {
             "HasUnderground" => {
-                writer.write_event(quick_xml::events::Event::Start(quick_xml::events::BytesStart::new("HasUnderground"))).unwrap();
-                writer.write_event(quick_xml::events::Event::Text(quick_xml::events::BytesText::new("true"))).unwrap();
-                writer.write_event(quick_xml::events::Event::End(quick_xml::events::BytesEnd::new("HasUnderground"))).unwrap(); 
+                writer.create_element("HasUnderground").write_text_content(BytesText::new("true")).unwrap();
             },
             "UndergroundTerrainFileName" => {
-                let terrain_name = self.size_to_terrain_map.get(&self.map_size).unwrap();
+                //let terrain_name = self.size_to_terrain_map.get(&self.map_size).unwrap();
                 writer.create_element("UndergroundTerrainFileName")
-                    .with_attribute(("href", terrain_name.as_str()))
+                    .with_attribute(("href", "UndergroundTerrain.bin"))
                     .write_empty().unwrap();
                 // let mut elem = quick_xml::events::BytesStart::new("UndergroundTerrainFileName");
                 // elem.push_attribute(("href", "UndergroundTerrain.bin"));
@@ -139,6 +139,7 @@ impl WriteAdditional for UndergroundTerrainCreator {
         let terrain_name = self.size_to_terrain_map.get(&self.map_size).unwrap();
         let path = PathBuf::from(&self.write_dir).join(terrain_name);
         let copy_path = self.terrain_path.join(terrain_name);
-        std::fs::copy(copy_path, path).unwrap();
+        std::fs::copy(copy_path, &path).unwrap();
+        std::fs::rename(&path, path.to_str().unwrap().replace(terrain_name, "UndergroundTerrain.bin")).unwrap();
     }
 }

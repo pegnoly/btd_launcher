@@ -13,13 +13,19 @@ export default function Patcher() {
   const gameModeContext = useGameModeContext();
 
   async function patcherButtonClicked(x: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    setVisible(!visible);
+      if (visible == false) {
+          appStateContext?.setState(AppState.Patching)
+      }
+      else {
+          appStateContext?.setState(AppState.Default)
+      }
+      setVisible(!visible);
   }
   
   return (
     <MantineProvider theme={{fontFamily: "Geologica, sans-serif"}} withGlobalStyles withNormalizeCSS>
       <ActionButton
-        disabled={!(appStateContext?.state == AppState.Default) || gameModeContext?.state == GameMode.Duel}
+        disabled={appStateContext?.state == AppState.Busy || gameModeContext?.state == GameMode.Duel}
         onClickFunction={patcherButtonClicked}
         text="Патчер карт"
       />

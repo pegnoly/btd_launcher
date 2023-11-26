@@ -1,11 +1,24 @@
-use quick_xml::events::{Event, BytesStart, BytesEnd, BytesText};
-use strum_macros::EnumString;
-use std::{io::Write, collections::HashMap, path::PathBuf};
-use crate::{GenerateLuaCode, WriteAdditional, ProcessText, PatchModifyable};
-use super::quest::PlayerSpecific;
-use homm5_types::quest::Quest;
-use serde::{Deserialize, Serialize};
+pub mod final_battle;
+pub mod capture;
+pub mod economic;
 
+use quick_xml::events::{Event, BytesStart, BytesEnd, BytesText};
+use std::{io::Write, collections::HashMap, path::PathBuf};
+use crate::Patcher;
+
+use super::{
+    GenerateLuaCode, WriteAdditional, PatchModifyable,
+    quest::PlayerSpecific,
+};
+
+use final_battle::FinalBattleTime;
+use economic::ResourceWinInfo;
+
+use homm5_types::quest::Quest;
+
+/// This mod contains patches for custom win condtions for map.
+
+/// Possible types of win conditions.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MapWinCondition {
     Default,
@@ -21,6 +34,7 @@ pub struct WinConditionWriter<'a> {
     pub quest_info_path: &'a PathBuf
 }
 
+/// Writes win conditions info into lua script.
 impl<'a> GenerateLuaCode for WinConditionWriter<'a> {
     fn to_lua(&self, path: & std::path::PathBuf) {
         let mut text = String::from("MCCS_MapWinConditions = {\n");
@@ -44,6 +58,7 @@ impl<'a> GenerateLuaCode for WinConditionWriter<'a> {
     }
 }
 
+/// Creates quests in map to display win conditions in game
 impl<'a> PatchModifyable for WinConditionWriter<'a> {
     fn try_modify(&mut self, _text: &String, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
         let quest_se = std::fs::read_to_string(&self.quest_path).unwrap();
@@ -70,103 +85,17 @@ impl<'a> PatchModifyable for WinConditionWriter<'a> {
     }
 }
 
+const WIN_CONDITION_QUEST_FILES: [&'static str; 6] = [
+    "final_battle_name.txt", "final_battle_desc.txt", "economic_name.txt", 
+    "economic_desc.txt", "capture_object_name.txt", "capture_object_desc.txt"
+];
+
+/// Puts quests info into map folder
 impl<'a> WriteAdditional for WinConditionWriter<'a> {
     fn try_write(&self) {
-        let path_to = PathBuf::from(&self.write_dir).join("final_battle_name.txt");
-        std::fs::copy(&self.quest_info_path.join("final_battle_name.txt"), &path_to).unwrap();
-        let path_to = PathBuf::from(&self.write_dir).join("final_battle_desc.txt");
-        std::fs::copy(&self.quest_info_path.join("final_battle_desc.txt"), &path_to).unwrap();
-        let path_to = PathBuf::from(&self.write_dir).join("economic_name.txt");
-        std::fs::copy(&self.quest_info_path.join("economic_name.txt"), &path_to).unwrap();
-        let path_to = PathBuf::from(&self.write_dir).join("economic_desc.txt");
-        std::fs::copy(&self.quest_info_path.join("economic_desc.txt"), &path_to).unwrap();
-        let path_to = PathBuf::from(&self.write_dir).join("capture_object_name.txt");
-        std::fs::copy(&self.quest_info_path.join("capture_object_name.txt"), &path_to).unwrap();
-        let path_to = PathBuf::from(&self.write_dir).join("capture_object_desc.txt");
-        std::fs::copy(&self.quest_info_path.join("capture_object_desc.txt"), &path_to).unwrap();
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-pub struct FinalBattleTime {
-    pub month: u8,
-    pub week: u8,
-    pub day: u8
-}
-
-pub struct WinConditionFinalBattleFileProcessor<'a> {
-    pub final_battle_time: Option<&'a MapWinCondition>
-}
-
-impl<'a> ProcessText for WinConditionFinalBattleFileProcessor<'a> {
-    fn try_process(&self, text: &mut String) -> String {
-        if self.final_battle_time.is_some() {
-            match self.final_battle_time.as_ref().unwrap() {
-                MapWinCondition::Final(f) => {
-                    text.replace("<month>", &f.month.to_string())
-                    .replace("<week>", &f.week.to_string())
-                    .replace("<day>", &f.day.to_string())
-                },
-                _=> text.to_owned()
-            }
-        }
-        else {
-            text.to_owned()
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize, EnumString)]
-pub enum ResourceType {
-    Gold,
-    RareResource
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-pub struct ResourceWinInfo {
-    pub _type: ResourceType,
-    pub count: u32
-}
-
-pub struct EconomicWinConditionTextProcessor<'a> {
-    pub resource_info: Option<&'a MapWinCondition>
-}
-
-impl<'a> ProcessText for EconomicWinConditionTextProcessor<'a> {
-    fn try_process(&self, text: &mut String) -> String {
-        if self.resource_info.is_some() {
-            match self.resource_info.as_ref().unwrap() {
-                MapWinCondition::Economic(r) => {
-                    text.replace("<res_type>", & if r._type == ResourceType::Gold {"золото"} else {"редкие ресурсы"} )
-                    .replace("<res_count>", & if r._type == ResourceType::Gold {r.count.to_string()} else {format!("{} каждого", r.count)})
-                },
-                _=> text.to_owned()
-            }
-        }
-        else {
-            text.to_owned()
-        }
-    }
-}
-
-pub struct CaptureObjectWinConditionTextProcessor<'a> {
-    pub delay_info: Option<&'a MapWinCondition>,
-    pub town_name: &'a String
-}
-
-impl<'a> ProcessText for CaptureObjectWinConditionTextProcessor<'a> {
-    fn try_process(&self, text: &mut String) -> String {
-        if self.delay_info.is_some() {
-            match self.delay_info.as_ref().unwrap() {
-                MapWinCondition::Capture(d) => {
-                    text.replace("<town_name>", self.town_name)
-                        .replace("<delay>", &d.to_string())
-                }
-                _=> text.to_owned()
-            }
-        }
-        else {
-            text.to_owned()
+        for file in WIN_CONDITION_QUEST_FILES {
+            let path_to = PathBuf::from(&self.write_dir).join(file);
+            std::fs::copy(&self.quest_info_path.join(file), &path_to).unwrap();
         }
     }
 }

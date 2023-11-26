@@ -24,7 +24,7 @@ export default function ModeSwitcher() {
             top: -250,
             left: 335
         }}>
-            <SegmentedControl disabled={appStateContext?.state == AppState.Busy}
+            <SegmentedControl disabled={!(appStateContext?.state == AppState.Default)}
                 style={{
                     position: 'absolute',
                     top: 500,

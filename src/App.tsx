@@ -1,41 +1,17 @@
-import { BackgroundImage, Box, Grid, MantineProvider, Progress,
-  SegmentedControl, Stack, Text, Image, createStyles, rem, Center, StarIcon } from '@mantine/core';
-import { HeroImageRight } from './back';
-import { Button, Group } from '@mantine/core';
-import { IconEye, IconCode, IconExternalLink } from '@tabler/icons-react';
-import { Actions } from './Actions';
-import { DescriptionRender } from './Desc';
+import { Box, Grid, MantineProvider, createStyles } from '@mantine/core';
 
-import { useState } from 'react';
-import styles from "./App.css"
-import { event, invoke } from '@tauri-apps/api';
-import { emit, listen } from '@tauri-apps/api/event'
+import { Actions } from './Actions';
+import { invoke } from '@tauri-apps/api';
 
 import mainBack from "./assets/main_back.png"
 import btdLogo from "./patcher/assets/btd_logo.png"
-import Patcher from './patcher/patcher';
-import { Donates } from './Donate';
-import AppStateProvider, { AppStateContext } from './contexts/AppState';
+// import { Donates } from './Donate';
+import AppStateProvider from './contexts/AppState';
 import GameModeProvider from './contexts/GameMode';
 import ModeSwitcher from './components/ModeSwitcher';
+import MainContainer from './patcher/components/main_container';
 
 invoke("start_update_thread");
-
-export enum GameMode {
-  Duel = "Duel",
-  RMG = "RMG",
-  Blitz = "Blitz"
-}
-
-export enum Locale {
-  Ru = "Ru",
-  En = "En"
-}
-
-export type Info = {
-  mode: GameMode,
-  locale: Locale
-}
 
 const useStyles = createStyles((theme) => ({
   hero: {
@@ -88,8 +64,7 @@ export default function App() {
             <Grid.Col data-tauri-drag-region offset={7.3}>
               <GameModeProvider>
                 <AppStateProvider>
-                  <ModeSwitcher/>
-                  <Actions/>
+                  <MainContainer/>
                 </AppStateProvider>
               </GameModeProvider>
             </Grid.Col>

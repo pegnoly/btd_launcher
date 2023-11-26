@@ -26,7 +26,7 @@ pub struct Documentation {
     pub manual: String
 }
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct BaseSettings {
     #[serde(rename = "CurrentGameMode")]
     pub current_mode: GameMode
@@ -147,6 +147,12 @@ pub async fn switch_mode(
     path_manager: State<'_, PathManager>, 
     new_mode: GameMode
 ) -> Result<(), ()> {
+    let new_settings = BaseSettings{current_mode: new_mode.clone()};
+    let base_path = path_manager.cfg().join("base.json");
+    std::fs::remove_file(&base_path).unwrap();
+    let mut file = std::fs::File::create(&base_path).unwrap();
+    file.write_all(serde_json::to_string_pretty(&new_settings).unwrap().as_bytes()).unwrap();
+    //
     let mut current_mode = game_mode_manager.current_mode.lock().await;
     game_mode_manager.remove_files(&current_mode, &path_manager).await;
     game_mode_manager.move_files_to_game(&new_mode, &path_manager).await;
@@ -154,4 +160,3 @@ pub async fn switch_mode(
     app.emit_to("main", "file_transfer_ended", {});
     Ok(())
 }
-

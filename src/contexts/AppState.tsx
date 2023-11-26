@@ -2,6 +2,7 @@ import { useState, createContext, PropsWithChildren, useContext, useEffect } fro
 
 export enum AppState {
     Default,
+    Patching,
     Busy
 }
 

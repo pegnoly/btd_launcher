@@ -2,6 +2,8 @@ use crate::map::template::TemplateType;
 use super::{PatchCreatable, WriteAdditional, GenerateLuaCode};
 use std::{path::PathBuf, io::Write};
 
+/// Some common patches necessary for every map.
+
 pub struct BaseCreator {
     write_dir: String,
     path: PathBuf
@@ -15,14 +17,13 @@ impl BaseCreator {
         }
     }
 }
- 
+
 impl PatchCreatable for BaseCreator {
+    /// Sets settings map can't work properly without.
     fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>, label: &str) {
         match label {
             "CustomTeams" => {
-                writer.write_event(quick_xml::events::Event::Start(quick_xml::events::BytesStart::new("CustomTeams"))).unwrap();
-                writer.write_event(quick_xml::events::Event::Text(quick_xml::events::BytesText::new("true"))).unwrap();
-                writer.write_event(quick_xml::events::Event::End(quick_xml::events::BytesEnd::new("CustomTeams"))).unwrap(); 
+                writer.create_element("CustomTeams").write_text_content(quick_xml::events::BytesText::new("true")).unwrap();
             },
             "MapScript" => {
                 writer.create_element("MapScript")
@@ -30,9 +31,7 @@ impl PatchCreatable for BaseCreator {
                     .write_empty().unwrap();
             },
             "RMGmap" => {
-                writer.write_event(quick_xml::events::Event::Start(quick_xml::events::BytesStart::new("RMGmap"))).unwrap();
-                writer.write_event(quick_xml::events::Event::Text(quick_xml::events::BytesText::new("false"))).unwrap();
-                writer.write_event(quick_xml::events::Event::End(quick_xml::events::BytesEnd::new("RMGmap"))).unwrap();
+                writer.create_element("RMGmap").write_text_content(quick_xml::events::BytesText::new("false")).unwrap();
             }
             _=> {}
         }
@@ -40,6 +39,7 @@ impl PatchCreatable for BaseCreator {
 }
 
 impl WriteAdditional for BaseCreator {
+    /// Writes preconfigured script files into map
     fn try_write(&self) {
         let path_to = PathBuf::from(&self.write_dir).join("MapScript.lua");
         std::fs::copy(&self.path.join("MapScript.lua"), &path_to).unwrap();
@@ -53,6 +53,7 @@ pub struct TemplateInfoGenerator<'a> {
 }
 
 impl<'a> GenerateLuaCode for TemplateInfoGenerator<'a> {
+    /// Writes template info into lua
     fn to_lua(&self, path: &std::path::PathBuf) {
         let mut file = std::fs::File::create(path.join("template_info.lua")).unwrap();
         file.write_all(format!("MCCS_TEMPLATE_TYPE = TEMPLATE_TYPE_{:?}", self.template).as_bytes()).unwrap();

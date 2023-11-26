@@ -8,6 +8,8 @@ pub mod treasure;
 pub mod misc;
 pub mod win_condition;
 
+/// This mod presents all types of possible patch strategies that can be applied to map files.
+
 pub trait PatchModifyable {
     /// Deserializes xml text to homm5 data struct and applies modifications to them.
     /// text: text parsed from xml document
@@ -38,5 +40,6 @@ pub trait WriteAdditional {
 }
 
 pub trait ProcessText {
+    /// Modifies given text. This trait is only useful cause of stupid encoding of homm5 text files.
     fn try_process(&self, text: &mut String) -> String;
 }

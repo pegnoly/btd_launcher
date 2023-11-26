@@ -25,3 +25,7 @@ cfg
 *.pak
 *.exe
 *.sw?
+BTD_Launcher.aip
+BTD_Launcher.back(21.2.2).aip
+BTD_Launcher-cache/part2/BTD_Launcher1.cab
+cfg/update/local.db

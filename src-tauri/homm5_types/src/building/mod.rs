@@ -98,7 +98,7 @@ pub struct AdvMapHillFort {
     pub creatures_upgrades_filter: CreaturesUpgradesFilter
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct AdvMapStatic {
     #[serde(rename = "Pos")]
     pub pos: Option<Pos>,

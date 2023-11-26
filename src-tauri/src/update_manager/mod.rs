@@ -6,21 +6,27 @@ use std::sync::{Mutex, Arc};
 use tauri::{AppHandle, State, Manager};
 use google_drive3::{DriveHub, oauth2, hyper, hyper_rustls::{HttpsConnector, HttpsConnectorBuilder}, chrono, FieldMask};
 use oauth2::{hyper::client::HttpConnector, service_account_impersonator};
-use tokio::io::AsyncWriteExt;
 use crate::drive;
 use crate::file_management::{FileLoadInfo, FileMoveType, FileLoadType};
-use crate::startup::DatabaseManager;
-use crate::{file_management::PathManager, drive::DriveManager, startup::StartupManager, game_mode::{GameModeManager, GameMode}};
-use futures_util::StreamExt;
+use crate::database::DatabaseManager;
+use crate::{file_management::PathManager, drive::DriveManager, game_mode::{GameModeManager, GameMode}, SingleValuePayload};
 
+/// This module contains functions for steps of update process.
+
+/// Form of database stored information about files to download
 #[derive(Debug, sqlx::FromRow)]
 pub struct Downloadable {
+    /// file id on google drive
     pub drive_id: String,
+    /// file name on drive
     pub name: String,
+    /// folder of drive file is contained
     pub parent: String,
+    /// timestamp of file modification time on drive
     pub modified: i64
 }
 
+/// Possible states of downloader(self explained i think)
 #[derive(Debug, PartialEq, Eq)]
 pub enum DownloaderState {
     NothingToDownload,
@@ -28,6 +34,7 @@ pub enum DownloaderState {
     Waiting
 }
 
+/// Manager that contains files that currently can be downloaded and its inner state.
 #[derive(Debug)]
 pub struct Downloader {
     pub downloadables: Arc<tokio::sync::Mutex<Vec<Downloadable>>>,
@@ -43,14 +50,11 @@ impl Downloader {
     }
 }
 
-#[derive(Debug, serde::Serialize, Clone)]
-pub struct SingleValuePayload<T> 
-    where T: serde::Serialize + Clone {
-    pub value: T
-}
-
+/// Id of drive file that is used to check of version update.
 const VERSION_FILE_ID: &'static str = "1aAsc5Uxlp6AJ5nsQaZvVxHRmI9QtYYdB";
 
+/// Constanly checks for change of version.txt file on drive.
+/// If it happens, downloader will collect updated files, changes its state and send this information to frontend.
 #[tauri::command]
 pub async fn start_update_thread(
     db: State<'_, DatabaseManager>, 
@@ -87,9 +91,10 @@ pub async fn start_update_thread(
                             if file.modified_time.as_ref().unwrap().timestamp() > version.modified {
                                 let mut state =  downloader_state.lock().await;
                                 if *state == DownloaderState::NothingToDownload {
-                                    collect_files_for_update(&downloadables, &hub, &connection, &folders).await;
-                                    println!("smth ready to download");
-                                    *state = DownloaderState::ReadyToDownload;
+                                    collect_files_for_update(&downloadables, &hub, &connection, &folders, &mut state).await;
+                                }
+                                else if *state == DownloaderState::ReadyToDownload {
+                                    //println!("smth ready to download");
                                     app.emit_to("main", "download_state_changed", SingleValuePayload{value: true});
                                 }
                             }
@@ -104,18 +109,21 @@ pub async fn start_update_thread(
     Ok(())
 }
 
+/// Collects files updated or added on drive.
 pub async fn collect_files_for_update(
     downloader: &Arc<tokio::sync::Mutex<Vec<Downloadable>>>,
     hub: &Arc<tokio::sync::Mutex<DriveHub<HttpsConnector<HttpConnector>>>>,
     pool: &sqlx::Pool<sqlx::Sqlite>,
-    folders: &Arc<tokio::sync::Mutex<HashMap<String, FileLoadInfo>>>
-) {
+    folders: &Arc<tokio::sync::Mutex<HashMap<String, FileLoadInfo>>>,
+    state: &mut tokio::sync::MutexGuard<'_, DownloaderState>
+){
+    //let mut handlers = vec![];
     let folders_locked = folders.lock().await.clone();
     for folder_id in folders_locked.into_keys() {
         let connection = pool.clone();
         let downloadables = Arc::clone(&downloader);
         let hub = Arc::clone(&hub);
-        tokio::spawn(async move {
+        let handle = tokio::spawn(async move {
             let responce = hub.lock().await
                 .files()
                 .list()
@@ -158,11 +166,15 @@ pub async fn collect_files_for_update(
                 Err(error) => {}
             }
         });
+        **state = DownloaderState::ReadyToDownload;
     }
 }
 
+/// Allows to generate link for downloads from disk without anti-virus checks.
 const API_KEY: &'static str = "AIzaSyA8TYClVgAHc-842t8_AZyvK5zldpZiakA";
 
+/// Downloads all updated or added files, writes new information into database, moves files if them are parts of active game mode.
+/// If launcher itself was updated, app will be closed.
 #[tauri::command]
 pub async fn download_update(
     app: AppHandle,
@@ -172,12 +184,14 @@ pub async fn download_update(
     drive: State<'_, DriveManager>,
     mode_manager: State<'_, GameModeManager>
 ) -> Result<(), ()> {
-    let downloadables_copied = Arc::clone(&downloader.downloadables);
-    let connection = db.pool.clone();
-    let current_game_mode = mode_manager.current_mode.lock().await.clone();
     app.emit_to("main", "updated_file_changed", SingleValuePayload {
         value: "Подключение...".to_string()
     });
+    let downloadables_copied = Arc::clone(&downloader.downloadables);
+    let connection = db.pool.clone();
+    let current_game_mode = mode_manager.current_mode.lock().await.clone();
+    let mut query_string = String::new();
+    let mut reload_required = false;
     for downloadable in downloadables_copied.lock().await.iter() {
         let target = format!("https://www.googleapis.com/drive/v3/files/{}?alt=media&key={}", &downloadable.drive_id, API_KEY);
         let responce = reqwest::get(target).await;
@@ -200,7 +214,11 @@ pub async fn download_update(
                 let mut download_root = &PathBuf::default();
                 match download_info.load {
                     FileLoadType::Game => download_root = path_manager.homm(),
-                    FileLoadType::Launcher => download_root = path_manager.cfg(),
+                    FileLoadType::Config => download_root = path_manager.cfg(),
+                    FileLoadType::App => {
+                        download_root = path_manager.app();
+                        reload_required = true;
+                    },
                     _=> {}
                 }
                 let download_dir = download_root.join(&download_info.path).join(&downloadable.name);
@@ -213,21 +231,11 @@ pub async fn download_update(
                         value: (downloaded / (len as f32)) as f32
                     });
                 }
-                let query = sqlx::query(
-                    "INSERT INTO files (drive_id, name, parent, modified) VALUES (?, ?, ?, ?) 
-                     ON CONFLICT(drive_id) 
-                     DO UPDATE SET modified = ?")
-                    .bind(&downloadable.drive_id).bind(&downloadable.name).bind(&downloadable.parent).bind(&downloadable.modified)
-                    .bind(&downloadable.modified)
-                    .execute(&connection).await;
-                match query {
-                    Ok(query_result) => {
-                        println!("Query ok, {:?}", &query_result);
-                    },
-                    Err(query_error) => {
-                        println!("Query error, {:?}", &query_error.to_string());
-                    }
-                }
+                query_string += &format!("
+                    INSERT INTO files (drive_id, name, parent, modified)\n
+                    VALUES ('{}', '{}', '{}', {})\n
+                    ON CONFLICT(drive_id)\n
+                    DO UPDATE SET modified = {};\n", &downloadable.drive_id, &downloadable.name, &downloadable.parent, &downloadable.modified, &downloadable.modified);
                 // move logic 
                 if download_info.move_info.is_some() && (download_info.move_info.as_ref().unwrap().mode == current_game_mode)  {
                     println!("Moving files cause some of them are of active game mode, {:?}", &current_game_mode);
@@ -250,6 +258,20 @@ pub async fn download_update(
             }
         }
     }
+    let query_try = sqlx::query(&query_string).execute(&connection).await;
+    match query_try {
+        Ok(query_result) => {
+            println!("Query ok, {:?}", &query_result);
+        },
+        Err(query_error) => {
+            println!("Query error, {:?}", &query_error.to_string());
+        }
+    }
+    if reload_required == true {
+        app.emit_to("main", "updated_file_changed", SingleValuePayload {
+            value: "Исполняемый файл лаунчера был обновлён. Запустите приложение заново.".to_string()
+        });
+    }
     downloader.downloadables.lock().await.clear();
     mode_manager.update_file_move_info(&path_manager);
     println!("Download ended!");
@@ -257,6 +279,8 @@ pub async fn download_update(
     app.emit_to("main", "download_state_changed", SingleValuePayload { value: false });
     let mut state = downloader.state.lock().await;
     *state = DownloaderState::NothingToDownload;
-    println!("state: {:?}", &state);
+    if reload_required == true {
+        app.exit(0);
+    }
     Ok(())
 }

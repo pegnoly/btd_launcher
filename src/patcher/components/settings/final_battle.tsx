@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Checkbox, Grid, Text } from "@mantine/core";
 import { invoke } from "@tauri-apps/api";
+import { PatcherSettingsProps } from "./main";
+import { PatchState } from "../main";
 
 class FinalBattleTiming {
     month: number = 1;
@@ -18,9 +20,16 @@ function generateMonths() {
     return options;
 }
 
-export function FinalBattleElement() {
+export function FinalBattleElement(props: PatcherSettingsProps) {
     const [checked, setChecked] = useState<boolean>(false);
     const [timing, setTiming] = useState<FinalBattleTiming>(new FinalBattleTiming());
+
+    useEffect(() => {
+        if (props.state == PatchState.Inactive) {
+            setChecked(false);
+            setTiming(new FinalBattleTiming())
+        }
+    }, [props.state])
 
     return (
         <>

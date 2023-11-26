@@ -2,16 +2,19 @@ use serde::{Serialize, Deserialize};
 use strum_macros::EnumString;
 use std::collections::HashMap;
 
+/// This mod contains structs to work with map temlates.
+
 /// Types of currently presented templates.
 #[derive(EnumString, PartialEq, Eq, Hash, Clone, Copy, Debug, Serialize, Deserialize)]
-#[strum(serialize_all = "UPPERCASE")]
+#[strum(serialize_all = "UPPERCASE")] // well, not working or i'm stupid...
 pub enum TemplateType {
     Common,
     Outcast,
     Blitz,
-    Crypt
+    Krypt
 }
 
+/// Types of possible additional settings for templates.
 #[derive(EnumString, PartialEq, Eq, Hash, Clone, Copy, Debug, Serialize, Deserialize)]
 pub enum TemplateAdditionalSetting {
     Capture
@@ -36,6 +39,7 @@ impl Default for Template {
     }
 }
 
+/// Template's presentation on frontend
 #[derive(serde::Serialize, Clone, Debug)]
 pub struct TemplateTransferable {
     pub name: String,
@@ -43,6 +47,7 @@ pub struct TemplateTransferable {
     pub settings_desc: String
 }
 
+/// Templates information for patcher
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
 pub struct TemplatesInfoModel {
     pub templates: Vec<Template>,

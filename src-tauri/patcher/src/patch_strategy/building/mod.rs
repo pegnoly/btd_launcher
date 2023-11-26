@@ -4,7 +4,7 @@ use crate::map::template::{Template, TemplateType};
 
 use super::{GenerateLuaCode, PatchModifyable, PatchCreatable};
 use homm5_types::{building::{AdvMapBuilding, AdvMapShrine, AdvMapStatic, NewBuildingType, BankType, AdvMapHillFort}, common::FileRef};
-use quick_xml::{Writer, events::{Event, BytesStart, BytesEnd}};
+use quick_xml::{Writer, events::{Event, BytesStart}};
 
 /// BuildingPatcher is a modifyable patcher that detects objects of AdvMapBuilding type, 
 /// recognizes their types, assigns names to them and writes this information to lua scripts.
@@ -44,71 +44,68 @@ pub(self) struct PredefinedHillFort {
     pub(self)  fort: AdvMapHillFort 
 } 
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename = "Item")]
-pub(self) struct PredefinedStatic {
+pub(crate) struct PredefinedStatic {
     #[serde(rename = "@href")]
-    pub(self)  href: Option<String>,
+    pub href: Option<String>,
     #[serde(rename = "@id")]
-    pub(self)  id: Option<String>,
+    pub id: Option<String>,
     #[serde(rename = "AdvMapStatic")]
-    pub(self)  object: AdvMapStatic 
+    pub object: AdvMapStatic 
 } 
 
 
-pub struct BuildingCreatable {
+pub struct CommonBuildingCreator {
     predefined_shrines: Vec<PredefinedShrine>,
-    predefined_hill_fort: PredefinedHillFort,
-    predefined_statics: Vec<PredefinedStatic>
+    predefined_hill_fort: PredefinedHillFort
 }
 
-impl BuildingCreatable {
-    pub fn new(path: PathBuf) -> Self {
-        let shrines_se = std::fs::read_to_string(&path.join("shrines.xml")).unwrap();
+impl CommonBuildingCreator {
+    pub fn new(path: &PathBuf) -> Self {
+        let shrines_se = std::fs::read_to_string(path.join("shrines.xml")).unwrap();
         let shrines_de: Vec<PredefinedShrine> = quick_xml::de::from_str(&shrines_se).unwrap();
-        let fort_se = std::fs::read_to_string(&path.join("hill_fort.xml")).unwrap();
+        let fort_se = std::fs::read_to_string(path.join("hill_fort.xml")).unwrap();
         let fort_de: PredefinedHillFort = quick_xml::de::from_str(&fort_se).unwrap();
-        let statics_se = std::fs::read_to_string(&path.join("statics.xml")).unwrap();
-        let statics_de: Vec<PredefinedStatic> = quick_xml::de::from_str(&statics_se).unwrap();
-        BuildingCreatable { 
+        CommonBuildingCreator { 
             predefined_shrines: shrines_de,
             predefined_hill_fort: fort_de,
-            predefined_statics: statics_de
         }
     }
 }
 
-impl PatchCreatable for BuildingCreatable {
+impl PatchCreatable for CommonBuildingCreator {
+    /// writes predefined objects into map
     fn try_create(&self, writer: &mut Writer<&mut Vec<u8>>, _label: &str) {
         writer.write_event(Event::Start(BytesStart::new("objects"))).unwrap();
+        // shrines for spell learning
         for shrine in &self.predefined_shrines {
-            let mut elem = BytesStart::new("Item");
-            elem.push_attribute(("href", shrine.href.as_ref().unwrap().as_str()));
-            elem.push_attribute(("id", shrine.id.as_ref().unwrap().as_str()));
-            writer.write_event(Event::Start(elem)).unwrap();
-            writer.write_serializable("AdvMapShrine", &shrine.shrine).unwrap();
-            writer.write_event(Event::End(BytesEnd::new("Item"))).unwrap();
-        }
-        let mut elem = BytesStart::new("Item");
-        elem.push_attribute(("href", self.predefined_hill_fort.href.as_ref().unwrap().as_str()));
-        elem.push_attribute(("id", self.predefined_hill_fort.id.as_ref().unwrap().as_str()));
-        writer.write_event(Event::Start(elem)).unwrap();
-        writer.write_serializable("AdvMapHillFort", &self.predefined_hill_fort.fort).unwrap();
-        writer.write_event(Event::End(BytesEnd::new("Item"))).unwrap();
-        //
-        for object in &self.predefined_statics {
             writer.create_element("Item")
-                .with_attributes(vec![("href", object.href.as_ref().unwrap().as_str()), ("id", object.id.as_ref().unwrap().as_str())])
+                .with_attributes(
+                    vec![
+                        ("href", shrine.href.as_ref().unwrap().as_str()), 
+                        ("id", shrine.id.as_ref().unwrap().as_str())
+                    ])
                 .write_inner_content(|w|{
-                    w.write_serializable("AdvMapStatic", &object.object).unwrap();
+                    w.write_serializable("AdvMapShrine", &shrine.shrine).unwrap();
                     Ok(())
                 }).unwrap();
         }
+        // hill fort to make regrade fort work
+        writer.create_element("Item")
+            .with_attributes(
+                vec![
+                    ("href", self.predefined_hill_fort.href.as_ref().unwrap().as_str()), 
+                    ("id", self.predefined_hill_fort.id.as_ref().unwrap().as_str())
+                ])
+            .write_inner_content(|w| {
+                w.write_serializable("AdvMapHillFort", &self.predefined_hill_fort.fort).unwrap();
+                Ok(())
+            }).unwrap();
     }
 }
 
 /// BuildingModifyable is a modifyable patch strategy that applies changes to objects of AdvMapBuilding type.
-/// 
 pub struct BuildingModifyable<'a> {
     /// Template information needed cause some buildings must be replaced or modified in some mods
     template: &'a Template,

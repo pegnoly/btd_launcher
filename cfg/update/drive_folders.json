@@ -1,6 +1,6 @@
 {
     "1BApV6vGkrRKvaTvbBDzmBoD1f_DnQ9Hp": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "modes\\RMG\\",
         "movable": {
             "type": "MOVE_TYPE_DATA",
@@ -8,11 +8,11 @@
         }
     },
 	"1qe4fPi--iWa_UOgYI9L4G6fyrBA_n2Jd": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "update\\"
     },
     "1nwXZ46RWDN2G0XNYZJnJd_4ovd1acmT8": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "modes\\Duel\\",
         "movable": {
             "type": "MOVE_TYPE_DATA",
@@ -20,7 +20,7 @@
         }
     },
     "1zJii9fkPv9Bvg1EPUkY5NRBWLt57y8-N": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "modes\\Duel\\Map\\",
         "movable": {
             "type": "MOVE_TYPE_MAPS",
@@ -28,7 +28,7 @@
         }
     },
     "1oAE0Ma-TyqvU3svgJVD99iGQ2q-kC5Ws": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "docs\\"
     },
     "19oDb9WhRg_sPyHGWmLNVJSkIm2OobZHx": {
@@ -40,27 +40,27 @@
         "path": "bin\\"
     },
     "1bsSxsJruBBbf6YbYNs5GDorXM_t1XGLW": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "patcher\\"
     },
     "12difILoXhs6YKWKGaaigZtRDPuwkMpy9": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "patcher\\adds\\common\\"
     },
     "1RaGab2ZW9s9L1O_cgRVzmzVNlwUuyx8m": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "patcher\\adds\\moon_calendar\\"  
     },
     "1KjXgid01O7pLbNhQ4Q3KvZDFhmXidksu": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "patcher\\adds\\outcast\\"  
     },
     "1kZU0f4bZD7lLQl68gmsk1ijm_ie3q9_4": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "patcher\\adds\\terrains\\"  
     },
     "1G0dGgWQ49ti4i8QoxqTOj2HjKRCGK9S5": {
-        "load": "Launcher",
+        "load": "Config",
         "path": "patcher\\adds\\win_conditions\\"  
     }
 }

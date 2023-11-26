@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { Checkbox, Grid, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { invoke } from "@tauri-apps/api";
+import { PatcherSettingsProps } from "./main";
+import { P } from "@tauri-apps/api/event-41a9edf5";
+import { PatchState } from "../main";
 
 enum ResourceType {
     Gold = "Gold",
@@ -14,10 +17,17 @@ class EconomicVictoryProps {
     resCount: number = 50;
 }
 
-export function EconomicVictoryElement() {
+export function EconomicVictoryElement(props: PatcherSettingsProps) {
 
     const [checked, setChecked] = useState<boolean>(false);
     const [economicProps, setEconomicProps] = useState<EconomicVictoryProps>(new EconomicVictoryProps());
+
+    useEffect(() => {
+        if (props.state == PatchState.Inactive) {
+            setChecked(false);
+            setEconomicProps(new EconomicVictoryProps())
+        }
+    }, [props.state])
 
     function sendResInfoToBackend(type: ResourceType, count: number) {
         invoke("update_economic_victory_setting", {isEnabled: true, resourceInfo: {_type: type, count: count}});

@@ -3,11 +3,14 @@ use patcher::{Patcher,
     map::{Unpacker, Map, template::{Template, TemplateTransferable, TemplatesInfoModel}}, 
     patch_strategy::{
         base::{BaseCreator, TemplateInfoGenerator}, 
-        building::{BuildingModifyable, BuildingCreatable}, 
+        building::{BuildingModifyable, CommonBuildingCreator}, 
         treasure::TreasurePatcher, 
         player::{PlayersPatcher, TeamsGenerator}, light::LightPatcher, quest::QuestPatcher,
         town::TownPatcher, misc::{MoonCalendarWriter, OutcastFilesWriter, MapNameChanger, UndergroundTerrainCreator},
-        win_condition::{MapWinCondition, FinalBattleTime, WinConditionWriter, WinConditionFinalBattleFileProcessor, ResourceWinInfo, EconomicWinConditionTextProcessor, CaptureObjectWinConditionTextProcessor}
+        win_condition::{MapWinCondition, WinConditionWriter, 
+            final_battle::{FinalBattleTime, FinalBattleArenaCreator, WinConditionFinalBattleFileProcessor}, 
+            economic::{ResourceWinInfo, EconomicWinConditionTextProcessor}, 
+            capture::CaptureObjectWinConditionTextProcessor}
     }, CodeGenerator, FileWriter, TextProcessor
 };
 use serde::{Serialize, Deserialize};
@@ -17,54 +20,44 @@ use std::{path::PathBuf, collections::HashMap, f64::consts::E, io::Read, cell::{
 use std::ops::Range;
 use std::io::Write;
 
-use crate::{file_management::PathManager, update_manager::SingleValuePayload};
+use crate::{file_management::PathManager, SingleValuePayload};
 
-// frontend communication structs.
+/// This module presents functions for all steps of patching process.
+/// The common flow is:
+/// Pick map -> Unpack map -> Configure settings for patches -> Run all patches -> Repack new map and save base into separate folder.
+
+
+/// Contains patcher props used in all steps of patching process.
+pub struct PatcherManager {
+    /// Map that is currently patched
+    pub map: Mutex<Option<Map>>,
+    /// Information of possible templates
+    pub templates_model: Mutex<TemplatesInfoModel>,
+    /// Path of configuration files of pactcher
+    pub config_path: PathBuf
+}
+
+impl PatcherManager {
+    pub fn new(config_path: &PathBuf) -> Self {
+        let patcher_config_path = config_path.join("patcher\\");
+        let mut templates_file = std::fs::File::open(patcher_config_path.join("templates.json")).unwrap();
+        let mut templates_string = String::new();
+        templates_file.read_to_string(&mut templates_string).unwrap();
+        let templates: TemplatesInfoModel = serde_json::from_str(&templates_string).unwrap();
+        PatcherManager { 
+            map: Mutex::new(None), 
+            templates_model: Mutex::new(templates), 
+            config_path: patcher_config_path 
+        }
+    }
+}
+
+/// Contains information about map that will be displayed in frontend.
 #[derive(Serialize, Clone, Debug)]
 pub struct MapDisplayableInfo {
     pub file_name: String,
     pub template: TemplateTransferable,
     pub players_count: u8,
-}
-
-pub struct ActivityInfo {
-    pub active: bool
-}
-
-pub struct PatcherManager {
-    pub activity: Mutex<ActivityInfo>,
-    pub map: Mutex<Option<Map>>,
-    pub templates_model: Mutex<TemplatesInfoModel>,
-    pub config_path: PathBuf
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct MapDisplayableName {
-    pub name: String
-}
-
-#[derive(Debug, Serialize, Clone)]
-pub struct PatcherVisibility {
-    pub visible: bool
-}
-
-#[tauri::command]
-pub async fn show_patcher(app: AppHandle, patcher_manager: State<'_, PatcherManager>) -> Result<(), ()> {
-    let mut activity = patcher_manager.activity.lock().await;
-    if activity.active == false {
-        activity.active = true;
-        app.app_handle().emit_to("main", "patcher_visibility_changed", SingleValuePayload {
-            value: false
-        }).unwrap();
-    }
-    else {
-        activity.active = false;
-        app.app_handle().emit_to("main", "patcher_visibility_changed", SingleValuePayload {
-            value: true
-        }).unwrap();
-    }
-
-    Ok(())
 }
 
 /// Invoked when user clicks on map_pick button of patcher. Creates an open file dialog and send picked map path to frontend.
@@ -210,12 +203,6 @@ pub async fn update_capture_object_setting(
     Ok(())
 }
 
-#[derive(serde::Deserialize)]
-pub struct MapPackable {
-    pub name: String,
-    pub dir: PathBuf
-}
-
 /// Invoked when user activates patch process.
 /// Creates all necessary patches and runs it.
 /// Repacks map after it.
@@ -225,89 +212,111 @@ pub async fn patch_map(
     patcher_manager: State<'_, PatcherManager>, 
 ) -> Result<(), ()> {
     let mut map_holder = patcher_manager.map.lock().await;
+
+    // ------ PATCHES -------
+    // base
     let base_creator = BaseCreator::new(
         map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
-        patcher_manager.config_path.join("patcher\\adds\\common\\")
+        patcher_manager.config_path.join("adds\\common\\")
     );
+    // players
     let teams = map_holder.as_ref().unwrap().teams_info.clone();
     let mut players_patcher = PlayersPatcher::new(teams.clone());
+    let mut teams_generator = TeamsGenerator::new(teams.clone());
+    // buildings
+    let building_creatable = CommonBuildingCreator::new(&patcher_manager.config_path);
     let mut building_modifyable = BuildingModifyable::new(
-        patcher_manager.config_path.join("patcher\\banks_types.json"),
-        patcher_manager.config_path.join("patcher\\new_buildings_types.json"),
+        patcher_manager.config_path.join("banks_types.json"),
+        patcher_manager.config_path.join("new_buildings_types.json"),
         map_holder.as_ref().unwrap().template()
     );
-    let light_patcher = LightPatcher::new(patcher_manager.config_path.join("patcher\\lights.json"), 
+    // lights
+    let light_patcher = LightPatcher::new(patcher_manager.config_path.join("lights.json"), 
         map_holder.as_ref().unwrap().settings.use_night_lights);
+    // treasures
     let mut treasure_patcher = TreasurePatcher::new();
+    // towns
     let mut town_patcher = TownPatcher::new(
-        patcher_manager.config_path.join("patcher\\town_types.json"), 
-        patcher_manager.config_path.join("patcher\\town_specs.json"),
+        patcher_manager.config_path.join("town_types.json"), 
+        patcher_manager.config_path.join("town_specs.json"),
         map_holder.as_ref().unwrap().template(),
         map_holder.as_ref().unwrap().has_win_condition("capture")
     );
+    // quests
+    let mut secondary_quest_patcher = QuestPatcher::new(patcher_manager.config_path.join("test_quest.xml"));
+    // win condition specific
     let underground_terrain_creator = UndergroundTerrainCreator::new(
         map_holder.as_ref().unwrap().has_win_condition("final"),
-        patcher_manager.config_path.join("patcher\\adds\\terrains\\"),
+        patcher_manager.config_path.join("adds\\terrains\\"),
         map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
         map_holder.as_ref().unwrap().size
     );
     let mut win_condition_writer = WinConditionWriter {
         conditions: &map_holder.as_ref().unwrap().conds,
-        quest_path: &patcher_manager.config_path.join("patcher\\win_condition_quests.xml"),
+        quest_path: &patcher_manager.config_path.join("win_condition_quests.xml"),
         write_dir: &map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
-        quest_info_path: &patcher_manager.config_path.join("patcher\\adds\\win_conditions\\"),
+        quest_info_path: &patcher_manager.config_path.join("adds\\win_conditions\\"),
     };
-    let p = Patcher::new()
+    let final_arena_creator = FinalBattleArenaCreator::new(
+        &patcher_manager.config_path, 
+        map_holder.as_ref().unwrap().has_win_condition("final")
+    );
+    
+    let map_xdb_patcher = Patcher::new()
         .with_root(map_holder.as_ref().unwrap().map_xdb()).unwrap()
         .with_creatable("AmbientLight", &light_patcher, false)
         .with_creatable("GroundAmbientLights", &light_patcher, false)
         .with_creatable("MapScript", &base_creator, true)
         .with_creatable("CustomTeams", &base_creator, true)
         .with_creatable("RMGmap", &base_creator, true)
-        .with_creatable("objects", &BuildingCreatable::new(patcher_manager.config_path.join("patcher\\")), false)
+        .with_creatable("objects", &building_creatable, false)
+        .with_creatable("objects", &final_arena_creator, false)
         .with_creatable("HasUnderground", &underground_terrain_creator, true)
         .with_creatable("UndergroundTerrainFileName", &underground_terrain_creator, true)
         .with_modifyable("AdvMapTreasure", &mut treasure_patcher)
         .with_modifyable("AdvMapBuilding", &mut building_modifyable)
         .with_modifyable("AdvMapTown", &mut town_patcher)
         .with_modifyable("players", &mut players_patcher)
-        .with_modifyable("Secondary", &mut QuestPatcher::new(patcher_manager.config_path.join("patcher\\test_quest.xml")))
+        .with_modifyable("Secondary", &mut secondary_quest_patcher)
         .with_modifyable("Primary", &mut win_condition_writer)
         .run();
-    let g = CodeGenerator::new()
-        .with(&building_modifyable)
-        .with(&treasure_patcher)
-        .with(&win_condition_writer)
-        .with(&TemplateInfoGenerator{template: &map_holder.as_ref().unwrap().template._type})
-        .run(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().to_path_buf());
-    let f = FileWriter::new()
+
+    let map_tag_patcher = Patcher::new()
+        .with_root(map_holder.as_ref().unwrap().map_tag()).unwrap()
+        .with_creatable("HasUnderground", &underground_terrain_creator, true)
+        .with_modifyable("teams", &mut teams_generator)
+        .run();
+
+    // ------ FILE WRITERS ------
+    let file_writer = FileWriter::new()
         .with(&MoonCalendarWriter::new(
             map_holder.as_ref().unwrap().settings.only_neutral_weeks,
             map_holder.as_ref().unwrap().get_write_dir(String::from("game_mechanics")),
-            patcher_manager.config_path.join("patcher\\adds\\moon_calendar\\Default.xdb")
+            patcher_manager.config_path.join("adds\\moon_calendar\\Default.xdb")
         ))
         .with(&OutcastFilesWriter::new(
             map_holder.as_ref().unwrap().template(),
             &map_holder.as_ref().unwrap().get_write_dir(String::from("game_mechanics")),
-            &patcher_manager.config_path.join("patcher\\adds\\outcast\\Summon_Creatures.xdb")
+            &patcher_manager.config_path.join("adds\\outcast\\Summon_Creatures.xdb")
         ))
         .with(&base_creator)
         .with(&underground_terrain_creator)
         .with(&win_condition_writer)
         .run();
-    // map-tag patch
-    let pp = Patcher::new()
-        .with_root(map_holder.as_ref().unwrap().map_tag()).unwrap()
-        .with_creatable("HasUnderground", &underground_terrain_creator, true)
-        .with_modifyable("teams", &mut TeamsGenerator::new(teams.clone()))
-        .run();
-    let t = TextProcessor::new(map_holder.as_ref().unwrap().map_name())
+
+    // ------- CODE GENERATORS -------
+    let template_info_generator = TemplateInfoGenerator{template: &map_holder.as_ref().unwrap().template._type};
+    let code_generator = CodeGenerator::new()
+        .with(&building_modifyable)
+        .with(&treasure_patcher)
+        .with(&win_condition_writer)
+        .with(&template_info_generator)
+        .run(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().to_path_buf());
+
+    // ------ TEXT PROCESSORS ------
+    let base_text_processor = TextProcessor::new(map_holder.as_ref().unwrap().map_name())
         .with(&MapNameChanger{})
         .run();
-    let m = MapPackable {
-        name: map_holder.as_ref().unwrap().name.clone(),
-        dir: map_holder.as_ref().unwrap().dir.clone()
-    };
     // win condition quests processing
     let fbtp = TextProcessor::new(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().join("final_battle_desc.txt"))
         .with(&WinConditionFinalBattleFileProcessor {
@@ -325,26 +334,25 @@ pub async fn patch_map(
             town_name: &town_patcher.neutral_town_name,
         })
         .run();
-    zip_map(m);
+    zip_map(&map_holder.as_ref().unwrap().name, &map_holder.as_ref().unwrap().dir);
     Ok(())
 }
 
 use walkdir::WalkDir;
 
 /// Creates patched map file from temp directory.
-#[tauri::command]
-pub fn zip_map(map: MapPackable)  {
+pub fn zip_map(name: &String, dir: &PathBuf)  {
     let mut zip_file = std::fs::File::create(
-        map.dir.parent().unwrap().join(&map.name)
+        dir.parent().unwrap().join(name)
     ).unwrap();
     let mut map_zipped = zip::ZipWriter::new(zip_file);
-    for entry in WalkDir::new(&map.dir) {
+    for entry in WalkDir::new(dir) {
         match entry {
             Ok(e) => {
                 let path = e.path();
-                println!("path: {:?}", path);
+                // println!("path: {:?}", path);
                 if path.is_file() {
-                    let file_name = path.strip_prefix(&map.dir).unwrap().to_str().unwrap();
+                    let file_name = path.strip_prefix(dir).unwrap().to_str().unwrap();
                     let mut curr_file = std::fs::File::open(&path).unwrap();
                     let mut s = Vec::new();
                     curr_file.read_to_end(&mut s);
@@ -358,5 +366,5 @@ pub fn zip_map(map: MapPackable)  {
         }
     }
     map_zipped.finish().unwrap();
-    std::fs::remove_dir_all(&map.dir);
+    std::fs::remove_dir_all(dir);
 }

@@ -1,5 +1,5 @@
 import { Text, Collapse, Button, ScrollArea } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PatchState } from "../main"
 import { useDisclosure } from "@mantine/hooks";
 import { invoke } from "@tauri-apps/api";
@@ -24,6 +24,10 @@ function generateTeamsInfo(count: number) {
 export default function TeamSelector(props: TeamSelectorProps) {
     const [visible, setVisible] = useState<boolean>(false);
     const [playersInfo, setPlayersInfo] = useState<string []>(() => {return generateTeamsInfo(props.playersCount)});
+
+    useEffect(() => {
+        setPlayersInfo(generateTeamsInfo(props.playersCount));
+    }, [props.playersCount])
 
     const {classes} = patcherStyles();
 

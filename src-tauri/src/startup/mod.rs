@@ -1,21 +1,18 @@
-use crate::file_management::PathManager;
-use tauri::State;
-use pyo3::prelude::*;
-use pyo3::types::{PyAny, PyModule, IntoPyDict};
+use crate::{file_management::PathManager, SingleValuePayload};
+use tauri::{State, AppHandle, Manager};
 
-pub struct StartupManager {
-    pub app_started: std::sync::Mutex<bool>,
-    pub download_thread_started: std::sync::Mutex<bool>
-}
-
-pub struct DatabaseManager {
-    pub pool: sqlx::Pool<sqlx::Sqlite>
-}
+/// Just functions to start some processes.
 
 #[tauri::command]
-pub fn start_game(path_manager: State<PathManager>) {
-    std::env::set_current_dir("D:\\Homm5Dev\\bin\\").unwrap();
-    std::process::Command::new("D:\\Homm5Dev\\bin\\H5_Game.exe").spawn().unwrap();
+pub fn start_game(path_manager: State<PathManager>, app: AppHandle) {
+    std::env::set_current_dir(path_manager.homm().join("bin\\")).unwrap();
+    let path = path_manager.homm().join("bin\\H5_Game_BTD.exe");
+    std::thread::spawn(move || {
+        app.emit_to("main", "game_closed", SingleValuePayload{value: false});
+        let mut homm5_process = std::process::Command::new(path).spawn().unwrap();
+        homm5_process.wait().unwrap();
+        app.emit_to("main", "game_closed", SingleValuePayload{value: true});
+    });
 }
 
 #[tauri::command]

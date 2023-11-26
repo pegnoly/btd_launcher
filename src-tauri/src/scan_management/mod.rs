@@ -12,6 +12,9 @@ use scaner::{
     }
 };
 
+/// This mod is used for lua code generation for game files entities like creatures, heroes etc.
+
+/// Checks entities in .pak files of game's data folder, reads their contents, scans them and create new pak with generated scripts.
 #[tauri::command]
 pub async fn scan_files(path_manager: State<'_, PathManager>) -> Result<(),()> {
     let mut files: HashMap<String, FileStructure> = HashMap::new();
