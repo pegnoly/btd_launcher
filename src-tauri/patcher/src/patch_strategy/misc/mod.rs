@@ -102,7 +102,7 @@ impl UndergroundTerrainCreator {
                 (176, "UT_Large.bin".to_string()),
                 (216, "UT_ExtraLarge.bin".to_string()),
                 (256, "UT_Huge.bin".to_string()),
-                (312, "UT_Impossible.bin".to_string())
+                (320, "UT_Impossible.bin".to_string())
             ]) 
         } 
     }

@@ -1,9 +1,8 @@
 import { Checkbox, Text } from "@mantine/core";
 import { invoke } from "@tauri-apps/api";
 import { PatcherSettingsProps } from "./main";
-import { useLocalStorage } from "@mantine/hooks";
 import { useState, useEffect } from "react";
-import { PatchState } from "../main";
+import { PatchState, usePatchStateContext } from "../../contexts/patch_state";
 
 const captureTemplates: string[] = ["BTD-Universe", "BTD-UniverseX6", "BTD-KingsBounty", "BTD-JebusCross-Castle", "BTD-JebusCross-2x2-Castle"];
 
@@ -14,13 +13,15 @@ class CaptureProps {
 
 export default function CaptureElement(props: PatcherSettingsProps) {
 
+    const patcherStateContext = usePatchStateContext();
+
     const [captureProps, setCaptureProps] = useState<CaptureProps>(new CaptureProps());
 
     useEffect(() => {
-        if (props.state == PatchState.Inactive) {
+        if (patcherStateContext?.state == PatchState.MapPicked) {
             setCaptureProps(new CaptureProps());
         }
-    }, [props.state])
+    }, [patcherStateContext?.state])
 
     return (
         <div>

@@ -45,6 +45,7 @@ impl Default for MapSettings {
 /// - write_dirs: directories in unpacked files, used to put additional files into map with patcher.
 pub struct Map {
     pub name: String,
+    pub base_name: PathBuf,
     pub dir: PathBuf,
     pub map_xdb: PathBuf,
     pub map_tag: PathBuf,
@@ -68,6 +69,7 @@ impl Map {
     pub fn new() -> Self {
         Map {
             name: String::new(),
+            base_name: PathBuf::new(),
             dir: PathBuf::default(),
             map_xdb: PathBuf::default(),
             map_tag: PathBuf::default(),
@@ -218,12 +220,13 @@ pub struct Unpacker {
 impl Unpacker {
     /// takes a path to base map, unpacks it and returns Map instance.
     pub fn unpack_map(p: &PathBuf) -> Map {
+        let temp = p.parent().unwrap().join("temp\\");
         let file = std::fs::File::open(p).unwrap();
         let mut archive = zip::ZipArchive::new(file).unwrap();
-        let temp = p.parent().unwrap().join("temp\\");
         let mut map = Map::new();
         map.dir = temp;
-        map.name = format!("BTD_{}", p.file_name().unwrap().to_str().unwrap());
+        map.name = format!("BTD_{}", &p.file_name().unwrap().to_str().unwrap());
+        map.base_name = p.to_owned();
         for i in 0..archive.len() {
             let mut entry = archive.by_index(i).unwrap();
             std::fs::create_dir_all(&map.dir.join(entry.enclosed_name().unwrap().parent().unwrap())).unwrap();

@@ -62,5 +62,9 @@
     "1G0dGgWQ49ti4i8QoxqTOj2HjKRCGK9S5": {
         "load": "Config",
         "path": "patcher\\adds\\win_conditions\\"  
+    },
+    "1XouJXGISf8nkWB9yR4f27u1ZVVQnZZMR": {
+        "load": "App",
+        "path": "new_version\\"
     }
 }

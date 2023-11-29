@@ -5,6 +5,7 @@ import { ActionButton } from "../Actions";
 import { useAppStateContext, AppState } from "../contexts/AppState";
 import { useGameModeContext, GameMode } from "../contexts/GameMode";
 import PatcherMain from "./components/main";
+import PatchStateProvider from "./contexts/patch_state";
 
 export default function Patcher() {
   const [visible, setVisible] = useState<boolean>(false);
@@ -29,7 +30,9 @@ export default function Patcher() {
         onClickFunction={patcherButtonClicked}
         text="Патчер карт"
       />
-      <PatcherMain visible={visible}/>
+      <PatchStateProvider>
+        <PatcherMain visible={visible}/>
+      </PatchStateProvider>
     </MantineProvider>
   );
 }

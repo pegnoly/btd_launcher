@@ -1,32 +1,43 @@
 import { Checkbox, ScrollArea, Stack, Button, MantineProvider } from "@mantine/core";
 import { event, invoke } from "@tauri-apps/api";
 import { useEffect, useState } from "react";
-import { PatchState } from "../main";
 import { FinalBattleElement } from "./final_battle";
 import { EconomicVictoryElement } from "./economic";
 import  CaptureElement  from "./capture";
 import { patcherStyles } from "../main";
 
 import settingsBack from "../../assets/settingsBack.png";
+import { PatchState, usePatchStateContext } from "../../contexts/patch_state";
 
 export type PatcherSettingsProps = {
-    state: PatchState;
     template: string;
 }
 
 export default function PatcherSettings(props: PatcherSettingsProps) {
     const {classes} = patcherStyles();
 
+    const patcherStateContext = usePatchStateContext();
+
     const [visible, setVisible] = useState<boolean>(false);
     const [nightLightsChecked, setNightLightsChecked] = useState<boolean>(false);
     const [weeksOnlyChecked, setWeeksOnlyChecked] = useState<boolean>(false);
 
     useEffect(() => {
-        if (props.state == PatchState.Inactive) {
+        if (patcherStateContext?.state == PatchState.MapPicked) {
             setNightLightsChecked(false);
             setWeeksOnlyChecked(false);
         }
-    }, [props.state])
+    }, [patcherStateContext?.state])
+
+    function settingsButtonClicked() {
+        setVisible(!visible);
+        if (patcherStateContext?.state == PatchState.Active) {
+            patcherStateContext.setState(PatchState.Configuring);
+        }
+        else {
+            patcherStateContext?.setState(PatchState.Active);
+        }
+    }
 
     return (
         <MantineProvider theme={{
@@ -34,13 +45,13 @@ export default function PatcherSettings(props: PatcherSettingsProps) {
         }}>
         <Button 
             name="settingsChecker"
-            disabled={!(props.state == PatchState.MapPicked)}
+            disabled={(patcherStateContext?.state == PatchState.Inactive || patcherStateContext?.state == PatchState.Patching)}
             className={classes.button}
             style={{
                 position: "relative",
                 left: 15,
             }}
-            onClick={() => setVisible(!visible)}>Настройки...
+            onClick={() => settingsButtonClicked()}>Настройки...
         </Button>
         <div
             hidden={!visible}
@@ -70,9 +81,9 @@ export default function PatcherSettings(props: PatcherSettingsProps) {
                                 setWeeksOnlyChecked(event.currentTarget.checked);
                                 invoke("set_weeks_only_setting", {weeksOnly: event.currentTarget.checked});
                         }}/>
-                        <FinalBattleElement template={props.template} state={props.state}/>
-                        <EconomicVictoryElement template={props.template} state={props.state}/>
-                        <CaptureElement template={props.template} state={props.state}/>
+                        <FinalBattleElement/>
+                        <EconomicVictoryElement/>
+                        <CaptureElement template={props.template}/>
                     </Stack>
                 </ScrollArea>
             </div>

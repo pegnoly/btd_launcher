@@ -1,15 +1,13 @@
-import { Text, Collapse, Button, ScrollArea } from "@mantine/core";
+import { Text, Button, ScrollArea } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { PatchState } from "../main"
-import { useDisclosure } from "@mantine/hooks";
 import { invoke } from "@tauri-apps/api";
 import { patcherStyles } from "../main";
 
 import teamSelectorBack from "../../assets/actions_panel_back.png";
+import { PatchState, usePatchStateContext } from "../../contexts/patch_state";
 
 export type TeamSelectorProps = {
     playersCount: number;
-    patchState: PatchState;
 }
 
 function generateTeamsInfo(count: number) {
@@ -22,12 +20,25 @@ function generateTeamsInfo(count: number) {
 }
 
 export default function TeamSelector(props: TeamSelectorProps) {
+
+    const patcherStateContext = usePatchStateContext();
+
     const [visible, setVisible] = useState<boolean>(false);
     const [playersInfo, setPlayersInfo] = useState<string []>(() => {return generateTeamsInfo(props.playersCount)});
 
     useEffect(() => {
         setPlayersInfo(generateTeamsInfo(props.playersCount));
     }, [props.playersCount])
+
+    function selectorButtonClicked() {
+        setVisible(!visible);
+        if (patcherStateContext?.state == PatchState.Active) {
+            patcherStateContext.setState(PatchState.Configuring);
+        }
+        else {
+            patcherStateContext?.setState(PatchState.Active);
+        }
+    }
 
     const {classes} = patcherStyles();
 
@@ -38,7 +49,7 @@ export default function TeamSelector(props: TeamSelectorProps) {
                 align="center"
             >Число игроков</Text>
             <Text 
-                hidden={!(props.patchState == PatchState.MapPicked)} 
+                hidden={patcherStateContext?.state == PatchState.Inactive} 
                 style={{fontFamily: 'Balsamiq Sans, cursive'}} 
                 color="green" 
                 align="center" 
@@ -46,13 +57,13 @@ export default function TeamSelector(props: TeamSelectorProps) {
             >{props.playersCount}</Text>
             <Button 
                 name="teamSelector"
-                disabled={!(props.patchState == PatchState.MapPicked)}
+                disabled={(patcherStateContext?.state == PatchState.Inactive || patcherStateContext?.state == PatchState.Patching)}
                 className={classes.button}
                 style={{
                     position: "relative",
                     left: 15,
             }}
-            onClick={() => setVisible(!visible)}>Команды...</Button>
+            onClick={() => selectorButtonClicked()}>Команды...</Button>
             <div hidden={!visible}
                 style={
                 { 

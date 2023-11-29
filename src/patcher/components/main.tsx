@@ -13,6 +13,7 @@ import TeamSelector from "./team_selector/main";
 import { listen } from "@tauri-apps/api/event";
 import { SingleValuePayload } from "../../App";
 import { AppState, useAppStateContext } from "../../contexts/AppState";
+import { PatchState, usePatchStateContext } from "../contexts/patch_state";
 
 export const patcherStyles = createStyles((theme) => ({
     map_info_div: {
@@ -80,12 +81,6 @@ export const patcherStyles = createStyles((theme) => ({
     // }
 }));
 
-export enum PatchState {
-    Inactive,
-    MapPicked,
-    Patching
-}
-
 type PatcherMainProps = {
     visible: boolean;
 }
@@ -105,14 +100,14 @@ type MapProps = {
 export default function PatcherMain(props: PatcherMainProps) {
     const {classes} = patcherStyles();
 
-    const [currentState, setCurrentState] = useState<PatchState>(PatchState.Inactive);
+    const patchStateContext = usePatchStateContext();
+    const appStateContext = useAppStateContext();
+
     const [currentMapName, setMapName] = useState<string>("");
     const [currentTemplate, setTemplate] = useState<string>("");
     const [currentPlayersCount, setPlayersCount] = useState<number>(0);
     const [templateDesc, setTemplateDesc] = useState<string>("");
     const [templateSettingsDesc, setTemplateSettingsDesc] = useState<string>("");
-
-    const appStateContext = useAppStateContext();
 
     async function mapPickButtonClicked(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         await invoke("pick_map")
@@ -121,13 +116,14 @@ export default function PatcherMain(props: PatcherMainProps) {
 
     const mapPickedListener = listen("map_picked", (event) => {
         let name = event.payload as SingleValuePayload<string>;
+        patchStateContext?.setState(PatchState.MapPicked);
         startMapUnpack(name.value);
     });
 
     async function startMapUnpack(path: string) { 
         await invoke("unpack_map", {mapPath: path})
             .then((mapInfo) => {
-                setCurrentState(PatchState.MapPicked);
+                patchStateContext?.setState(PatchState.Active);
                 setUnpackedMapProps(mapInfo as MapProps);
             })
             .catch((error) => console.log("error occured while unpacking map: ", error));
@@ -143,23 +139,23 @@ export default function PatcherMain(props: PatcherMainProps) {
     }
 
     async function patchButtonClick() {
-        setCurrentState(PatchState.Patching);
+        patchStateContext?.setState(PatchState.Patching);
         appStateContext?.setState(AppState.Busy);
         invoke("patch_map").then(() => {
-            setCurrentState(PatchState.Inactive);
-            appStateContext?.setState(AppState.Default);
-        }); // msg that everything ok here and state changes here
+            patchStateContext?.setState(PatchState.Inactive);
+            appStateContext?.setState(AppState.Patching);
+        });
     }
 
     useEffect(() => {
-        if (currentState == PatchState.Inactive) {
+        if (patchStateContext?.state == PatchState.Inactive) {
             setMapName("");
             setPlayersCount(0);
             setTemplate("");
             setTemplateDesc("");
             setTemplateSettingsDesc("");
         }
-    }, [currentState])
+    }, [patchStateContext?.state])
 
     return (
         <Box 
@@ -177,7 +173,7 @@ export default function PatcherMain(props: PatcherMainProps) {
                 bottom: -50
             }}>
             <Button 
-                disabled={!(currentState == PatchState.Inactive)}
+                disabled={(patchStateContext?.state == PatchState.Configuring || patchStateContext?.state == PatchState.Patching)}
                 className={classes.button}
                 name="mapPicker"
                 style={{
@@ -200,7 +196,7 @@ export default function PatcherMain(props: PatcherMainProps) {
                 <Text className={classes.button_text} style = {{position: "relative", top: 10}} size={12} align="center" color="yellow">{templateSettingsDesc}</Text>
                 <Button 
                     name="patcherStartup"
-                    disabled={!(currentState == PatchState.MapPicked)}
+                    disabled={!(patchStateContext?.state == PatchState.Active)}
                     className={classes.button}
                     style={{
                         position: "absolute",
@@ -216,11 +212,11 @@ export default function PatcherMain(props: PatcherMainProps) {
                     <div>
                         <Text style={{fontFamily: 'Balsamiq Sans, cursive'}} align="center">Имя карты</Text>
                         <Text style={{fontFamily: 'Balsamiq Sans, cursive'}} align="center" size={13} color="green">{currentMapName}</Text>
-                        <PatcherSettings state={currentState} template={currentTemplate}/>
+                        <PatcherSettings template={currentTemplate}/>
                     </div>
                 </Grid.Col>
                 <Grid.Col offset={2} span={5}>
-                    <TeamSelector playersCount={currentPlayersCount} patchState={currentState}/>
+                    <TeamSelector playersCount={currentPlayersCount}/>
                 </Grid.Col>
             </Grid>
             </div>

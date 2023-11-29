@@ -58,7 +58,9 @@ pub(crate) struct PredefinedStatic {
 
 pub struct CommonBuildingCreator {
     predefined_shrines: Vec<PredefinedShrine>,
-    predefined_hill_fort: PredefinedHillFort
+    predefined_hill_fort: PredefinedHillFort,
+    // !TEMPORARY UNTIL #6 IMPLEMENTED
+    predefined_statics: Vec<PredefinedStatic>
 }
 
 impl CommonBuildingCreator {
@@ -67,9 +69,12 @@ impl CommonBuildingCreator {
         let shrines_de: Vec<PredefinedShrine> = quick_xml::de::from_str(&shrines_se).unwrap();
         let fort_se = std::fs::read_to_string(path.join("hill_fort.xml")).unwrap();
         let fort_de: PredefinedHillFort = quick_xml::de::from_str(&fort_se).unwrap();
+        let statics_se = std::fs::read_to_string(path.join("statics.xml")).unwrap();
+        let statics_de: Vec<PredefinedStatic> = quick_xml::de::from_str(&statics_se).unwrap();
         CommonBuildingCreator { 
             predefined_shrines: shrines_de,
             predefined_hill_fort: fort_de,
+            predefined_statics: statics_de
         }
     }
 }
@@ -102,6 +107,19 @@ impl PatchCreatable for CommonBuildingCreator {
                 w.write_serializable("AdvMapHillFort", &self.predefined_hill_fort.fort).unwrap();
                 Ok(())
             }).unwrap();
+        // !TEMPORARY UNTIL #6 IMPLEMENTED
+        for object in &self.predefined_statics {
+            writer.create_element("Item")
+                .with_attributes(
+                    vec![
+                        ("href", object.href.as_ref().unwrap().as_str()), 
+                        ("id", object.id.as_ref().unwrap().as_str())
+                    ])
+                .write_inner_content(|w|{
+                    w.write_serializable("AdvMapStatic", &object.object).unwrap();
+                    Ok(())
+                }).unwrap();
+        }
     }
 }
 

@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Checkbox, Grid, Text } from "@mantine/core";
 import { invoke } from "@tauri-apps/api";
-import { PatcherSettingsProps } from "./main";
-import { PatchState } from "../main";
+import { PatchState, usePatchStateContext } from "../../contexts/patch_state";
 
 class FinalBattleTiming {
     month: number = 1;
@@ -20,16 +19,19 @@ function generateMonths() {
     return options;
 }
 
-export function FinalBattleElement(props: PatcherSettingsProps) {
+export function FinalBattleElement() {
+
+    const patcherStateContext = usePatchStateContext();
+
     const [checked, setChecked] = useState<boolean>(false);
     const [timing, setTiming] = useState<FinalBattleTiming>(new FinalBattleTiming());
 
     useEffect(() => {
-        if (props.state == PatchState.Inactive) {
-            setChecked(false);
-            setTiming(new FinalBattleTiming())
+        if (patcherStateContext?.state == PatchState.MapPicked) {
+            setChecked(false)
+            setTiming(new FinalBattleTiming());
         }
-    }, [props.state])
+    }, [patcherStateContext?.state])
 
     return (
         <>
@@ -64,7 +66,7 @@ export function FinalBattleElement(props: PatcherSettingsProps) {
                             position: "relative",
                             left: -3
                         }}
-                        defaultValue={timing.month}
+                        value={timing.month}
                         onChange={(event) => {
                             setTiming({
                                 ...timing,
@@ -88,7 +90,7 @@ export function FinalBattleElement(props: PatcherSettingsProps) {
                             height: 20, 
                             fontSize: 12
                         }}
-                        defaultValue={timing.week}
+                        value={timing.week}
                         onChange={(event) => {
                             setTiming({
                                 ...timing,
@@ -117,7 +119,7 @@ export function FinalBattleElement(props: PatcherSettingsProps) {
                         position: "relative",
                         left: -6  
                     }}
-                    defaultValue={timing.day}
+                    value={timing.day}
                     onChange={(event) => {
                         setTiming({
                             ...timing,

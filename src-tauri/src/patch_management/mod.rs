@@ -67,6 +67,10 @@ pub async fn pick_map(
     app: AppHandle, 
     path_manager: State<'_, PathManager>
 ) -> Result<(), ()> {
+    let temp = path_manager.maps().join("temp\\");
+    if temp.exists() {
+        std::fs::remove_dir_all(&temp).unwrap();
+    }
     let file_dialog = FileDialogBuilder::new()
         .add_filter("hommV maps", &["h5m"])
         .set_directory(path_manager.maps());
@@ -209,7 +213,8 @@ pub async fn update_capture_object_setting(
 #[tauri::command]
 pub async fn patch_map(
     app: AppHandle, 
-    patcher_manager: State<'_, PatcherManager>, 
+    patcher_manager: State<'_, PatcherManager>,
+    path_manager: State<'_, PathManager>
 ) -> Result<(), ()> {
     let mut map_holder = patcher_manager.map.lock().await;
 
@@ -270,7 +275,7 @@ pub async fn patch_map(
         .with_creatable("CustomTeams", &base_creator, true)
         .with_creatable("RMGmap", &base_creator, true)
         .with_creatable("objects", &building_creatable, false)
-        .with_creatable("objects", &final_arena_creator, false)
+        //.with_creatable("objects", &final_arena_creator, false)
         .with_creatable("HasUnderground", &underground_terrain_creator, true)
         .with_creatable("UndergroundTerrainFileName", &underground_terrain_creator, true)
         .with_modifyable("AdvMapTreasure", &mut treasure_patcher)
@@ -334,14 +339,24 @@ pub async fn patch_map(
             town_name: &town_patcher.neutral_town_name,
         })
         .run();
-    zip_map(&map_holder.as_ref().unwrap().name, &map_holder.as_ref().unwrap().dir);
+    zip_map(&map_holder.as_ref().unwrap().name, &map_holder.as_ref().unwrap().dir).await;
+    // move base map
+    let base_map_move_path = path_manager.maps().join("base_maps\\");
+    if base_map_move_path.exists() == false {
+        std::fs::create_dir(&base_map_move_path);
+    }
+    std::fs::copy(
+        &map_holder.as_ref().unwrap().base_name,
+        base_map_move_path.join(&map_holder.as_ref().unwrap().base_name.file_name().unwrap().to_str().unwrap())
+    ).unwrap();
+    std::fs::remove_file(&map_holder.as_ref().unwrap().base_name);
     Ok(())
 }
 
 use walkdir::WalkDir;
 
 /// Creates patched map file from temp directory.
-pub fn zip_map(name: &String, dir: &PathBuf)  {
+pub async fn zip_map(name: &String, dir: &PathBuf)  {
     let mut zip_file = std::fs::File::create(
         dir.parent().unwrap().join(name)
     ).unwrap();
