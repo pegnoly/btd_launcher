@@ -59,7 +59,7 @@ pub(crate) struct PredefinedStatic {
 pub struct CommonBuildingCreator {
     predefined_shrines: Vec<PredefinedShrine>,
     predefined_hill_fort: PredefinedHillFort,
-    // !TEMPORARY UNTIL #6 IMPLEMENTED
+    // !TEMPORARY UNTIL #7 IMPLEMENTED
     predefined_statics: Vec<PredefinedStatic>
 }
 
@@ -107,7 +107,7 @@ impl PatchCreatable for CommonBuildingCreator {
                 w.write_serializable("AdvMapHillFort", &self.predefined_hill_fort.fort).unwrap();
                 Ok(())
             }).unwrap();
-        // !TEMPORARY UNTIL #6 IMPLEMENTED
+        // !TEMPORARY UNTIL #7 IMPLEMENTED
         for object in &self.predefined_statics {
             writer.create_element("Item")
                 .with_attributes(
@@ -139,6 +139,8 @@ pub struct BuildingModifyable<'a> {
     buildings_types_count: HashMap<NewBuildingType, u16>,
     /// Types of concrete buildings in current map
     current_map_buildings: HashMap<String, NewBuildingType>,
+    // ! Temporary here i think until #7
+    dwarven_warrens_rotations: HashMap<String, f32>
 }
 
 impl<'a> BuildingModifyable<'a> {
@@ -158,6 +160,8 @@ impl<'a> BuildingModifyable<'a> {
             buildings_info: buildings_de,
             buildings_types_count: HashMap::new(),
             current_map_buildings: HashMap::new(),
+
+            dwarven_warrens_rotations: HashMap::new()
         }
     }
 
@@ -201,7 +205,11 @@ impl<'a> BuildingModifyable<'a> {
                 }
                 let building_game_name = format!("{:?}_{}", build.building_type, curr_count);
                 building.name = building_game_name.clone();
-                self.current_map_buildings.insert(building_game_name, build.building_type);
+                self.current_map_buildings.insert(building_game_name.clone(), build.building_type);
+                // ! temporary until #7
+                if build.building_type == NewBuildingType::BTD_DWARVEN_MINE {
+                    self.dwarven_warrens_rotations.insert(building_game_name, building.rot);
+                }
             },
             None => {}
         }
@@ -227,8 +235,7 @@ impl<'a> PatchModifyable for BuildingModifyable<'a> {
                 }
                 writer.write_serializable("AdvMapBuilding", &building).unwrap();
             }
-            Err(_e) => {
-            }
+            Err(_e) => println!("Error while deserialize new building from {}, {}", &actual_string, _e.to_string())
         }
     }
 }
@@ -246,6 +253,12 @@ impl<'a> GenerateLuaCode for BuildingModifyable<'a> {
             .for_each(|build| {
                 generated_str.push_str(format!("\t[\"{}\"] = {:?},\n", build.0, build.1).as_str())
         });
+        generated_str.push_str("}\n\n");
+        generated_str.push_str("BTD_DwarvenMinesRots = \n{\n");
+        self.dwarven_warrens_rotations.iter()
+            .for_each(|mine| {
+                generated_str.push_str(&format!("\t[\"{}\"] = {},\n", mine.0, mine.1))
+            });
         generated_str.push_str("}\n\n");
         let mut out_file = fs::File::create(path.join("buildings.lua")).unwrap();
         out_file.write_all(&mut generated_str.as_bytes()).unwrap();

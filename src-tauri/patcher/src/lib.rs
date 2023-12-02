@@ -17,12 +17,20 @@ use quick_xml::reader::Reader;
 use pyo3::prelude::*;
 use pyo3::types::{PyAny, PyModule, IntoPyDict};
 
+/// Patcher performs all possible strategies for given file.
+
 pub struct Patcher<'a> {
+    /// path to file for patching
     path: Option<&'a PathBuf>,
+    /// its string representation
     readable: String,
+    /// list of creatable tags(keys), value marks this tag replaceable
     creatables: HashMap<String, bool>,
+    /// [tag: patch object]
     creatable_patches: HashMap<String, &'a dyn PatchCreatable>,
+    /// list of modidiable tags
     modifyables: Vec<String>,
+    /// [tag: patch object]
     modifyable_patches: HashMap<String, &'a mut dyn PatchModifyable>,
 }
 
@@ -37,8 +45,7 @@ impl<'a> Patcher<'a> {
             modifyable_patches: HashMap::new(),
         }
     }
-    /// sets main file for this patcher. 
-    /// I want this to be a path to file to separate it with subpatchers that will directly take string
+    /// sets main file for this patcher.
     pub fn with_root(&mut self, root_path: &'a PathBuf) -> Option<&mut Self> {
         self.path = Some(root_path);
         match fs::File::open(root_path) {
@@ -61,12 +68,14 @@ impl<'a> Patcher<'a> {
         self
     }
 
+    /// adds modifiable patch strategy
     pub fn with_modifyable(&mut self, label: &str, patch: &'a mut dyn PatchModifyable) -> &mut Self {
         self.modifyables.push(label.to_string());
         self.modifyable_patches.insert(label.to_string(), patch);
         self
     }
 
+    /// executes patch process and writes patched info when it is done.
     pub fn run(&mut self) {
         let mut output: Vec<u8> = Vec::new();
         let mut writer = Writer::new(&mut output);
@@ -76,6 +85,8 @@ impl<'a> Patcher<'a> {
         out_file.write_all(&output).unwrap();
     }
 
+    /// reads all tags in given xml file.
+    /// if finds tag that is creatable/modifiable then applies necessary patches to its content
     fn process(&mut self, writer: &mut Writer<&mut Vec<u8>>) {
         let mut buf = Vec::new();
         let mut reader = Reader::from_str(&self.readable);
@@ -92,12 +103,12 @@ impl<'a> Patcher<'a> {
                         if *self.creatables.get(&actual_tag).unwrap() == true {
                             reader.read_to_end(e.to_end().name()).unwrap();
                         }
-                        println!("creatable tag found: {}", &actual_tag);
+                        //println!("creatable tag found: {}", &actual_tag);
                         let actual_strategy = self.creatable_patches.get_mut(&actual_tag).unwrap();
                         actual_strategy.try_create(writer, &actual_tag);
                     }
                     else if self.modifyables.contains(&actual_tag) {
-                        println!("modifyable tag found: {}", &actual_tag);
+                        //println!("modifyable tag found: {}", &actual_tag);
                         let end = e.to_end().into_owned();
                         let text = reader.read_text(end.name()).unwrap().to_string();
                         let actual_strategy = self.modifyable_patches.get_mut(&actual_tag).unwrap();
@@ -123,6 +134,8 @@ impl<'a> Patcher<'a> {
     }
 }
 
+/// Modifies text file of map.
+/// This is needed cause of stupid encoding of these files so i'm using this python solution here(couldnt find right way to output utf16-le in Rust)
 pub struct TextProcessor<'a> {
     path: Option<&'a PathBuf>,
     processors: Vec<&'a dyn ProcessText>
@@ -136,11 +149,13 @@ impl<'a> TextProcessor<'a> {
         }
     }
 
+    /// adds new processor
     pub fn with(&mut self, processor: &'a dyn ProcessText) -> &mut Self {
         self.processors.push(processor);
         self
     }
 
+    /// apply all processors to text
     pub fn run(&self) {
         let file = fs::File::open(self.path.unwrap()).unwrap();
         let mut text = utf16_reader::read_to_string(file);
@@ -166,6 +181,7 @@ impl<'a> TextProcessor<'a> {
     }
 }
 
+/// Generates additional lua files.
 pub struct CodeGenerator<'a> {
     code_generators: Vec<&'a dyn GenerateLuaCode>
 }
@@ -189,6 +205,7 @@ impl<'a> CodeGenerator<'a> {
     }
 }
 
+/// Puts additional files to map(from configs mostly)
 pub struct FileWriter<'a> {
     file_writers: Vec<&'a dyn WriteAdditional>
 }

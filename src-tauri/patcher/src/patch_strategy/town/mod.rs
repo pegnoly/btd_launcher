@@ -1,71 +1,46 @@
-use std::collections::HashMap;
-use std::path::PathBuf;
+mod town_scheme;
 
-use crate::map::template::{TemplateType, Template};
-use homm5_types::town::{TownBuilding, TownBuildingType, TownBuildingLevel, TownType, AdvMapTown};
+use std::{collections::HashMap, path::PathBuf};
+use crate::map::template::Template;
+use homm5_types::town::{TownType, AdvMapTown};
 use quick_xml::Writer;
+
+use self::town_scheme::TownBuildingScheme;
 
 use super::PatchModifyable;
 
-pub struct TownBuildingCreator {
-    _type: TownBuildingType,
-    initial_upgrade: Option<TownBuildingLevel>,
-    max_upgrade: Option<TownBuildingLevel>
-}
-
-impl TownBuildingCreator {
-    pub fn start(t: TownBuildingType) -> Self {
-        TownBuildingCreator { 
-            _type: t, 
-            initial_upgrade: None, 
-            max_upgrade: None 
-        }
-    }
-
-    pub fn with_initial_upgrade(&mut self, level: TownBuildingLevel) -> &mut Self {
-        self.initial_upgrade = Some(level);
-        self
-    }
-
-    pub fn with_max_upgrade(&mut self, level: TownBuildingLevel) -> &mut Self {
-        self.max_upgrade = Some(level);
-        self
-    }
-
-    pub fn create(&self) -> TownBuilding {
-        TownBuilding { 
-            Type: self._type, 
-            InitialUpgrade: self.initial_upgrade.unwrap(), 
-            MaxUpgrade: self.max_upgrade.unwrap() 
-        }
-    }
-}
-
-fn create_building(_type: TownBuildingType, initial_upgrade: TownBuildingLevel, max_upgrade: TownBuildingLevel) -> TownBuilding {
-    let building = TownBuildingCreator::start(_type)
-        .with_initial_upgrade(initial_upgrade)
-        .with_max_upgrade(max_upgrade)
-        .create();
-    building
-}
+/// TownPatcher is a modifyable patch strategy that allows to set town's names and modify town's buildings list.
+/// Also now it is used to configure information for capture win condition but i think i'll move it into separate patches.
 
 pub struct TownPatcher<'a> {
+    // possible building schemes
+    town_building_schemes: HashMap<String, TownBuildingScheme>,
+    // maps towns shareds to their game constants
     town_shareds: HashMap<String, TownType>,
+    // maps towns specializations to their names
+    town_specs: HashMap<String, String>,
+    // template of map that contains towns
     template: &'a Template,
-    // TODO remove this to getter type of patches.
-    pub neutral_town_name: String,
+    // capture win condition flag
     capture_victory_enabled: bool,
-    town_specs: HashMap<String, String>
+    // TODO remove this to getter type of patches.
+    // name of town that secures victory by its capture
+    pub neutral_town_name: String,
 }
 
 impl<'a> TownPatcher<'a> {
-    pub fn new(town_types_path: PathBuf, town_specs_path: PathBuf, template: &'a Template, capture_victory: bool) -> Self {
-        let towns_se = std::fs::read_to_string(town_types_path).unwrap();
+    pub fn new(config_path: &'a PathBuf, template: &'a Template, capture_victory: bool) -> Self {
+        let towns_se = std::fs::read_to_string(config_path.join("town_types.json")).unwrap();
         let towns_de: HashMap<String, TownType> = serde_json::from_str(&towns_se).unwrap();
         //
-        let specs_se = std::fs::read_to_string(town_specs_path).unwrap();
+        let specs_se = std::fs::read_to_string(config_path.join("town_specs.json")).unwrap();
         let specs_de: HashMap<String, String> = serde_json::from_str(&specs_se).unwrap();
+        //
+        let schemes_se = std::fs::read_to_string(config_path.join("town_build_schemes.json")).unwrap();
+        let schemes_de: HashMap<String, TownBuildingScheme> = serde_json::from_str(&schemes_se).unwrap();
+        println!("TownSchemes: {:?}", &schemes_de);
         TownPatcher { 
+            town_building_schemes: schemes_de,
             town_shareds: towns_de,
             template: template,
             neutral_town_name: String::new(),
@@ -77,13 +52,11 @@ impl<'a> TownPatcher<'a> {
 
 impl<'a> PatchModifyable for TownPatcher<'a> {
     fn try_modify(&mut self, text: &String, writer: &mut Writer<&mut Vec<u8>>) {
-        use homm5_types::town::TownBuildingType as tbt;
-        use homm5_types::town::TownBuildingLevel as tbl;
-
         let actual_string = format!("<AdvMapTown>{}</AdvMapTown>", text);
         let town_info: Result<AdvMapTown, quick_xml::DeError> = quick_xml::de::from_str(&actual_string);
         match town_info {
             Ok(mut town) => {
+                //println!("Town: {:?}", &town);
                 // TODO move this to getter patch.
                 if self.capture_victory_enabled == true && town.player_id == "PLAYER_NONE" {
                     town.name = "wc_capture_town".to_string();
@@ -102,42 +75,10 @@ impl<'a> PatchModifyable for TownPatcher<'a> {
                 let no_xpointer_shared = town.shared.href.as_ref().unwrap().replace("#xpointer(/AdvMapTownShared)", "");
                 let town_type = self.town_shareds.get(&no_xpointer_shared).unwrap();
                 town.buildings.items = vec![];
-                // base buildings
-                let town_hall = create_building(tbt::TownHall, tbl::BldUpg1, tbl::BldUpg4);
-                let fort = create_building(tbt::Fort, tbl::BldUpg1, tbl::BldUpg4);
-                let tavern = create_building(tbt::Tavern, tbl::BldUpg1, tbl::BldUpg1);
-                town.buildings.items.push(town_hall);
-                town.buildings.items.push(fort);
-                match self.template._type {
-                    TemplateType::Outcast => {
-                        let dwell_l1 = create_building(tbt::Dwelling1, tbl::BldUpg1, tbl::BldUpg2);
-                        let tavern = create_building(tbt::Tavern, tbl::BldUpgNone, tbl::BldUpgNone);
-                        town.buildings.items.push(dwell_l1);
-                        town.buildings.items.push(tavern);
-                    }
-                    TemplateType::Blitz => {
-                        let blacksmith = create_building(tbt::Blacksmith, tbl::BldUpg1, tbl::BldUpg1);
-                        let marketplace = create_building(tbt::Marketplace, tbl::BldUpg1, tbl::BldUpg2);
-                        let dwell_l1 = create_building(tbt::Dwelling1, tbl::BldUpg1, tbl::BldUpg2);
-                        let dwell_l2 = create_building(tbt::Dwelling2, tbl::BldUpg1, tbl::BldUpg2);
-                        town.buildings.items.push(blacksmith);
-                        town.buildings.items.push(marketplace);
-                        town.buildings.items.push(dwell_l1);
-                        town.buildings.items.push(dwell_l2);
-                        town.buildings.items.push(tavern);
-                        if *town_type == TownType::TownStronghold {
-                            let special_one = create_building(tbt::Special1, tbl::BldUpg1, tbl::BldUpg3);
-                            let special_three = create_building(tbt::Special3, tbl::BldUpg1, tbl::BldUpg1);
-                            town.buildings.items.push(special_one);
-                            town.buildings.items.push(special_three);
-                        }
-                        else {
-                            let magic_guild = create_building(tbt::MagicGuild, tbl::BldUpg2, tbl::BldUpg5);
-                            town.buildings.items.push(magic_guild); 
-                        }
-                    }
-                    _=> {
-                        town.buildings.items.push(tavern);
+                for scheme in &self.town_building_schemes {
+                    if scheme.1.can_be_applied(&self.template._type, town_type) {
+                        println!("Scheme applied: {:?}", &scheme.0);
+                        scheme.1.apply(&mut town.buildings.items);
                     }
                 }
                 writer.write_serializable("AdvMapTown", &town).unwrap(); 

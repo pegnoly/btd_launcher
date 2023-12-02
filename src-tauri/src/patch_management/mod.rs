@@ -6,7 +6,7 @@ use patcher::{Patcher,
         building::{BuildingModifyable, CommonBuildingCreator}, 
         treasure::TreasurePatcher, 
         player::{PlayersPatcher, TeamsGenerator}, light::LightPatcher, quest::QuestPatcher,
-        town::TownPatcher, misc::{MoonCalendarWriter, OutcastFilesWriter, MapNameChanger, UndergroundTerrainCreator},
+        town::TownPatcher, misc::{MoonCalendarWriter, MapNameChanger, UndergroundTerrainCreator, OutcastMechanicsWriter, OutcastTextWriter},
         win_condition::{MapWinCondition, WinConditionWriter, 
             final_battle::{FinalBattleTime, FinalBattleArenaCreator, WinConditionFinalBattleFileProcessor}, 
             economic::{ResourceWinInfo, EconomicWinConditionTextProcessor}, 
@@ -97,7 +97,6 @@ pub async fn unpack_map(
     map_path: String
 ) -> Result<MapDisplayableInfo, ()> {
     let mut map = Unpacker::unpack_map(&PathBuf::from(&map_path));
-    map.init_write_dirs();
     let mut map_holder = patcher_manager.map.lock().await;
     let mut templates_holder = patcher_manager.templates_model.lock().await;
     *map_holder = Some(map);
@@ -216,16 +215,20 @@ pub async fn patch_map(
     patcher_manager: State<'_, PatcherManager>,
     path_manager: State<'_, PathManager>
 ) -> Result<(), ()> {
-    let mut map_holder = patcher_manager.map.lock().await;
+    let map_locked = patcher_manager.map.lock().await;
+    let mut map = map_locked.as_ref().unwrap();
+
+    let config = patcher_manager.config_path.clone();
 
     // ------ PATCHES -------
     // base
+    let base_creator_path = config.join("adds\\common\\");
     let base_creator = BaseCreator::new(
-        map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
-        patcher_manager.config_path.join("adds\\common\\")
+        &map.main_dir,
+        &base_creator_path
     );
     // players
-    let teams = map_holder.as_ref().unwrap().teams_info.clone();
+    let teams = map.teams_info.clone();
     let mut players_patcher = PlayersPatcher::new(teams.clone());
     let mut teams_generator = TeamsGenerator::new(teams.clone());
     // buildings
@@ -233,42 +236,42 @@ pub async fn patch_map(
     let mut building_modifyable = BuildingModifyable::new(
         patcher_manager.config_path.join("banks_types.json"),
         patcher_manager.config_path.join("new_buildings_types.json"),
-        map_holder.as_ref().unwrap().template()
+        &map.template
     );
     // lights
     let light_patcher = LightPatcher::new(patcher_manager.config_path.join("lights.json"), 
-        map_holder.as_ref().unwrap().settings.use_night_lights);
+    map.settings.use_night_lights);
     // treasures
     let mut treasure_patcher = TreasurePatcher::new();
     // towns
     let mut town_patcher = TownPatcher::new(
-        patcher_manager.config_path.join("town_types.json"), 
-        patcher_manager.config_path.join("town_specs.json"),
-        map_holder.as_ref().unwrap().template(),
-        map_holder.as_ref().unwrap().has_win_condition("capture")
+        &patcher_manager.config_path, 
+        &map.template,
+        map.has_win_condition("capture")
     );
     // quests
     let mut secondary_quest_patcher = QuestPatcher::new(patcher_manager.config_path.join("test_quest.xml"));
     // win condition specific
+    let terrain_creator_path = config.join("adds\\terrains\\");
     let underground_terrain_creator = UndergroundTerrainCreator::new(
-        map_holder.as_ref().unwrap().has_win_condition("final"),
-        patcher_manager.config_path.join("adds\\terrains\\"),
-        map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
-        map_holder.as_ref().unwrap().size
+        map.has_win_condition("final"),
+        &terrain_creator_path,
+        &map.main_dir,
+        map.size
     );
     let mut win_condition_writer = WinConditionWriter {
-        conditions: &map_holder.as_ref().unwrap().conds,
+        conditions: &map.conds,
         quest_path: &patcher_manager.config_path.join("win_condition_quests.xml"),
-        write_dir: &map_holder.as_ref().unwrap().get_write_dir(String::from("main")),
+        write_dir: &map.main_dir,
         quest_info_path: &patcher_manager.config_path.join("adds\\win_conditions\\"),
     };
     let final_arena_creator = FinalBattleArenaCreator::new(
         &patcher_manager.config_path, 
-        map_holder.as_ref().unwrap().has_win_condition("final")
+        map.has_win_condition("final")
     );
     
     let map_xdb_patcher = Patcher::new()
-        .with_root(map_holder.as_ref().unwrap().map_xdb()).unwrap()
+        .with_root(&map.map_xdb).unwrap()
         .with_creatable("AmbientLight", &light_patcher, false)
         .with_creatable("GroundAmbientLights", &light_patcher, false)
         .with_creatable("MapScript", &base_creator, true)
@@ -287,7 +290,7 @@ pub async fn patch_map(
         .run();
 
     let map_tag_patcher = Patcher::new()
-        .with_root(map_holder.as_ref().unwrap().map_tag()).unwrap()
+        .with_root(&map.map_tag).unwrap()
         .with_creatable("HasUnderground", &underground_terrain_creator, true)
         .with_modifyable("teams", &mut teams_generator)
         .run();
@@ -295,14 +298,19 @@ pub async fn patch_map(
     // ------ FILE WRITERS ------
     let file_writer = FileWriter::new()
         .with(&MoonCalendarWriter::new(
-            map_holder.as_ref().unwrap().settings.only_neutral_weeks,
-            map_holder.as_ref().unwrap().get_write_dir(String::from("game_mechanics")),
-            patcher_manager.config_path.join("adds\\moon_calendar\\Default.xdb")
+            map.settings.only_neutral_weeks,
+            &map.game_mechanics_dir,
+            &patcher_manager.config_path.join("adds\\moon_calendar\\Default.xdb")
         ))
-        .with(&OutcastFilesWriter::new(
-            map_holder.as_ref().unwrap().template(),
-            &map_holder.as_ref().unwrap().get_write_dir(String::from("game_mechanics")),
+        .with(&OutcastMechanicsWriter::new(
+            &map.template,
+            &map.game_mechanics_dir,
             &patcher_manager.config_path.join("adds\\outcast\\Summon_Creatures.xdb")
+        ))
+        .with(&OutcastTextWriter::new(
+            &map.template,
+            &map.text_dir,
+            &patcher_manager.config_path.join("adds\\outcast\\Long_Description.txt")
         ))
         .with(&base_creator)
         .with(&underground_terrain_creator)
@@ -310,46 +318,46 @@ pub async fn patch_map(
         .run();
 
     // ------- CODE GENERATORS -------
-    let template_info_generator = TemplateInfoGenerator{template: &map_holder.as_ref().unwrap().template._type};
+    let template_info_generator = TemplateInfoGenerator{template: &map.template._type};
     let code_generator = CodeGenerator::new()
         .with(&building_modifyable)
         .with(&treasure_patcher)
         .with(&win_condition_writer)
         .with(&template_info_generator)
-        .run(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().to_path_buf());
+        .run(&map.main_dir);
 
     // ------ TEXT PROCESSORS ------
-    let base_text_processor = TextProcessor::new(map_holder.as_ref().unwrap().map_name())
+    let base_text_processor = TextProcessor::new(&map.map_name)
         .with(&MapNameChanger{})
         .run();
     // win condition quests processing
-    let fbtp = TextProcessor::new(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().join("final_battle_desc.txt"))
+    let fbtp = TextProcessor::new(&map.main_dir.join("final_battle_desc.txt"))
         .with(&WinConditionFinalBattleFileProcessor {
-            final_battle_time: map_holder.as_ref().unwrap().conds.get("final")
+            final_battle_time: map.conds.get("final")
         })
         .run();
-    let etp = TextProcessor::new(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().join("economic_desc.txt"))
+    let etp = TextProcessor::new(&map.main_dir.join("economic_desc.txt"))
         .with(&EconomicWinConditionTextProcessor {
-            resource_info: map_holder.as_ref().unwrap().conds.get("economic")
+            resource_info: map.conds.get("economic")
         })
         .run();
-    let cotp = TextProcessor::new(&map_holder.as_ref().unwrap().map_xdb().parent().unwrap().join("capture_object_desc.txt"))
+    let cotp = TextProcessor::new(&map.main_dir.join("capture_object_desc.txt"))
         .with(&CaptureObjectWinConditionTextProcessor {
-            delay_info: map_holder.as_ref().unwrap().conds.get("capture"),
+            delay_info: map.conds.get("capture"),
             town_name: &town_patcher.neutral_town_name,
         })
         .run();
-    zip_map(&map_holder.as_ref().unwrap().name, &map_holder.as_ref().unwrap().dir).await;
+    zip_map(&map.name, &map.dir).await;
     // move base map
     let base_map_move_path = path_manager.maps().join("base_maps\\");
     if base_map_move_path.exists() == false {
         std::fs::create_dir(&base_map_move_path);
     }
     std::fs::copy(
-        &map_holder.as_ref().unwrap().base_name,
-        base_map_move_path.join(&map_holder.as_ref().unwrap().base_name.file_name().unwrap().to_str().unwrap())
+        &map.base_name,
+        base_map_move_path.join(&map.base_name.file_name().unwrap().to_str().unwrap())
     ).unwrap();
-    std::fs::remove_file(&map_holder.as_ref().unwrap().base_name);
+    std::fs::remove_file(&map.base_name);
     Ok(())
 }
 

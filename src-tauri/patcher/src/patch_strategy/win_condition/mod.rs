@@ -4,7 +4,6 @@ pub mod economic;
 
 use quick_xml::events::{Event, BytesStart, BytesEnd, BytesText};
 use std::{io::Write, collections::HashMap, path::PathBuf};
-use crate::Patcher;
 
 use super::{
     GenerateLuaCode, WriteAdditional, PatchModifyable,
@@ -30,7 +29,7 @@ pub enum MapWinCondition {
 pub struct WinConditionWriter<'a> {
     pub conditions: &'a HashMap<String, MapWinCondition>,
     pub quest_path: &'a PathBuf,
-    pub write_dir: &'a String,
+    pub write_dir: &'a PathBuf,
     pub quest_info_path: &'a PathBuf
 }
 

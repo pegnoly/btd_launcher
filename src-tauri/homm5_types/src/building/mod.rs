@@ -54,7 +54,7 @@ pub struct AdvMapBuilding {
     #[serde(rename = "CaptureTrigger")]
     pub capture_trigger: Trigger,
     #[serde(rename = "GroupID")]
-    pub group_id: u8,
+    pub group_id: u32,
     #[serde(rename = "showCameras")]
     pub show_cameras: String
 }

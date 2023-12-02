@@ -2,7 +2,7 @@ use serde::{Serialize, Deserialize};
 use crate::{common::{FileRef, Pos, Trigger, ArmySlot}, Homm5Type};
 use strum_macros::EnumString;
 
-#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, EnumString, PartialEq, Eq, Hash)]
 pub enum TownType {
     #[serde(rename = "TOWN_NO_TYPE")]
     TownNoType,
@@ -24,7 +24,7 @@ pub enum TownType {
     TownStronghold
 }
 
-#[derive(Debug, Serialize, Deserialize, EnumString, Clone, Copy)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
 pub enum TownBuildingType {
     #[serde(rename = "TB_TOWN_HALL")]
     TownHall, 
@@ -103,8 +103,7 @@ pub struct ShipTile {
 }
 
 #[allow(non_snake_case)]
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename = "Item")]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct TownBuilding {
     #[serde(with = "quick_xml::serde_helpers::text_content")]
     pub Type: TownBuildingType,
@@ -117,8 +116,8 @@ pub struct TownBuilding {
 #[allow(non_snake_case)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Editable {
-    pub NameFileRef: FileRef,
-    pub BiographyFileRef: FileRef
+    pub NameFileRef: crate::common::FileRef,
+    pub BiographyFileRef: crate::common::FileRef
 }
 
 #[allow(non_snake_case)]

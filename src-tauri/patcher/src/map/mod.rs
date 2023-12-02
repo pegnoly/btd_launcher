@@ -32,31 +32,39 @@ impl Default for MapSettings {
     }
 }
 
+
 /// Map struct
-/// - name: name, patched map must be saved with.
-/// - dir: directory contains base map's unpacked files.
-/// - map_xdb: path to map.xdb file in unpacked dir.
-/// - map_tag: path to map-tag.xdb file in unpacked dir.
-/// - map_name: path to mapname-text-0.txt in unpacked dir.
-/// - map_desc: path to mapdesc-text-0.txt in unpacked dir.
-/// - template: template of this map.
-/// - teams_info: information about teams of this map.
-/// - settings: this map's additional settings.
-/// - write_dirs: directories in unpacked files, used to put additional files into map with patcher.
 pub struct Map {
+    /// name, patched map must be saved with.
     pub name: String,
+    /// path of base map for after patch move purpose.
     pub base_name: PathBuf,
+    /// directory contains base map's unpacked files.
     pub dir: PathBuf,
+    /// path to map.xdb file in unpacked dir.
     pub map_xdb: PathBuf,
+    /// path to map-tag.xdb file in unpacked dir.
     pub map_tag: PathBuf,
+    /// path to mapname-text-0.txt in unpacked dir.
     pub map_name: PathBuf,
+    /// path to mapdesc-text-0.txt in unpacked dir.
     pub map_desc: PathBuf,
+    /// template of this map.
     pub template: Template,
+    /// size in tiles of this map.
     pub size: usize,
+    /// information about teams of this map.
     pub teams_info: Vec<usize>,
+    /// this map's additional settings.
     pub settings: MapSettings,
-    write_dirs: HashMap<String, String>, // possible directories to write specific files into,
-    pub conds: HashMap<String, MapWinCondition>
+    /// this map's additional win conditions.
+    pub conds: HashMap<String, MapWinCondition>,
+    /// directory that contains map.xdb file(for additional files writing)
+    pub main_dir: PathBuf,
+    /// GameMechanics/ dir for additional files writing
+    pub game_mechanics_dir: PathBuf,
+    /// Text/ dir for additional files writing
+    pub text_dir: PathBuf
 }
 
 #[derive(Debug)]
@@ -79,53 +87,19 @@ impl Map {
             size: 0,
             teams_info: vec![0, 0, 0, 0, 0, 0, 0, 0, 0],
             settings: MapSettings::default(),
-            write_dirs: HashMap::new(),
             conds: HashMap::from([
                 ("default".to_string(), MapWinCondition::Default),
-            ])
+            ]),
+            main_dir: PathBuf::default(),
+            game_mechanics_dir: PathBuf::default(),
+            text_dir: PathBuf::default()
         }
     }
 
-    pub fn init_write_dirs(&mut self) {
-        self.write_dirs.insert(String::from("main"), self.map_xdb.parent().unwrap().strip_prefix(&self.dir).unwrap().to_str().unwrap().to_string());
-        self.write_dirs.insert(String::from("game_mechanics"), String::from("GameMechanics\\"));
-    }
-
-    pub fn get_write_dir(&self, write_dir: String) -> String {
-        self.dir().join(self.write_dirs.get(&write_dir).unwrap()).to_str().unwrap().to_string()
-    }
-
-    pub fn name(&self) -> &String {
-        &self.name
-    }
-
-    pub fn dir(&self) -> &PathBuf {
-        &self.dir
-    }
-
-    pub fn map_xdb(&self) -> &PathBuf {
-        &self.map_xdb
-    }
-
-    pub fn map_tag(&self) -> &PathBuf {
-        &self.map_tag
-    }
-
-    pub fn map_name(&self) -> &PathBuf {
-        &self.map_name
-    }
-
-    pub fn map_desc(&self) -> &PathBuf {
-        &self.map_desc
-    }
-
-    pub fn template(&self) -> &Template {
-        &self.template
-    }
-
+    /// Detects size of map and players count of it.
     pub fn detect_tag_info(&self) -> Option<MapTagInfo>  {
         let mut s = String::new();
-        let mut file = std::fs::File::open(self.map_tag()).unwrap();
+        let mut file = std::fs::File::open(&self.map_tag).unwrap();
         file.read_to_string(&mut s).unwrap();
         let mut buf = Vec::new();
         let mut reader = Reader::from_str(&s);
@@ -165,8 +139,9 @@ impl Map {
         Some(map_tag_info)
     }
 
+    /// Detects template of map.
     pub fn detect_template(&mut self, possible_templates: &TemplatesInfoModel) -> Option<TemplateTransferable> {
-        let file = std::fs::File::open(self.map_desc()).unwrap();
+        let file = std::fs::File::open(&self.map_desc).unwrap();
         let buf = BufReader::new(file);
         let desc = utf16_reader::read_to_string(buf);
         let s = possible_templates.templates.iter()
@@ -198,15 +173,18 @@ impl Map {
         }
     }
 
+    /// Adds new win condition to the map
     pub fn set_win_condition(&mut self, label: &str, cond: MapWinCondition) {
         self.conds.insert(label.to_string(), cond);
     }
 
+    /// Remove win condition from the map
     pub fn remove_win_condition(&mut self, label: &str) {
         self.conds.remove(label);
         println!("Conditions after remove: {:?}", &self.conds);
     }
 
+    /// Checks if map has concrete win condition
     pub fn has_win_condition(&self, label: &str) -> bool {
         self.conds.get(label).is_some()
     }
@@ -219,14 +197,16 @@ pub struct Unpacker {
 
 impl Unpacker {
     /// takes a path to base map, unpacks it and returns Map instance.
-    pub fn unpack_map(p: &PathBuf) -> Map {
-        let temp = p.parent().unwrap().join("temp\\");
-        let file = std::fs::File::open(p).unwrap();
+    pub fn unpack_map(map_path: &PathBuf) -> Map {
+        let temp = map_path.parent().unwrap().join("temp\\");
+        let file = std::fs::File::open(map_path).unwrap();
         let mut archive = zip::ZipArchive::new(file).unwrap();
         let mut map = Map::new();
+        map.game_mechanics_dir = temp.join("GameMechanics\\");
+        map.text_dir = temp.join("Text\\");
         map.dir = temp;
-        map.name = format!("BTD_{}", &p.file_name().unwrap().to_str().unwrap());
-        map.base_name = p.to_owned();
+        map.name = format!("BTD_{}", &map_path.file_name().unwrap().to_str().unwrap());
+        map.base_name = map_path.to_owned();
         for i in 0..archive.len() {
             let mut entry = archive.by_index(i).unwrap();
             std::fs::create_dir_all(&map.dir.join(entry.enclosed_name().unwrap().parent().unwrap())).unwrap();
@@ -249,6 +229,7 @@ impl Unpacker {
                 _=> {}
             }
         }
+        map.main_dir = map.map_tag.parent().unwrap().to_path_buf();
         map
     }
 }
