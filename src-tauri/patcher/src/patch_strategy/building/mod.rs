@@ -242,7 +242,11 @@ impl<'a> PatchModifyable for BuildingModifyable<'a> {
                     self.portals_count += 1;
                     let name = format!("btd_portal_{}", &self.portals_count);
                     building.name = name.clone();
-                    self.portals_ids.insert(name, building.group_id).unwrap();
+                    let res = self.portals_ids.insert(name.clone(), building.group_id);
+                    match res {
+                        Some(ok) => {},
+                        None => println!("Smth wrong inserting {} with {}", &name, &building.group_id)
+                    }
                 }
                 writer.write_serializable("AdvMapBuilding", &building).unwrap();
             }
@@ -276,6 +280,7 @@ impl<'a> GenerateLuaCode for BuildingModifyable<'a> {
             .for_each(|portal|{
                 generated_str.push_str(&format!("\t[\"{}\"] = {},\n", portal.0, portal.1))
             });
+        generated_str.push_str("}\n\n");
         let mut out_file = fs::File::create(path.join("buildings.lua")).unwrap();
         out_file.write_all(&mut generated_str.as_bytes()).unwrap();
     }

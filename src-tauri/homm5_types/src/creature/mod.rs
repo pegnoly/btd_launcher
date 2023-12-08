@@ -83,7 +83,6 @@ pub struct AdvMapCreatureShared {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename = "Item")]
 pub struct Stack {
     #[serde(rename = "Creature")]
     pub creature: String,
@@ -93,6 +92,12 @@ pub struct Stack {
     pub min_count: u32,
     #[serde(rename = "Amount2")]
     pub max_count: u32
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename = "Item")]
+pub struct AdditionalStacks {
+    items: Option<Vec<Stack>>
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -140,7 +145,7 @@ pub struct AdvMapMonster {
     #[serde(rename = "DoesNotDependOnDifficulty")]
     pub does_not_depends_on_difficulty: bool,
     #[serde(rename = "AdditionalStacks")]
-    pub additional_stacks: Option<Vec<Stack>>,
+    pub additional_stacks: AdditionalStacks,
     #[serde(rename = "SingleMonsterNameFileRef")]
     pub single_monster_name: Option<FileRef>,
     #[serde(rename = "MultipleMonstersNameFileRef")]
