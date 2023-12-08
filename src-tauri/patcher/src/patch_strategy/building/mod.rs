@@ -140,7 +140,9 @@ pub struct BuildingModifyable<'a> {
     /// Types of concrete buildings in current map
     current_map_buildings: HashMap<String, NewBuildingType>,
     // ! Temporary here i think until #7
-    dwarven_warrens_rotations: HashMap<String, f32>
+    dwarven_warrens_rotations: HashMap<String, f32>,
+    portals_count: u32,
+    portals_ids: HashMap<String, u32>
 }
 
 impl<'a> BuildingModifyable<'a> {
@@ -161,7 +163,9 @@ impl<'a> BuildingModifyable<'a> {
             buildings_types_count: HashMap::new(),
             current_map_buildings: HashMap::new(),
 
-            dwarven_warrens_rotations: HashMap::new()
+            dwarven_warrens_rotations: HashMap::new(),
+            portals_count: 0,
+            portals_ids: HashMap::new()
         }
     }
 
@@ -233,6 +237,13 @@ impl<'a> PatchModifyable for BuildingModifyable<'a> {
                         href: Some(String::from("/MapObjects/Den_Of_Thieves.(AdvMapBuildingShared).xdb#xpointer(/AdvMapBuildingShared)"))
                     } 
                 }
+                //
+                if no_xpointer_shared == "/MapObjects/Monolith_Two_Way.(AdvMapBuildingShared).xdb" {
+                    self.portals_count += 1;
+                    let name = format!("btd_portal_{}", &self.portals_count);
+                    building.name = name.clone();
+                    self.portals_ids.insert(name, building.group_id).unwrap();
+                }
                 writer.write_serializable("AdvMapBuilding", &building).unwrap();
             }
             Err(_e) => println!("Error while deserialize new building from {}, {}", &actual_string, _e.to_string())
@@ -260,6 +271,11 @@ impl<'a> GenerateLuaCode for BuildingModifyable<'a> {
                 generated_str.push_str(&format!("\t[\"{}\"] = {},\n", mine.0, mine.1))
             });
         generated_str.push_str("}\n\n");
+        generated_str.push_str("BTD_Portals = \n{\n");
+        self.portals_ids.iter()
+            .for_each(|portal|{
+                generated_str.push_str(&format!("\t[\"{}\"] = {},\n", portal.0, portal.1))
+            });
         let mut out_file = fs::File::create(path.join("buildings.lua")).unwrap();
         out_file.write_all(&mut generated_str.as_bytes()).unwrap();
     }
