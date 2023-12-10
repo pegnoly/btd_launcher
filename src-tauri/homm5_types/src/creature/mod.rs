@@ -95,9 +95,9 @@ pub struct Stack {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename = "Item")]
 pub struct AdditionalStacks {
-    items: Option<Vec<Stack>>
+    #[serde(rename = "Item")]
+    pub items: Option<Vec<Stack>>
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -145,7 +145,7 @@ pub struct AdvMapMonster {
     #[serde(rename = "DoesNotDependOnDifficulty")]
     pub does_not_depends_on_difficulty: bool,
     #[serde(rename = "AdditionalStacks")]
-    pub additional_stacks: AdditionalStacks,
+    pub additional_stacks: Option<AdditionalStacks>,
     #[serde(rename = "SingleMonsterNameFileRef")]
     pub single_monster_name: Option<FileRef>,
     #[serde(rename = "MultipleMonstersNameFileRef")]
