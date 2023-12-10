@@ -6,7 +6,7 @@ use tauri::{State, AppHandle, Manager};
 #[tauri::command]
 pub fn start_game(path_manager: State<PathManager>, app: AppHandle) {
     std::env::set_current_dir(path_manager.homm().join("bin\\")).unwrap();
-    let path = path_manager.homm().join("bin\\H5_Game_BTD.exe");
+    let path = path_manager.homm().join("bin\\H5_BTD.exe");
     std::thread::spawn(move || {
         app.emit_to("main", "game_closed", SingleValuePayload{value: false});
         let mut homm5_process = std::process::Command::new(path).spawn().unwrap();
@@ -22,7 +22,7 @@ pub fn start_telegram_dialog() {
 
 #[tauri::command]
 pub fn open_discord_dialog() {
-    opener::open("https://discordapp.com/users/436937919308234762").unwrap();
+    opener::open("https://discord.gg/4JebWVSPXr").unwrap();
 }
 
 #[tauri::command]

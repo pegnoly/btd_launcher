@@ -145,6 +145,9 @@ export default function PatcherMain(props: PatcherMainProps) {
         invoke("patch_map").then(() => {
             patchStateContext?.setState(PatchState.Inactive);
             appStateContext?.setState(AppState.Patching);
+        }).catch((error) => {
+            patchStateContext?.setState(PatchState.Inactive);
+            appStateContext?.setState(AppState.Patching);
         });
     }
 

@@ -10,6 +10,7 @@ import AppStateProvider from './contexts/AppState';
 import GameModeProvider from './contexts/GameMode';
 import ModeSwitcher from './components/ModeSwitcher';
 import MainContainer from './patcher/components/main_container';
+import { Donates } from './Donate';
 
 invoke("start_update_thread");
 
@@ -70,7 +71,7 @@ export default function App() {
             </Grid.Col>
           </Grid>
         </div>
-        {/* <Donates data-tauri-drag-region /> */}
+        <Donates/>
       </Box>
     </MantineProvider>
   );
