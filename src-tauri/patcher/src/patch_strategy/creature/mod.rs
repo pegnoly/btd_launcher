@@ -30,6 +30,9 @@ impl PatchModifyable for CreatureModifier {
                 self.count += 1;
                 let name = format!("btd_creature_{}", &self.count);
                 creature.name = Some(name.clone());
+                if creature.additional_stacks.as_ref().unwrap().items.is_none() {
+                    creature.additional_stacks = None;
+                }
                 self.creature_pos_info.insert(name, creature.pos.clone());
                 writer.write_serializable("AdvMapMonster", &creature).unwrap();
             }
