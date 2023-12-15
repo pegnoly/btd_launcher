@@ -184,7 +184,7 @@ const API_KEY: &'static str = "AIzaSyA8TYClVgAHc-842t8_AZyvK5zldpZiakA";
 
 #[derive(Debug)]
 enum DownloadProcessState {
-    DownloadStarted(Downloadable),
+    DownloadStarted(String),
     ProgressChanged(f32)
 }
 
@@ -209,7 +209,13 @@ pub async fn download_update(
     collect_files_for_update(&files_cloned, &hub, &pool, &folders, &mut state).await;
     tokio::task::spawn(async move {
         for file in files_cloned.read().await.iter() {
-            sender.send(DownloadProcessState::DownloadStarted(file.clone())).await;
+            let props = folders.get(&file.parent).unwrap();
+            download_file(
+                &file, 
+                get_root_path(&paths, &props.load).await.unwrap(),
+                &props.path, 
+                &sender
+            ).await;
         }
     });
     tokio::spawn(async move {
@@ -223,7 +229,9 @@ pub async fn download_update(
                         DownloadProcessState::DownloadStarted(file) => {
                             set_updated_file_name(&app, &file).await;
                         }
-                        DownloadProcessState::ProgressChanged(progress) => {},
+                        DownloadProcessState::ProgressChanged(progress) => {
+                            set_download_progress(&app, progress).await;
+                        },
                         _=> {}
                     }
                 },
@@ -239,45 +247,6 @@ pub async fn download_update(
     // let current_game_mode = mode_manager.current_mode.lock().await.clone();
     // let mut query_string = String::new();
     // let mut reload_required = false;
-    // for downloadable in downloadables_copied.lock().await.iter() {
-    //     let target = format!("https://www.googleapis.com/drive/v3/files/{}?alt=media&key={}", &downloadable.drive_id, API_KEY);
-    //     let responce = reqwest::get(target).await;
-    //     match responce {
-    //         Ok(res) => {
-    //             app.emit_to("main", "updated_file_changed", SingleValuePayload {
-    //                 value: format!("Загружается {}", &downloadable.name)
-    //             });
-    //             app.emit_to("main", "download_progress_changed", SingleValuePayload {
-    //                 value: 0
-    //             });
-    //             let x = res.bytes().await.unwrap();
-    //             let len = x.len();
-    //             let mut chunk_len = len / 100;
-    //             if chunk_len <= 0 {
-    //                 chunk_len = 1;
-    //             }
-    //             let mut downloaded = 0f32;
-    //             let download_info = path_manager.move_path(&downloadable.parent).unwrap();
-    //             let mut download_root = &PathBuf::default();
-    //             match download_info.load {
-    //                 FileLoadType::Game => download_root = path_manager.homm(),
-    //                 FileLoadType::Config => download_root = path_manager.cfg(),
-    //                 FileLoadType::App => {
-    //                     download_root = path_manager.app();
-    //                     reload_required = true;
-    //                 },
-    //                 _=> {}
-    //             }
-    //             let download_dir = download_root.join(&download_info.path).join(&downloadable.name);
-    //             let mut new_file = std::fs::File::create(&download_dir).unwrap();
-    //             for chunk in x.chunks(chunk_len) {
-    //                 let mut content = std::io::Cursor::new(chunk);
-    //                 std::io::copy(&mut content, &mut new_file); 
-    //                 downloaded += (chunk_len as f32);
-    //                 app.emit_to("main", "download_progress_changed", SingleValuePayload {
-    //                     value: (downloaded / (len as f32)) as f32
-    //                 });
-    //             }
     //             query_string += &format!("
     //                 INSERT INTO files (drive_id, name, parent, modified)\n
     //                 VALUES ('{}', '{}', '{}', {})\n
@@ -332,10 +301,57 @@ pub async fn download_update(
     Ok(())
 }
 
-async fn set_updated_file_name(app: &AppHandle, file: &Downloadable) {
+async fn set_updated_file_name(app: &AppHandle, name: &String) {
     app.emit_to("main", "updated_file_changed", SingleValuePayload {
-        value: format!("Загружается {}", &file.name)
+        value: format!("Загружается {}", name)
     });
+}
+
+async fn set_download_progress(app: &AppHandle, progress: f32) {
+    app.emit_to("main", "download_progress_changed", SingleValuePayload {
+        value: progress
+    });
+}
+
+async fn download_file(
+    file: &Downloadable, 
+    root: &PathBuf,
+    dir: &String,
+    sender: &tokio::sync::mpsc::Sender<DownloadProcessState>
+) {
+    let target = format!("https://www.googleapis.com/drive/v3/files/{}?alt=media&key={}", &file.drive_id, API_KEY);
+    let responce = reqwest::get(target).await;
+    match responce {
+        Ok(res) => {
+            sender.send(DownloadProcessState::DownloadStarted(file.name.clone())).await;
+            sender.send(DownloadProcessState::ProgressChanged(0f32)).await;
+            let x = res.bytes().await.unwrap();
+            let len = x.len();
+            let mut chunk_len = len / 100;
+            if chunk_len <= 0 {
+                chunk_len = 1;
+            }
+            let mut downloaded = 0f32;
+            let download_dir = root.join(dir).join(&file.name);
+            let mut new_file = std::fs::File::create(&download_dir).unwrap();
+            for chunk in x.chunks(chunk_len) {
+                let mut content = std::io::Cursor::new(chunk);
+                std::io::copy(&mut content, &mut new_file); 
+                downloaded += (chunk_len as f32);
+                sender.send(DownloadProcessState::ProgressChanged((downloaded / (len as f32)) as f32)).await;
+            }
+        },
+        Err(e) => {}
+    }
+}
+
+async fn get_root_path<'a>(paths: &'a Arc<HashMap<String, PathBuf>>, load_type: &'a FileLoadType) -> Option<&'a PathBuf> {
+    match load_type {
+        FileLoadType::Game => Some(paths.get("homm").unwrap()),
+        FileLoadType::Config => Some(paths.get("cfg").unwrap()),
+        FileLoadType::App => Some(paths.get("app").unwrap()),
+        _=> None
+    }
 }
 
 async fn test_channel(
