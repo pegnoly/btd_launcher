@@ -5,12 +5,12 @@ use sqlx::{Connection, SqliteConnection, pool::PoolConnection, Sqlite};
 use tauri::State;
 use serde::{Serialize, Deserialize};
 
-use crate::{drive::DriveManager, update_manager::{Downloader, Downloadable, DownloaderState}, game_mode::GameMode};
+use crate::{drive::DriveManager, update_manager::{Downloader, Downloadable, DownloaderState, DownloadedFile}, game_mode::GameMode};
 
 /// Some data structs to work with file system.
 
 // Where to load files
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub enum FileLoadType {
     // into game folders
     Game,
@@ -91,6 +91,25 @@ impl PathManager {
 
     pub fn cfg(&self) -> &PathBuf {
         &self.paths.get("cfg").unwrap()
+    }
+
+    pub async fn move_file(&self, file: &DownloadedFile, game_mode: &GameMode) {
+        let concrete_move_info = self.file_movement_info.get(&file.file.parent).unwrap();
+        if concrete_move_info.move_info.is_some() && (concrete_move_info.move_info.as_ref().unwrap().mode == *game_mode)  {
+            println!("Moving files cause some of them are of active game mode, {:?}", &game_mode);
+            match concrete_move_info.move_info.as_ref().unwrap()._type {
+                FileMoveType::Data => {
+                    let move_path = self.paths.get("data").unwrap().join(&file.file.name);
+                    println!("Moving {:?}", &move_path);
+                    std::fs::copy(&file.path, move_path);
+                },
+                FileMoveType::Maps => {
+                    let move_path = self.paths.get("maps").unwrap().join(&file.file.name);
+                    println!("Moving {:?}", &move_path);
+                    std::fs::copy(&file.path, move_path);
+                }
+            }
+        }
     }
 
     // pub fn move_info(&self) -> &std::sync::Arc<tokio::sync::Mutex<HashMap<String, FileLoadInfo>>> {

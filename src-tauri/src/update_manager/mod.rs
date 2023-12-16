@@ -11,7 +11,7 @@ use google_drive3::{DriveHub, oauth2, hyper, hyper_rustls::{HttpsConnector, Http
 use oauth2::{hyper::client::HttpConnector, service_account_impersonator};
 use crate::drive;
 use crate::file_management::{FileLoadInfo, FileMoveType, FileLoadType};
-use crate::database::DatabaseManager;
+use crate::database::{DatabaseManager, WriteDBItem};
 use crate::{file_management::PathManager, drive::DriveManager, game_mode::{GameModeManager, GameMode}, SingleValuePayload};
 
 /// This module contains functions for steps of update process.
@@ -27,6 +27,30 @@ pub struct Downloadable {
     pub parent: String,
     /// timestamp of file modification time on drive
     pub modified: i64
+}
+
+#[async_trait::async_trait]
+impl WriteDBItem<Downloadable> for DatabaseManager {
+    async fn write(&self, item: &Downloadable) {
+        let query = sqlx::query(
+            "INSERT INTO files (drive_id, name, parent, modified)\n
+                   VALUES (?, ?, ?, ?)\n
+                    ON CONFLICT(drive_id)\n
+                    DO UPDATE SET modified = ?;\n")
+                .bind(&item.drive_id)
+                .bind(&item.name)
+                .bind(&item.parent)
+                .bind(&item.modified)
+                .execute(&self.pool).await;
+        match query {
+            Ok(query_result) => {
+                println!("File successfuly written to database: {:?}", &query_result);
+            },
+            Err(query_error) => {
+                println!("Error occured while writing file to database: {:?}", &query_error);
+            }
+        }
+    }
 }
 
 /// Possible states of downloader(self explained i think)
@@ -179,13 +203,23 @@ async fn collect_files_in_folder(
         Err(error) => {}
     }
 }
+
+
 /// Allows to generate link for downloads from disk without anti-virus checks.
 const API_KEY: &'static str = "AIzaSyA8TYClVgAHc-842t8_AZyvK5zldpZiakA";
+
+#[derive(Debug, Clone)]
+pub struct DownloadedFile {
+    pub file: Downloadable,
+    pub path: PathBuf
+}
 
 #[derive(Debug)]
 enum DownloadProcessState {
     DownloadStarted(String),
-    ProgressChanged(f32)
+    ProgressChanged(f32),
+    FileDownloaded(DownloadedFile),
+    DownloadProcessEnded(bool)
 }
 
 /// Downloads all updated or added files, writes new information into database, moves files if them are parts of active game mode.
@@ -205,11 +239,16 @@ pub async fn download_update(
     let hub = Arc::clone(&drive.hub);
     let pool = db.pool.clone();
     let folders = path_manager.file_move_info();
-    let mut state = downloader.state.lock().await;
-    collect_files_for_update(&files_cloned, &hub, &pool, &folders, &mut state).await;
+    let current_game_mode = mode_manager.current_mode.lock().await;
+    let mut download_state = downloader.state.lock().await;
+    collect_files_for_update(&files_cloned, &hub, &pool, &folders, &mut download_state).await;
     tokio::task::spawn(async move {
+        let mut is_reload_required = false;
         for file in files_cloned.read().await.iter() {
             let props = folders.get(&file.parent).unwrap();
+            if props.load == FileLoadType::App {
+                is_reload_required = true;
+            }
             download_file(
                 &file, 
                 get_root_path(&paths, &props.load).await.unwrap(),
@@ -217,102 +256,53 @@ pub async fn download_update(
                 &sender
             ).await;
         }
+        sender.send(DownloadProcessState::DownloadProcessEnded(is_reload_required)).await;
     });
-    tokio::spawn(async move {
-        //test_channel2(&sender.clone()).await;
-        loop {
-            match receiver.recv().await {
-                Some(state) => 
-                {
-                    println!("New state: {:?}", &state);
-                    match state {
-                        DownloadProcessState::DownloadStarted(file) => {
-                            set_updated_file_name(&app, &file).await;
-                        }
-                        DownloadProcessState::ProgressChanged(progress) => {
-                            set_download_progress(&app, progress).await;
-                        },
-                        _=> {}
+    loop {
+        match receiver.recv().await {
+            Some(state) => 
+            {
+                println!("New state: {:?}", &state);
+                match state {
+                    DownloadProcessState::DownloadStarted(name) => {
+                        set_updated_file_name(&app, &name).await;
                     }
-                },
-                None => {}
-            }
+                    DownloadProcessState::ProgressChanged(progress) => {
+                        set_download_progress(&app, progress).await;
+                    },
+                    DownloadProcessState::FileDownloaded(file) => {
+                        path_manager.move_file(&file, &current_game_mode).await;
+                        db.write(&file.file).await;
+                    }
+                    DownloadProcessState::DownloadProcessEnded(is_reload_required) => {
+                        downloader.downloadables.write().await.clear();
+                        *download_state = DownloaderState::NothingToDownload;
+                        close_updater(&app).await;
+                        try_reload_app(&app, is_reload_required).await;
+                        break;
+                    }
+                    _=> {}
+                }
+            },
+            None => {}
         }
-    });
-    // app.emit_to("main", "updated_file_changed", SingleValuePayload {
-    //     value: "Подключение...".to_string()
-    // });
-    // let downloadables_copied = Arc::clone(&downloader.downloadables);
-    // let connection = db.pool.clone();
-    // let current_game_mode = mode_manager.current_mode.lock().await.clone();
-    // let mut query_string = String::new();
-    // let mut reload_required = false;
-    //             query_string += &format!("
-    //                 INSERT INTO files (drive_id, name, parent, modified)\n
-    //                 VALUES ('{}', '{}', '{}', {})\n
-    //                 ON CONFLICT(drive_id)\n
-    //                 DO UPDATE SET modified = {};\n", &downloadable.drive_id, &downloadable.name, &downloadable.parent, &downloadable.modified, &downloadable.modified);
-    //             // move logic 
-    //             if download_info.move_info.is_some() && (download_info.move_info.as_ref().unwrap().mode == current_game_mode)  {
-    //                 println!("Moving files cause some of them are of active game mode, {:?}", &current_game_mode);
-    //                 match download_info.move_info.as_ref().unwrap()._type {
-    //                     FileMoveType::Data => {
-    //                         let move_path = path_manager.data().join(&downloadable.name);
-    //                         println!("Moving {:?}", &move_path);
-    //                         std::fs::copy(&download_dir, move_path);
-    //                     },
-    //                     FileMoveType::Maps => {
-    //                         let move_path = path_manager.maps().join(&downloadable.name);
-    //                         println!("Moving {:?}", &move_path);
-    //                         std::fs::copy(&download_dir, move_path);
-    //                     }
-    //                 }
-    //             }
-    //         },
-    //         Err(err) => {
-    //             println!("error while downloading {:?}", err);
-    //         }
-    //     }
-    // }
-    // let query_try = sqlx::query(&query_string).execute(&connection).await;
-    // match query_try {
-    //     Ok(query_result) => {
-    //         println!("Query ok, {:?}", &query_result);
-    //     },
-    //     Err(query_error) => {
-    //         println!("Query error, {:?}", &query_error.to_string());
-    //     }
-    // }
-    // if reload_required == true {
-    //     app.emit_to("main", "updated_file_changed", SingleValuePayload {
-    //         value: "Исполняемый файл лаунчера был обновлён. Запустите приложение заново.".to_string()
-    //     });
-    // }
-    // downloader.downloadables.lock().await.clear();
-    // //mode_manager.update_file_move_info(&path_manager);
-    // println!("Download ended!");
-    // std::thread::sleep(std::time::Duration::from_secs(5));
-    // app.emit_to("main", "download_state_changed", SingleValuePayload { value: false });
-    // let mut state = downloader.state.lock().await;
-    // *state = DownloaderState::NothingToDownload;
-    // if reload_required == true {
-    //     app.exit(0);
-    // }
+    }
     Ok(())
 }
 
-async fn set_updated_file_name(app: &AppHandle, name: &String) {
-    app.emit_to("main", "updated_file_changed", SingleValuePayload {
-        value: format!("Загружается {}", name)
-    });
+/// Helper function for downloading, gets root folder of download destination.
+async fn get_root_path<'a>(paths: &'a Arc<HashMap<String, PathBuf>>, load_type: &'a FileLoadType) -> Option<&'a PathBuf> {
+    match load_type {
+        FileLoadType::Game => Some(paths.get("homm").unwrap()),
+        FileLoadType::Config => Some(paths.get("cfg").unwrap()),
+        FileLoadType::App => Some(paths.get("app").unwrap()),
+        _=> None
+    }
 }
 
-async fn set_download_progress(app: &AppHandle, progress: f32) {
-    app.emit_to("main", "download_progress_changed", SingleValuePayload {
-        value: progress
-    });
-}
-
+/// Actually downloads file.
+/// Tries to get responce from google drive server, if it successful, sends state with file name, starts download, sends progress state.
+/// When file is loaded, send state that indicates that download is over.
 async fn download_file(
     file: &Downloadable, 
     root: &PathBuf,
@@ -340,36 +330,42 @@ async fn download_file(
                 downloaded += (chunk_len as f32);
                 sender.send(DownloadProcessState::ProgressChanged((downloaded / (len as f32)) as f32)).await;
             }
+            sender.send(DownloadProcessState::FileDownloaded(DownloadedFile {
+                file: file.clone(),
+                path: download_dir.clone()
+            })).await;
         },
         Err(e) => {}
     }
 }
 
-async fn get_root_path<'a>(paths: &'a Arc<HashMap<String, PathBuf>>, load_type: &'a FileLoadType) -> Option<&'a PathBuf> {
-    match load_type {
-        FileLoadType::Game => Some(paths.get("homm").unwrap()),
-        FileLoadType::Config => Some(paths.get("cfg").unwrap()),
-        FileLoadType::App => Some(paths.get("app").unwrap()),
-        _=> None
-    }
+/// Updates file name on frontend
+async fn set_updated_file_name(app: &AppHandle, name: &String) {
+    app.emit_to("main", "updated_file_changed", SingleValuePayload {
+        value: format!("Загружается {}", name)
+    });
 }
 
-async fn test_channel(
-    sender: &tokio::sync::mpsc::Sender<String>,
-    files: &Vec<Downloadable>
-) {
-    for file in files.iter() {
-        sender.send(file.name.clone()).await;
-        // println!("Sended {}", i);
-        tokio::time::sleep(Duration::from_secs(1));
-        //std::thread::sleep(Duration::from_secs(5));
-    }
+/// Updates download progress of current file on frontend
+async fn set_download_progress(app: &AppHandle, progress: f32) {
+    app.emit_to("main", "download_progress_changed", SingleValuePayload {
+        value: progress
+    });
 }
 
-async fn test_channel2(sender: &tokio::sync::mpsc::Sender<i32>) {
-    for i in 10..19 {
-        sender.send(i).await;
-        // println!("Sended {}", i);
-        // std::thread::sleep(Duration::from_secs(10));
+/// Sends frontend information to close updater window
+async fn close_updater(app: &AppHandle) {
+    tokio::time::sleep(std::time::Duration::from_secs(5));
+    app.emit_to("main", "download_state_changed", SingleValuePayload { value: false });
+}
+
+/// If launcher executable was updated, app must be reloaded
+async fn try_reload_app(app: &AppHandle, must_be_reloaded: bool) {
+    if must_be_reloaded == true {
+        app.emit_to("main", "updated_file_changed", SingleValuePayload {
+            value: "Исполняемый файл лаунчера был обновлён. Запустите приложение заново.".to_string()
+        });
+        tokio::time::sleep(std::time::Duration::from_secs(5));
+        app.exit(0);
     }
 }

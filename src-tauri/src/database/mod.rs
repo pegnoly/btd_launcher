@@ -4,5 +4,5 @@ pub struct DatabaseManager {
 
 #[async_trait::async_trait]
 pub trait WriteDBItem<T> {
-   async fn write(&self, item: T);
+   async fn write(&self, item: &T);
 }
