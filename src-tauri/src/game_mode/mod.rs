@@ -33,8 +33,8 @@ pub struct BaseSettings {
 }
 
 pub struct GameModeManager {
-    pub current_mode: tokio::sync::Mutex<GameMode>,
-    file_movement: std::sync::Mutex<HashMap<GameMode, Vec<FileMovementInfo>>>,
+    pub current_mode: std::sync::Arc<tokio::sync::Mutex<GameMode>>,
+    pub file_movement: std::sync::Arc<tokio::sync::Mutex<HashMap<GameMode, Vec<FileMovementInfo>>>>,
     docs_info: HashMap<GameMode, Documentation>,
     //modes_files_names: HashMap<GameMode, Vec<String>>
 }
@@ -51,43 +51,43 @@ impl GameModeManager {
         let docs = serde_json::from_str(&docs_info)
             .unwrap();
         GameModeManager { 
-            current_mode: tokio::sync::Mutex::new(settings.current_mode), 
-            file_movement: std::sync::Mutex::new(file_movement),
+            current_mode: std::sync::Arc::new(tokio::sync::Mutex::new(settings.current_mode)), 
+            file_movement: std::sync::Arc::new(tokio::sync::Mutex::new(file_movement)),
             docs_info: docs
         }
     }
 
-    pub fn update_file_move_info(&self, path_manager: &PathManager) {
-        let mut file_move_locked = self.file_movement.lock().unwrap();
-        for mode_info in file_move_locked.iter_mut() {
-            for move_info in mode_info.1.iter_mut() {
-                let path = path_manager.cfg().join(&move_info.from);
-                for entry in std::fs::read_dir(&path).unwrap() {
-                    match entry {
-                        Ok(file) => {
-                            if file.metadata().unwrap().is_file() {
-                                let name = file.file_name().to_str().unwrap().to_string();
-                                if move_info.files.contains(&name) == false {
-                                    println!("adding entry {:?}", &file);
-                                    move_info.files.push(name);
-                                }
-                            }
-                        }
-                        Err(_e) => {}
-                    }
-                }
-            }
-        }
-        let mut move_info_out = serde_json::to_string_pretty(&*file_move_locked).unwrap();
-        println!("move info out: {}", &move_info_out);
-        let config_file_path = path_manager.cfg().join("modes\\file_move.json");
-        std::fs::remove_file(&config_file_path).unwrap();
-        let mut config_file = std::fs::File::create(config_file_path).unwrap();
-        config_file.write_all(&mut move_info_out.as_bytes()).unwrap();
-    }
+    // pub fn update_file_move_info(&self, path_manager: &PathManager) {
+    //     let mut file_move_locked = self.file_movement.lock().await.unwrap();
+    //     for mode_info in file_move_locked.iter_mut() {
+    //         for move_info in mode_info.1.iter_mut() {
+    //             let path = path_manager.cfg().join(&move_info.from);
+    //             for entry in std::fs::read_dir(&path).unwrap() {
+    //                 match entry {
+    //                     Ok(file) => {
+    //                         if file.metadata().unwrap().is_file() {
+    //                             let name = file.file_name().to_str().unwrap().to_string();
+    //                             if move_info.files.contains(&name) == false {
+    //                                 println!("adding entry {:?}", &file);
+    //                                 move_info.files.push(name);
+    //                             }
+    //                         }
+    //                     }
+    //                     Err(_e) => {}
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     let mut move_info_out = serde_json::to_string_pretty(&*file_move_locked).unwrap();
+    //     println!("move info out: {}", &move_info_out);
+    //     let config_file_path = path_manager.cfg().join("modes\\file_move.json");
+    //     std::fs::remove_file(&config_file_path).unwrap();
+    //     let mut config_file = std::fs::File::create(config_file_path).unwrap();
+    //     config_file.write_all(&mut move_info_out.as_bytes()).unwrap();
+    // }
 
     pub async fn remove_files(&self, mode: &GameMode, path_manager: &PathManager) {
-        for move_info in self.file_movement.lock().unwrap().get(mode).unwrap() {
+        for move_info in self.file_movement.lock().await.get(mode).unwrap() {
             match move_info._type {
                 FileMoveType::Data => {
                     for file in &move_info.files {
@@ -104,7 +104,7 @@ impl GameModeManager {
     }
 
     pub async fn move_files_to_game(&self, mode: &GameMode, path_manager: &PathManager) {
-        for move_info in self.file_movement.lock().unwrap().get(mode).unwrap() {
+        for move_info in self.file_movement.lock().await.get(mode).unwrap() {
             match move_info._type {
                 FileMoveType::Data => {
                     for file in &move_info.files {

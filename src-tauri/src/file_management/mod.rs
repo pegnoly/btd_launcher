@@ -5,12 +5,12 @@ use sqlx::{Connection, SqliteConnection, pool::PoolConnection, Sqlite};
 use tauri::State;
 use serde::{Serialize, Deserialize};
 
-use crate::{drive::DriveManager, update_manager::{Downloader, Downloadable, DownloaderState}, game_mode::GameMode};
+use crate::{drive::DriveManager, update_manager::{Downloader, Downloadable, DownloaderState, DownloadedFile}, game_mode::GameMode};
 
 /// Some data structs to work with file system.
 
 // Where to load files
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 pub enum FileLoadType {
     // into game folders
     Game,
@@ -56,60 +56,75 @@ pub struct FileLoadInfo {
 // Contains all useful paths of the application
 #[derive(Default, Debug)]
 pub struct PathManager {
-    // path of launcher executable
-    app: PathBuf,
-    // path of launcher main folder
-    main: PathBuf,
-    // path of the game
-    homm: PathBuf,
-    // path of data game folder
-    data: PathBuf,
-    // path of Maps game folder
-    maps: PathBuf,
-    // path of modes launcher folder
-    modes: PathBuf,
-    // path of cfg launcher folder
-    cfg: PathBuf,
-
+    //
+    paths: std::sync::Arc<HashMap<String, PathBuf>>,
     // mapping of google drive folder ids and launcher paths to download files to
-    pub file_movement_info: std::sync::Arc<tokio::sync::Mutex<HashMap<String, FileLoadInfo>>>,
+    file_movement_info: std::sync::Arc<HashMap<String, FileLoadInfo>>,
+
     file_movement_info_synced: HashMap<String, FileLoadInfo>
 }
 
 impl PathManager {
     pub fn app(&self) -> &PathBuf {
-        &self.app
+        &self.paths.get("app").unwrap()
     }
 
     pub fn main(&self) -> &PathBuf {
-        &self.main
+        &self.paths.get("main").unwrap()
     }
 
     pub fn homm(&self) -> &PathBuf {
-        &self.homm
+        &self.paths.get("homm").unwrap()
     }
 
     pub fn data(&self) -> &PathBuf {
-        &self.data
+        &self.paths.get("data").unwrap()
     }
 
     pub fn maps(&self) -> &PathBuf {
-        &self.maps
+        &self.paths.get("maps").unwrap()
     }
 
     pub fn modes(&self) -> &PathBuf {
-        &self.modes
+        &self.paths.get("modes").unwrap()
     }
 
     pub fn cfg(&self) -> &PathBuf {
-        &self.cfg
+        &self.paths.get("cfg").unwrap()
     }
 
-    pub fn move_info(&self) -> &std::sync::Arc<tokio::sync::Mutex<HashMap<String, FileLoadInfo>>> {
-        &self.file_movement_info
+    pub async fn move_file(&self, file: &DownloadedFile, game_mode: &GameMode) {
+        let concrete_move_info = self.file_movement_info.get(&file.file.parent).unwrap();
+        if concrete_move_info.move_info.is_some() && (concrete_move_info.move_info.as_ref().unwrap().mode == *game_mode)  {
+            println!("Moving files cause some of them are of active game mode, {:?}", &game_mode);
+            match concrete_move_info.move_info.as_ref().unwrap()._type {
+                FileMoveType::Data => {
+                    let move_path = self.paths.get("data").unwrap().join(&file.file.name);
+                    println!("Moving {:?}", &move_path);
+                    std::fs::copy(&file.path, move_path);
+                },
+                FileMoveType::Maps => {
+                    let move_path = self.paths.get("maps").unwrap().join(&file.file.name);
+                    println!("Moving {:?}", &move_path);
+                    std::fs::copy(&file.path, move_path);
+                }
+            }
+        }
     }
+
+    // pub fn move_info(&self) -> &std::sync::Arc<tokio::sync::Mutex<HashMap<String, FileLoadInfo>>> {
+    //     &self.file_movement_info
+    // }
     pub fn move_path<'a>(&'a self, folder_id: &'a String) -> Option<&FileLoadInfo> {
         self.file_movement_info_synced.get(folder_id)
+    }
+
+    pub fn paths(&self) -> Arc<HashMap<String, PathBuf>> {
+        Arc::clone(&self.paths)
+    }
+
+    pub fn file_move_info(&self) -> Arc<HashMap<String, FileLoadInfo>> {
+        Arc::clone(&self.file_movement_info)
     }
 
     pub fn folders(&self) -> Vec<String> {
@@ -132,15 +147,17 @@ impl PathManager {
         println!("files map: {:?}", &files_map);
 
         PathManager { 
-            app: app_path,
-            main: main_path, 
-            homm: homm_path, 
-            data: data_path, 
-            maps: maps_path, 
-            modes: modes_path, 
-            cfg: cfg_path, 
+            paths: Arc::new(HashMap::from([
+                ("app".to_string(), app_path),
+                ("main".to_string(), main_path),
+                ("homm".to_string(), homm_path),
+                ("data".to_string(), data_path),
+                ("maps".to_string(), maps_path),
+                ("modes".to_string(), modes_path),
+                ("cfg".to_string(), cfg_path)
+            ])),
             file_movement_info_synced: files_map.clone(),
-            file_movement_info: Arc::new(tokio::sync::Mutex::new(files_map)),
+            file_movement_info: Arc::new(files_map),
         }
     }
 }

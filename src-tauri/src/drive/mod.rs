@@ -15,7 +15,7 @@ use std::io::Cursor;
 const BTD_FILES_FOLDER_ID: &str = "1V4r2zyRutMSEpzD7envq5nAXDhIZaLtH";
 
 pub struct DriveManager {
-    pub hub: Arc<tokio::sync::Mutex<DriveHub<HttpsConnector<HttpConnector>>>>
+    pub hub: Arc<DriveHub<HttpsConnector<HttpConnector>>>
 }
 
 impl DriveManager {
@@ -39,7 +39,7 @@ impl DriveManager {
                         );
                         println!("auth ok");
                         Some(DriveManager {
-                            hub: Arc::new(tokio::sync::Mutex::new(hub))
+                            hub: Arc::new(hub)
                         })
                     },
                     Err(ee) => {
@@ -77,7 +77,7 @@ impl DriveManager {
     }
 
     pub async fn test(&mut self) {
-        let res = self.hub.lock().await.
+        let res = self.hub.
             files().
             list().add_scope(drive3::api::Scope::MetadataReadonly).param("fields", "files(id, name, mimeType, parents, modifiedTime)").
             q(format!("'{}' in parents and mimeType = 'application/x-zip'", BTD_FILES_FOLDER_ID).as_str()).
