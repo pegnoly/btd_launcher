@@ -41,6 +41,7 @@ impl WriteDBItem<Downloadable> for DatabaseManager {
                 .bind(&item.name)
                 .bind(&item.parent)
                 .bind(&item.modified)
+                .bind(&item.modified)
                 .execute(&self.pool).await;
         match query {
             Ok(query_result) => {
@@ -214,16 +215,25 @@ pub struct DownloadedFile {
     pub path: PathBuf
 }
 
+/// Presents possible messages can be received with downloader's state machine
 #[derive(Debug)]
 enum DownloadProcessState {
+    /// Sended when the disk responce is successful, contains this file's name
     DownloadStarted(String),
+    /// Sended when download progress of file is changed, contains new progress
     ProgressChanged(f32),
+    /// Sended when file download finished, contains this file information with its local path on user's computer
     FileDownloaded(DownloadedFile),
+    /// Sended when all files downloaded successfully, contains boolean value that indicates, is app needed to be reloaded
     DownloadProcessEnded(bool)
 }
 
-/// Downloads all updated or added files, writes new information into database, moves files if them are parts of active game mode.
-/// If launcher itself was updated, app will be closed.
+/// I think i got smth like pattern here.
+/// I have main task here - download process encapsulated with tokio::task and "event loop" that receives messages from this task.
+/// The way of communication between them is using channels, i was struggle with them in start, but now i can see some patterns here.
+/// I also paid great respect to Rust's enums here so i can send any type of information with channels.
+/// I think i'll use this scheme in the future cause it seems pretty good for me and made decomposition easier(i'm stupid, but ok).
+/// ![main task](tokio::task with some move values from tauri states) -> [event loop](using receiver and tauri states directly)
 #[tauri::command]
 pub async fn download_update(
     app: AppHandle,
@@ -233,7 +243,9 @@ pub async fn download_update(
     drive: State<'_, DriveManager>,
     mode_manager: State<'_, GameModeManager>
 ) -> Result<(), ()> {
+    // Creates channel to communicate between task and event loop
     let (sender, mut receiver) = tokio::sync::mpsc::channel(32);
+    // Creates copies of data that must be moved into main task
     let files_cloned = Arc::clone(&downloader.downloadables);
     let paths = path_manager.paths();
     let hub = Arc::clone(&drive.hub);
@@ -241,7 +253,11 @@ pub async fn download_update(
     let folders = path_manager.file_move_info();
     let current_game_mode = mode_manager.current_mode.lock().await;
     let mut download_state = downloader.state.lock().await;
+    // I can't get all tricky things with tokio::task(it doesn't return future trait, but can be awaited, but works without awaiting...)
+    // I think it creates some separate async block so for futures in this function block it works like sync code so it will wait until this
+    // function finishes. Pretty good cause task depends on data collected by this one.
     collect_files_for_update(&files_cloned, &hub, &pool, &folders, &mut download_state).await;
+    // Download files - main task
     tokio::task::spawn(async move {
         let mut is_reload_required = false;
         for file in files_cloned.read().await.iter() {
@@ -258,6 +274,7 @@ pub async fn download_update(
         }
         sender.send(DownloadProcessState::DownloadProcessEnded(is_reload_required)).await;
     });
+    // Event loop
     loop {
         match receiver.recv().await {
             Some(state) => 
@@ -301,7 +318,7 @@ async fn get_root_path<'a>(paths: &'a Arc<HashMap<String, PathBuf>>, load_type: 
 }
 
 /// Actually downloads file.
-/// Tries to get responce from google drive server, if it successful, sends state with file name, starts download, sends progress state.
+/// Tries to get responce from google drive, if it successful, sends state with file name, starts download, sends progress state.
 /// When file is loaded, send state that indicates that download is over.
 async fn download_file(
     file: &Downloadable, 
