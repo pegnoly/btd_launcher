@@ -10,7 +10,7 @@ use patcher::{Patcher,
         win_condition::{MapWinCondition, WinConditionWriter, 
             final_battle::{FinalBattleTime, FinalBattleArenaCreator, WinConditionFinalBattleFileProcessor}, 
             economic::{ResourceWinInfo, EconomicWinConditionTextProcessor}, 
-            capture::CaptureObjectWinConditionTextProcessor}
+            capture::CaptureObjectWinConditionTextProcessor}, creature::CreatureModifier
     }, CodeGenerator, FileWriter, TextProcessor
 };
 use serde::{Serialize, Deserialize};
@@ -243,6 +243,8 @@ pub async fn patch_map(
     map.settings.use_night_lights);
     // treasures
     let mut treasure_patcher = TreasurePatcher::new();
+    // monsters
+    let mut monsters_patcher = CreatureModifier::new();
     // towns
     let mut town_patcher = TownPatcher::new(
         &patcher_manager.config_path, 
@@ -287,6 +289,7 @@ pub async fn patch_map(
         .with_modifyable("players", &mut players_patcher)
         .with_modifyable("Secondary", &mut secondary_quest_patcher)
         .with_modifyable("Primary", &mut win_condition_writer)
+        .with_modifyable("AdvMapMonster", &mut monsters_patcher)
         .run();
 
     let map_tag_patcher = Patcher::new()
@@ -324,6 +327,7 @@ pub async fn patch_map(
         .with(&treasure_patcher)
         .with(&win_condition_writer)
         .with(&template_info_generator)
+        .with(&monsters_patcher)
         .run(&map.main_dir);
 
     // ------ TEXT PROCESSORS ------

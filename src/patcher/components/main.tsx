@@ -110,6 +110,7 @@ export default function PatcherMain(props: PatcherMainProps) {
     const [templateSettingsDesc, setTemplateSettingsDesc] = useState<string>("");
 
     async function mapPickButtonClicked(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        //patchStateContext?.setState(PatchState.Inactive);
         await invoke("pick_map")
             .catch((error) => console.log("error occured while picking map: ", error));
     }
@@ -142,6 +143,9 @@ export default function PatcherMain(props: PatcherMainProps) {
         patchStateContext?.setState(PatchState.Patching);
         appStateContext?.setState(AppState.Busy);
         invoke("patch_map").then(() => {
+            patchStateContext?.setState(PatchState.Inactive);
+            appStateContext?.setState(AppState.Patching);
+        }).catch((error) => {
             patchStateContext?.setState(PatchState.Inactive);
             appStateContext?.setState(AppState.Patching);
         });

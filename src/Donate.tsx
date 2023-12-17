@@ -1,4 +1,4 @@
-import { Button, Group, Image, Popover, Stack, Text } from "@mantine/core"
+import { Button, Group, Image, Popover, Stack, Text, createStyles } from "@mantine/core"
 import mir_icon from "./assets/mir.png"
 import telegram_icon from "./assets/telegram.png"
 import discord_icon from "./assets/discord_icon.png"
@@ -7,16 +7,35 @@ import alerts_icon from "./assets/alerts.png"
 import { useState } from "react"
 import { invoke } from "@tauri-apps/api"
 
+const donatesStyles = createStyles((theme) => ({
+    button: {
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "contain",
+        backgroundColor: "transparent",
+        ":hover": {
+            boxShadow: "revert",
+            lightingColor: "chocolate"
+        }
+    }
+}));
+
 export function Donates() {
+    const {classes} = donatesStyles();
     return(
         <>
             <div style={{
                 position: "absolute",
                 top: 5,
-                right: -30,
+                left: 745,
                 width: 200
             }}>
-                <Stack spacing={2} style={{
+                <Button h={50} w={50} style={{
+                    backgroundImage: `url("${discord_icon}")`,
+                }}
+                className={classes.button}
+                onClick={() => invoke("open_discord_dialog")}
+                ></Button>
+                {/* <Stack spacing={2} style={{
                     }}>
                     <Text align="center" style={{
                         fontFamily: "Pattaya, sans-serif",
@@ -26,13 +45,13 @@ export function Donates() {
                         borderColor: "black",
                         color: "darkviolet",
                     }}>by Gerter</Text>
-                    {/* <Button style={{
+                    <Button style={{
                         fontFamily: "Gabriela, sans-serif",
                         color: "burlywood",
                         backgroundColor: "green",
                         height: 30,
                         width: 125
-                    }} onClick={() => setContactsHidden(!contactsHidden)}>Контакты</Button> */}
+                    }} onClick={() => setContactsHidden(!contactsHidden)}>Контакты</Button>
                     <div>
                         <Group
                             style={{
@@ -101,7 +120,7 @@ export function Donates() {
                             }}></Button>
                         </Group>
                     </div>
-                </Stack>
+                </Stack> */}
             </div>
         </>
     )

@@ -3,6 +3,7 @@ pub mod building;
 pub mod quest;
 pub mod light;
 pub mod player;
+pub mod creature;
 pub mod town;
 pub mod treasure;
 pub mod misc;
