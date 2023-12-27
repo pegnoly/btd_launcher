@@ -16,5 +16,5 @@ strum = "0.25.0"
 strum_macros = "0.25.2"
 utf16_reader = "0.1.0"
 zip = "0.6.6"
-homm5_types = {path = "../homm5_types"}
 pyo3 = "0.19.2"
+homm5-types = "0.1.0"

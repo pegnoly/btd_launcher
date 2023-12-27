@@ -119,10 +119,7 @@ pub async fn start_update_thread(
                             if file.modified_time.as_ref().unwrap().timestamp() > version.modified {
                                 let mut state =  downloader_state.lock().await;
                                 if *state == DownloaderState::NothingToDownload {
-                                    //collect_files_for_update(&downloadables, &hub, &connection, &folders, &mut state).await;
-                                }
-                                else if *state == DownloaderState::ReadyToDownload {
-                                    //println!("smth ready to download");
+                                    *state == DownloaderState::ReadyToDownload;
                                     app.emit_to("main", "download_state_changed", SingleValuePayload{value: true});
                                 }
                             }

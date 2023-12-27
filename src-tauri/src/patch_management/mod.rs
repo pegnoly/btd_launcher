@@ -328,6 +328,7 @@ pub async fn patch_map(
         .with(&win_condition_writer)
         .with(&template_info_generator)
         .with(&monsters_patcher)
+        .with(&town_patcher)
         .run(&map.main_dir);
 
     // ------ TEXT PROCESSORS ------

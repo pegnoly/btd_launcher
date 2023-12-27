@@ -1,5 +1,4 @@
 pub mod patch_strategy;
-mod macros;
 pub mod map;
 
 use patch_strategy::{GenerateLuaCode, PatchModifyable, PatchCreatable, WriteAdditional, ProcessText};
