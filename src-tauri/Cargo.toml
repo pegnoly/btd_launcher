@@ -25,7 +25,6 @@ reqwest = { version = "0.11.18", features = ["stream"] }
 tokio = { version = "1.29.1", features = ["process"] }
 chrono = "0.4.26"
 patcher = {path = "../src-tauri/patcher"}
-scaner = {path = "../src-tauri/scaner"}
 zip = "0.6.6"
 walkdir = "2.3.3"
 sqlx = { version = "0.7.1", features = ["sqlite", "runtime-tokio"] }
@@ -34,6 +33,7 @@ futures-util = "0.3.29"
 serde-xml-rs = "0.6.0"
 async-trait = "0.1.74"
 homm5-types = "0.1.0"
+homm5-scaner = "0.1.0"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

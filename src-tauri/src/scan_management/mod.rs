@@ -1,7 +1,7 @@
 use crate::file_management::PathManager;
 use tauri::State;
 use std::{io::Write, collections::HashMap};
-use scaner::{
+use homm5_scaner::{
     pak::FileStructure,
     entity::{
         ScanProcessor,
@@ -24,7 +24,7 @@ pub async fn scan_files(path_manager: State<'_, PathManager>) -> Result<(),()> {
         let name = f.as_ref().unwrap().file_name();
         paks.push(name.to_str().unwrap().to_string());
         if name.to_str().unwrap().ends_with(".pak") {
-            scaner::pak::check_pak(path_manager.data().join(&name), &mut files);
+            homm5_scaner::pak::check_pak(path_manager.data().join(&name), &mut files);
         }
     }
     let art_collector = ArtFileCollector{};
