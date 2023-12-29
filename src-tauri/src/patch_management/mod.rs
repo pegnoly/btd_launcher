@@ -242,7 +242,7 @@ pub async fn patch_map(
     let light_patcher = LightPatcher::new(patcher_manager.config_path.join("lights.json"), 
     map.settings.use_night_lights);
     // treasures
-    let mut treasure_patcher = TreasurePatcher::new();
+    let mut treasure_patcher = TreasurePatcher::new(&patcher_manager.config_path);
     // monsters
     let mut monsters_patcher = CreatureModifier::new();
     // towns
@@ -308,7 +308,10 @@ pub async fn patch_map(
         .with(&OutcastMechanicsWriter::new(
             &map.template,
             &map.game_mechanics_dir,
-            &patcher_manager.config_path.join("adds\\outcast\\Summon_Creatures.xdb")
+            vec![
+                (&patcher_manager.config_path.join("adds\\outcast\\Summon_Creatures.xdb"), &PathBuf::from("Spell\\Adventure_Spells\\Summon_Creatures.xdb")),
+                (&patcher_manager.config_path.join("adds\\outcast\\Summon_Boat.xdb"), &PathBuf::from("Spell\\Adventure_Spells\\Summon_Boat.xdb"))
+            ]
         ))
         .with(&OutcastTextWriter::new(
             &map.template,

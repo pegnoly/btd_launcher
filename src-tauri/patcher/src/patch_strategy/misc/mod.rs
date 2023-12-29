@@ -42,15 +42,15 @@ impl<'a> WriteAdditional for MoonCalendarWriter<'a> {
 pub struct OutcastMechanicsWriter<'a> {
     template: &'a Template,
     write_dir: &'a PathBuf,
-    file_path: &'a PathBuf
+    files: Vec<(&'a PathBuf, &'a PathBuf)>
 }
 
 impl<'a> OutcastMechanicsWriter<'a> {
-    pub fn new(template: &'a Template, dir: &'a PathBuf, path: &'a PathBuf) -> Self {
+    pub fn new(template: &'a Template, dir: &'a PathBuf, files: Vec<(&'a PathBuf, &'a PathBuf)>) -> Self {
         OutcastMechanicsWriter { 
             template: template, 
             write_dir: dir, 
-            file_path: path 
+            files: files 
         }
     }
 }
@@ -58,13 +58,15 @@ impl<'a> OutcastMechanicsWriter<'a> {
 impl<'a> WriteAdditional for OutcastMechanicsWriter<'a> {
     fn try_write(&self) {
         if self.template._type == TemplateType::Outcast {
-            let path_to = self.write_dir.join("Spell\\Adventure_Spells\\Summon_Creatures.xdb");
-            std::fs::create_dir_all(&path_to.parent().unwrap()).unwrap();
-            let copy_result = std::fs::copy(&self.file_path, &path_to);
-            match copy_result {
-                Ok(_num) => {},
-                Err(_e) => {
-                    println!("error copying file from {:?} to {:?}", &self.file_path, &path_to);
+            for file_info in &self.files {
+                let path_to = self.write_dir.join(file_info.1);
+                std::fs::create_dir_all(&path_to.parent().unwrap()).unwrap();
+                let copy_result = std::fs::copy(file_info.0, &path_to);
+                match copy_result {
+                    Ok(_num) => {},
+                    Err(_e) => {
+                        println!("error copying file from {:?} to {:?}", file_info.0, &path_to);
+                    }
                 }
             }
         }
