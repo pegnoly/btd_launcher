@@ -4,10 +4,10 @@ use std::collections::HashMap;
 
 /// This mod contains structs to work with map temlates.
 
-/// Types of currently presented templates.
+/// Types of currently presented modes.
 #[derive(EnumString, PartialEq, Eq, Hash, Clone, Copy, Debug, Serialize, Deserialize)]
 #[strum(serialize_all = "UPPERCASE")] // well, not working or i'm stupid...
-pub enum TemplateType {
+pub enum TemplateModeType {
     Common,
     Outcast,
     Blitz,
@@ -23,8 +23,8 @@ pub enum TemplateAdditionalSetting {
 /// Template is actually is a type and a string that used to recognize this type in map file.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Template {
-    #[serde(rename = "type")]
-    pub _type: TemplateType,
+    pub main_mode: TemplateModeType,
+    pub possible_modes: Option<Vec<TemplateModeType>>,
     pub name: String,
     pub settings: Option<Vec<TemplateAdditionalSetting>>
 }
@@ -32,7 +32,8 @@ pub struct Template {
 impl Default for Template {
     fn default() -> Self {
         Template { 
-            _type: TemplateType::Common, 
+            main_mode: TemplateModeType::Common, 
+            possible_modes: Some(vec![]),
             name: String::new(),
             settings: Some(vec![]) 
         }
@@ -51,6 +52,6 @@ pub struct TemplateTransferable {
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
 pub struct TemplatesInfoModel {
     pub templates: Vec<Template>,
-    pub descs: HashMap<TemplateType, String>,
+    pub descs: HashMap<TemplateModeType, String>,
     pub settings_descs: HashMap<TemplateAdditionalSetting, String>
 }
