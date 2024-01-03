@@ -1,4 +1,4 @@
-import { createStyles } from "@mantine/core";
+import { Flex, Group, HoverCard, Tooltip, UnstyledButton, createStyles } from "@mantine/core";
 import { Box, Button, Text, Grid } from "@mantine/core";
 import { event, invoke } from "@tauri-apps/api";
 import { useEffect, useState } from "react";
@@ -8,12 +8,16 @@ import patcherBack from "../assets/patcher_back.png"
 import patcherButtonActive from "../assets/patcher_button_active.png"
 import patcherButtonPushed from "../assets/patcher_button_pushed.png"
 import patcherButtonDisabled from "../assets/patcher_button_disabled.png"
+import sd from "../assets/btd_logo.png"
+
 import PatcherSettings from "./settings/main";
 import TeamSelector from "./team_selector/main";
 import { listen } from "@tauri-apps/api/event";
 import { SingleValuePayload } from "../../App";
 import { AppState, useAppStateContext } from "../../contexts/AppState";
 import { PatchState, usePatchStateContext } from "../contexts/patch_state";
+import { FinalBattleElement, FinalBattleTiming } from "./settings/final_battle";
+import { EconomicVictoryProps } from "./settings/economic";
 
 export const patcherStyles = createStyles((theme) => ({
     map_info_div: {
@@ -89,6 +93,7 @@ type Template = {
     name: string;
     desc: string;
     settings_desc: string;
+    possible_modes: MapMode[]
 }
 
 type MapProps = {
@@ -96,6 +101,83 @@ type MapProps = {
     players_count: number;
     template: Template;
 }
+
+export enum MapMode {
+    Blitz = "Blitz",
+    Economic = "Economic",
+    FinalBatte = "FinalBattle",
+    Outcast = "Outcast"
+}
+
+type MapModeProps = {
+    name: string | undefined,
+    url: string | undefined,
+    desc: string | undefined
+}
+
+type MapModeChanged = {
+    onChange: (v: boolean) => void
+}
+
+type MapModeElementProps = MapModeProps & MapModeChanged;
+
+function MapModeElement(props: MapModeElementProps) {
+    const [selected, setSelected] = useState<boolean>(false);
+    return (
+        <>
+        <HoverCard width={250} shadow="md">
+            <HoverCard.Target>
+                <button style={{
+                    width: 100,
+                    height: 50,
+                    borderColor: !selected ? "red" : "green",
+                    borderRadius: 0,
+                    borderWidth: 3,
+                    fontSize: 13,
+                    fontFamily: "Pacifico",
+                    wordWrap: "break-word",
+                    padding: 0,
+                    //backgroundImage: `url(${type.url})`,
+                    backgroundSize: "contain",
+                    backgroundColor: "transparent"
+                }}
+                onClick={() => 
+                    {
+                        setSelected(!selected);
+                        props.onChange(selected);
+                    }}
+                >{props.name}</button>
+            </HoverCard.Target>
+            <HoverCard.Dropdown>
+                <Text size={15} align="center">{props.desc}</Text>
+            </HoverCard.Dropdown>
+        </HoverCard>
+        </>
+    )
+}
+
+const MapModeInfo = new Map<MapMode, MapModeProps>([
+    [MapMode.Blitz, {
+        url: sd, 
+        name: "Blitz-режим", 
+        desc: "Активирует режим ускоренной постройки города и прироста армии"
+    }],
+    [MapMode.Economic, {
+        url: sd, 
+        name: "Экономическая победа", 
+        desc: "Активирует условие победы при наборе определенного числа золота или редких ресурсов(используйте соотв. настройку)"
+    }],
+    [MapMode.FinalBatte, {
+        url: sd, 
+        name: "Финальная битва", 
+        desc: "Позволяет установить дату принудительной финальной битвы(используйте соотв. настройку)"
+    }],
+    [MapMode.Outcast, {
+        url: sd, 
+        name: "Outcast-режим", 
+        desc: "Активирует режим игры только одним героем"
+    }]
+])
 
 export default function PatcherMain(props: PatcherMainProps) {
     const {classes} = patcherStyles();
@@ -106,8 +188,12 @@ export default function PatcherMain(props: PatcherMainProps) {
     const [currentMapName, setMapName] = useState<string>("");
     const [currentTemplate, setTemplate] = useState<string>("");
     const [currentPlayersCount, setPlayersCount] = useState<number>(0);
-    const [templateDesc, setTemplateDesc] = useState<string>("");
-    const [templateSettingsDesc, setTemplateSettingsDesc] = useState<string>("");
+    const [possibleMapModes, setPossibleMapModes] = useState<MapMode[]>([]);
+    const [activeMapModes, setActiveMapModes] = useState<MapMode[]>([]);
+
+    function test(b: boolean) {
+        console.log("test: ", b)
+    }
 
     async function mapPickButtonClicked(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         //patchStateContext?.setState(PatchState.Inactive);
@@ -135,8 +221,7 @@ export default function PatcherMain(props: PatcherMainProps) {
         setMapName(mapInfo.file_name);
         setTemplate(mapInfo.template.name);
         setPlayersCount(mapInfo.players_count);
-        setTemplateDesc(mapInfo.template.desc);
-        setTemplateSettingsDesc(mapInfo.template.settings_desc);
+        setPossibleMapModes(mapInfo.template.possible_modes);
     }
 
     async function patchButtonClick() {
@@ -156,8 +241,7 @@ export default function PatcherMain(props: PatcherMainProps) {
             setMapName("");
             setPlayersCount(0);
             setTemplate("");
-            setTemplateDesc("");
-            setTemplateSettingsDesc("");
+            setPossibleMapModes([])
         }
     }, [patchStateContext?.state])
 
@@ -196,8 +280,20 @@ export default function PatcherMain(props: PatcherMainProps) {
                 }}>
                 <Text className={classes.button_text} align="center">Шаблон</Text>
                 <Text className={classes.button_text} align="center" color="green">{currentTemplate}</Text>
-                <Text className={classes.button_text} size={12} align="center" color="yellow">{templateDesc}</Text>
-                <Text className={classes.button_text} style = {{position: "relative", top: 10}} size={12} align="center" color="yellow">{templateSettingsDesc}</Text>
+                <Flex justify="center" gap={10}>
+                    {possibleMapModes.map((mode, index) => (
+                        <MapModeElement 
+                            key={index} 
+                            url={MapModeInfo.get(mode)?.url}
+                            name={MapModeInfo.get(mode)?.name}
+                            desc={MapModeInfo.get(mode)?.desc}
+                            onChange={(e) => {
+                                setActiveMapModes([...activeMapModes, mode]);
+                                console.log("active modes ", activeMapModes)
+                            }}
+                        />
+                    ))}
+                </Flex>
                 <Button 
                     name="patcherStartup"
                     disabled={!(patchStateContext?.state == PatchState.Active)}
