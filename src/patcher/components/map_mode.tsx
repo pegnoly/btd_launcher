@@ -18,7 +18,8 @@ type MapModeProps = {
 }
 
 type MapModeType = {
-    mode: MapMode
+    mode: MapMode,
+    disableable: boolean
 }
 
 type MapModeElementProps = MapModeProps & MapModeType;
@@ -28,12 +29,12 @@ export function MapModeElement(props: MapModeElementProps) {
     const mapModeContext = useMapModesContext();
     return (
         <>
-        <HoverCard width={200} shadow="md">
+        <HoverCard width={240} shadow="md" offset={1}>
             <HoverCard.Target>
                 <button style={{
                     width: 100,
                     height: 50,
-                    borderColor: !selected ? "red" : "green",
+                    borderColor: (props.disableable == false) ? "yellow" : (selected ? "green" : "red"),
                     borderRadius: 0,
                     borderWidth: 3,
                     fontSize: 13,
@@ -45,19 +46,22 @@ export function MapModeElement(props: MapModeElementProps) {
                     backgroundColor: "transparent"
                 }}
                 onClick={() => {
-                    let new_selected = !selected;
-                    if (new_selected == true) {
-                        mapModeContext?.setState([...mapModeContext?.state, props.mode]);
+                    if (props.disableable == true) {
+                        let new_selected = !selected;
+                        if (new_selected == true) {
+                            mapModeContext?.setState([...mapModeContext?.state, props.mode]);
+                        }
+                        else {
+                            mapModeContext?.setState(mapModeContext?.state.filter(m => m != props.mode));
+                        }
+                        setSelected(new_selected);
                     }
-                    else {
-                        mapModeContext?.setState(mapModeContext?.state.filter(m => m != props.mode));
-                    }
-                    setSelected(new_selected);
                 }}
                 >{props.name}</button>
             </HoverCard.Target>
             <HoverCard.Dropdown>
-                <Text size={11} align="center">{props.desc}</Text>
+                <Text size={10.5} align="center">{props.desc}</Text>
+                <Text size={10} style={{color: "silver"}} align="center">{(props.disableable == false ? "[Встроенный режим для шаблона]" : "")}</Text>
             </HoverCard.Dropdown>
         </HoverCard>
         </>

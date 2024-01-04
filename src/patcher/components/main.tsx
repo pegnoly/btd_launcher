@@ -94,6 +94,7 @@ type Template = {
     name: string;
     desc: string;
     settings_desc: string;
+    main_mode: MapMode | null,
     possible_modes: MapMode[]
 }
 
@@ -113,6 +114,7 @@ export default function PatcherMain(props: PatcherMainProps) {
     const [currentTemplate, setTemplate] = useState<string>("");
     const [currentPlayersCount, setPlayersCount] = useState<number>(0);
     const [possibleMapModes, setPossibleMapModes] = useState<MapMode[]>([]);
+    const [mainMapMode, setMainMapMode] = useState<MapMode|null>(null);
 
     async function mapPickButtonClicked(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         //patchStateContext?.setState(PatchState.Inactive);
@@ -141,6 +143,7 @@ export default function PatcherMain(props: PatcherMainProps) {
         setTemplate(mapInfo.template.name);
         setPlayersCount(mapInfo.players_count);
         setPossibleMapModes(mapInfo.template.possible_modes);
+        setMainMapMode(mapInfo.template.main_mode);
     }
 
     async function patchButtonClick() {
@@ -200,13 +203,14 @@ export default function PatcherMain(props: PatcherMainProps) {
                     }}>
                     <Text className={classes.button_text} align="center">Шаблон</Text>
                     <Text className={classes.button_text} align="center" color="green">{currentTemplate}</Text>
-                    <Flex justify="center" gap={10}>
+                    <Flex style={{position: "relative", top: 5}} justify="center" gap={10}>
                         {possibleMapModes.map((mode, index) => (
                             <MapModeElement 
                                 key={index} 
                                 name={MapModeInfo.get(mode)?.name}
                                 desc={MapModeInfo.get(mode)?.desc}
                                 mode={mode}
+                                disableable={mainMapMode != null && mainMapMode != mode}
                             />
                         ))}
                     </Flex>
