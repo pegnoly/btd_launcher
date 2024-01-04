@@ -1,7 +1,7 @@
 import { Flex, Group, HoverCard, Tooltip, UnstyledButton, createStyles } from "@mantine/core";
 import { Box, Button, Text, Grid } from "@mantine/core";
 import { event, invoke } from "@tauri-apps/api";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {useDisclosure} from "@mantine/hooks";
 
 import patcherBack from "../assets/patcher_back.png"
@@ -16,8 +16,9 @@ import { listen } from "@tauri-apps/api/event";
 import { SingleValuePayload } from "../../App";
 import { AppState, useAppStateContext } from "../../contexts/AppState";
 import { PatchState, usePatchStateContext } from "../contexts/patch_state";
-import { FinalBattleElement, FinalBattleTiming } from "./settings/final_battle";
-import { EconomicVictoryProps } from "./settings/economic";
+import MapModesProvider from "../contexts/map_mode";
+
+import { MapMode, MapModeElement, MapModeInfo } from "./map_mode";
 
 export const patcherStyles = createStyles((theme) => ({
     map_info_div: {
@@ -102,83 +103,6 @@ type MapProps = {
     template: Template;
 }
 
-export enum MapMode {
-    Blitz = "Blitz",
-    Economic = "Economic",
-    FinalBatte = "FinalBattle",
-    Outcast = "Outcast"
-}
-
-type MapModeProps = {
-    name: string | undefined,
-    url: string | undefined,
-    desc: string | undefined
-}
-
-type MapModeChanged = {
-    onChange: (v: boolean) => void
-}
-
-type MapModeElementProps = MapModeProps & MapModeChanged;
-
-function MapModeElement(props: MapModeElementProps) {
-    const [selected, setSelected] = useState<boolean>(false);
-    return (
-        <>
-        <HoverCard width={250} shadow="md">
-            <HoverCard.Target>
-                <button style={{
-                    width: 100,
-                    height: 50,
-                    borderColor: !selected ? "red" : "green",
-                    borderRadius: 0,
-                    borderWidth: 3,
-                    fontSize: 13,
-                    fontFamily: "Pacifico",
-                    wordWrap: "break-word",
-                    padding: 0,
-                    //backgroundImage: `url(${type.url})`,
-                    backgroundSize: "contain",
-                    backgroundColor: "transparent"
-                }}
-                onClick={() => 
-                    {
-                        setSelected(!selected);
-                        props.onChange(selected);
-                    }}
-                >{props.name}</button>
-            </HoverCard.Target>
-            <HoverCard.Dropdown>
-                <Text size={15} align="center">{props.desc}</Text>
-            </HoverCard.Dropdown>
-        </HoverCard>
-        </>
-    )
-}
-
-const MapModeInfo = new Map<MapMode, MapModeProps>([
-    [MapMode.Blitz, {
-        url: sd, 
-        name: "Blitz-режим", 
-        desc: "Активирует режим ускоренной постройки города и прироста армии"
-    }],
-    [MapMode.Economic, {
-        url: sd, 
-        name: "Экономическая победа", 
-        desc: "Активирует условие победы при наборе определенного числа золота или редких ресурсов(используйте соотв. настройку)"
-    }],
-    [MapMode.FinalBatte, {
-        url: sd, 
-        name: "Финальная битва", 
-        desc: "Позволяет установить дату принудительной финальной битвы(используйте соотв. настройку)"
-    }],
-    [MapMode.Outcast, {
-        url: sd, 
-        name: "Outcast-режим", 
-        desc: "Активирует режим игры только одним героем"
-    }]
-])
-
 export default function PatcherMain(props: PatcherMainProps) {
     const {classes} = patcherStyles();
 
@@ -189,11 +113,6 @@ export default function PatcherMain(props: PatcherMainProps) {
     const [currentTemplate, setTemplate] = useState<string>("");
     const [currentPlayersCount, setPlayersCount] = useState<number>(0);
     const [possibleMapModes, setPossibleMapModes] = useState<MapMode[]>([]);
-    const [activeMapModes, setActiveMapModes] = useState<MapMode[]>([]);
-
-    function test(b: boolean) {
-        console.log("test: ", b)
-    }
 
     async function mapPickButtonClicked(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         //patchStateContext?.setState(PatchState.Inactive);
@@ -246,80 +165,78 @@ export default function PatcherMain(props: PatcherMainProps) {
     }, [patchStateContext?.state])
 
     return (
-        <Box 
-            hidden={!props.visible} 
-            style={{
-                width: 500,
-                height: 410,
-                backgroundImage: `url(${patcherBack})`,
-                backgroundSize: 'hover',
-                backgroundRepeat: 'no-repeat',
-                backgroundColor: "transparent",
-                overflow: "hidden",
-                position: "absolute",
-                right: 275,
-                bottom: -50
-            }}>
-            <Button 
-                disabled={(patchStateContext?.state == PatchState.Configuring || patchStateContext?.state == PatchState.Patching)}
-                className={classes.button}
-                name="mapPicker"
+        <MapModesProvider>
+            <Box 
+                hidden={!props.visible} 
                 style={{
+                    width: 500,
+                    height: 410,
+                    backgroundImage: `url(${patcherBack})`,
+                    backgroundSize: 'hover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundColor: "transparent",
+                    overflow: "hidden",
                     position: "absolute",
-                    top: 33,
-                    left: 175,
-                }} 
-                onClick={mapPickButtonClicked}>Выберите карту
-            </Button>
-            <div 
-                style={{
-                    position: "relative", 
-                    top: 175, 
-                    left: 50, 
-                    width: 400
+                    right: 275,
+                    bottom: -50
                 }}>
-                <Text className={classes.button_text} align="center">Шаблон</Text>
-                <Text className={classes.button_text} align="center" color="green">{currentTemplate}</Text>
-                <Flex justify="center" gap={10}>
-                    {possibleMapModes.map((mode, index) => (
-                        <MapModeElement 
-                            key={index} 
-                            url={MapModeInfo.get(mode)?.url}
-                            name={MapModeInfo.get(mode)?.name}
-                            desc={MapModeInfo.get(mode)?.desc}
-                            onChange={(e) => {
-                                setActiveMapModes([...activeMapModes, mode]);
-                                console.log("active modes ", activeMapModes)
-                            }}
-                        />
-                    ))}
-                </Flex>
                 <Button 
-                    name="patcherStartup"
-                    disabled={!(patchStateContext?.state == PatchState.Active)}
+                    disabled={(patchStateContext?.state == PatchState.Configuring || patchStateContext?.state == PatchState.Patching)}
                     className={classes.button}
+                    name="mapPicker"
                     style={{
                         position: "absolute",
-                        top: 165,
-                        left: 125
-                    }}
-                    onClick={patchButtonClick}>Обработать
+                        top: 33,
+                        left: 175,
+                    }} 
+                    onClick={mapPickButtonClicked}>Выберите карту
                 </Button>
-            </div>
-            <div className={classes.map_info_div}>
-            <Grid>
-                <Grid.Col span={5}>
-                    <div>
-                        <Text style={{fontFamily: 'Balsamiq Sans, cursive'}} align="center">Имя карты</Text>
-                        <Text style={{fontFamily: 'Balsamiq Sans, cursive'}} align="center" size={13} color="green">{currentMapName}</Text>
-                        <PatcherSettings template={currentTemplate}/>
-                    </div>
-                </Grid.Col>
-                <Grid.Col offset={2} span={5}>
-                    <TeamSelector playersCount={currentPlayersCount}/>
-                </Grid.Col>
-            </Grid>
-            </div>
-        </Box>
+                <div 
+                    style={{
+                        position: "relative", 
+                        top: 175, 
+                        left: 50, 
+                        width: 400
+                    }}>
+                    <Text className={classes.button_text} align="center">Шаблон</Text>
+                    <Text className={classes.button_text} align="center" color="green">{currentTemplate}</Text>
+                    <Flex justify="center" gap={10}>
+                        {possibleMapModes.map((mode, index) => (
+                            <MapModeElement 
+                                key={index} 
+                                name={MapModeInfo.get(mode)?.name}
+                                desc={MapModeInfo.get(mode)?.desc}
+                                mode={mode}
+                            />
+                        ))}
+                    </Flex>
+                    <Button 
+                        name="patcherStartup"
+                        disabled={!(patchStateContext?.state == PatchState.Active)}
+                        className={classes.button}
+                        style={{
+                            position: "absolute",
+                            top: 165,
+                            left: 125
+                        }}
+                        onClick={patchButtonClick}>Обработать
+                    </Button>
+                </div>
+                <div className={classes.map_info_div}>
+                <Grid>
+                    <Grid.Col span={5}>
+                        <div>
+                            <Text style={{fontFamily: 'Balsamiq Sans, cursive'}} align="center">Имя карты</Text>
+                            <Text style={{fontFamily: 'Balsamiq Sans, cursive'}} align="center" size={13} color="green">{currentMapName}</Text>
+                            <PatcherSettings template={currentTemplate}/>
+                        </div>
+                    </Grid.Col>
+                    <Grid.Col offset={2} span={5}>
+                        <TeamSelector playersCount={currentPlayersCount}/>
+                    </Grid.Col>
+                </Grid>
+                </div>
+            </Box>
+        </MapModesProvider>
     )
 }
