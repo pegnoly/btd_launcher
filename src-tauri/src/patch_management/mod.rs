@@ -153,6 +153,30 @@ pub async fn set_weeks_only_setting(
     Ok(())
 }
 
+/// Invoked when user checks disable_neutral_towns_dwells setting
+#[tauri::command]
+pub async fn set_neutral_towns_dwells_setting(
+    patcher_manager: State<'_, PatcherManager>,
+    is_disabled: bool
+) -> Result<(), ()> {
+    let mut map_holder = patcher_manager.map.lock().await;
+    map_holder.as_mut().unwrap().settings.disable_neutral_towns_dwells = is_disabled;
+    println!("Updating disable_neutral_towns_dwells setting from frontend {}", is_disabled);
+    Ok(())
+}
+
+/// Invoked when user checks disable_neutral_towns_dwells setting
+#[tauri::command]
+pub async fn set_enable_new_arts_setting(
+    patcher_manager: State<'_, PatcherManager>,
+    is_enabled: bool
+) -> Result<(), ()> {
+    let mut map_holder = patcher_manager.map.lock().await;
+    map_holder.as_mut().unwrap().settings.enable_new_arts = is_enabled;
+    println!("Updating enable_new_arts setting from frontend {}", is_enabled);
+    Ok(())
+}
+
 #[tauri::command] 
 pub async fn add_game_mode(
     patcher_manager: State<'_, PatcherManager>,
