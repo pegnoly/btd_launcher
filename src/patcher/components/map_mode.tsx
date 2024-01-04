@@ -59,7 +59,7 @@ export function MapModeElement(props: MapModeElementProps) {
                         }
                         else {
                             mapModeContext?.setState(mapModeContext?.state.filter(m => m != props.mode));
-                            // if mode must not be configurable just enable it here
+                            // if mode must not be configurable just disable it here
                             if (props.configurable == false) {
                                 invoke("remove_game_mode", {label: props.mode.toString()})
                             }
