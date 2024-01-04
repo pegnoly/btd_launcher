@@ -36,7 +36,7 @@ export function EconomicVictoryElement() {
             if (mapModeContext?.state.includes(MapMode.Economic)) {
                 setEnabled(true);
                 invoke("add_economic_mode", {label: "economic", resourceInfo: {
-                    _type: economicProps.resType,
+                    type: economicProps.resType,
                     count: economicProps.resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount
                 }});
             }
@@ -52,7 +52,7 @@ export function EconomicVictoryElement() {
     useEffect(() => {
         if (enabled == true) {
             invoke("add_economic_mode", {label: "economic", resourceInfo: {
-                _type: economicProps.resType,
+                type: economicProps.resType,
                 count: economicProps.resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount
             }});
         }
