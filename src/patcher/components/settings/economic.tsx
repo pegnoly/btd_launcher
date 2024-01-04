@@ -2,13 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import { Checkbox, Grid, Text } from "@mantine/core";
 import { invoke } from "@tauri-apps/api";
 import { PatchState, usePatchStateContext } from "../../contexts/patch_state";
+import { useMapModesContext } from "../../contexts/map_mode";
+import { MapMode } from "../map_mode";
 
-enum ResourceType {
+export enum ResourceType {
     Gold = "Gold",
     RareResource = "RareResource"
 }
 
-class EconomicVictoryProps {
+export class EconomicVictoryProps {
     resType: ResourceType = ResourceType.Gold;
     goldCount: number = 200000;
     resCount: number = 50;
@@ -17,20 +19,44 @@ class EconomicVictoryProps {
 export function EconomicVictoryElement() {
 
     const patcherStateContext = usePatchStateContext();
+    const mapModeContext = useMapModesContext();
 
-    const [checked, setChecked] = useState<boolean>(false);
+    const [enabled, setEnabled] = useState<boolean>(false);
     const [economicProps, setEconomicProps] = useState<EconomicVictoryProps>(new EconomicVictoryProps());
 
     useEffect(() => {
         if (patcherStateContext?.state == PatchState.Inactive) {
-            setChecked(false);
+            setEnabled(false);
             setEconomicProps(new EconomicVictoryProps());
         }
     }, [patcherStateContext?.state])
 
-    function sendResInfoToBackend(type: ResourceType, count: number) {
-        invoke("update_economic_victory_setting", {isEnabled: true, resourceInfo: {_type: type, count: count}});
-    }
+    useEffect(() => {
+        if (enabled == false) {
+            if (mapModeContext?.state.includes(MapMode.Economic)) {
+                setEnabled(true);
+                invoke("add_economic_mode", {label: "economic", resourceInfo: {
+                    _type: economicProps.resType,
+                    count: economicProps.resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount
+                }});
+            }
+        }
+        else {
+            if (mapModeContext?.state.includes(MapMode.Economic) == false) {
+                setEnabled(false);
+                invoke("remove_game_mode", {label: "economic"});
+            }
+        }
+    }, [mapModeContext?.state]);
+
+    useEffect(() => {
+        if (enabled == true) {
+            invoke("add_economic_mode", {label: "economic", resourceInfo: {
+                _type: economicProps.resType,
+                count: economicProps.resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount
+            }});
+        }
+    }, [economicProps]);
 
     const resourcesInfo = {
         [ResourceType.Gold] : {values: [200000, 300000, 500000], update: ((count: number) => {
@@ -38,32 +64,19 @@ export function EconomicVictoryElement() {
                 ...economicProps,
                 goldCount: count,
             });
-            sendResInfoToBackend(ResourceType.Gold, count);
         })},
         [ResourceType.RareResource] : {values: [50, 75, 100], update: ((count: number) => {
             setEconomicProps({
                 ...economicProps,
                 resCount: count,
             });
-            sendResInfoToBackend(ResourceType.RareResource, count);
         })}
     }
 
     return (
         <div>
-            <Checkbox size="xs" labelPosition="left" label = "Победа по числу ресурсов"
-                checked={checked}
-                onChange={(event) => {
-                    let checked = event.currentTarget.checked;
-                    setChecked(checked);
-                    if (checked == true) {
-                        resourcesInfo[economicProps.resType].update(economicProps.resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount)
-                    }
-                    else {
-                        invoke("update_economic_victory_setting", {isEnabled: false})
-                    }
-                }}/>
-            <div hidden={!checked}>
+            <div hidden={!enabled}>
+                <Text size="xs">Тип и число ресурсов для победы</Text>
                 <Grid>
                     <Grid.Col span={5}>
                         <Text align="center" size={10} style={{position: "relative", left: 15}}>Тип ресурсов</Text>
@@ -78,10 +91,12 @@ export function EconomicVictoryElement() {
                             onChange={
                                 (e) => {
                                     let resType: ResourceType = ResourceType[e.target.value as keyof typeof ResourceType];
-                                    resourcesInfo[resType].update(resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount);
+                                    let resAmount = resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount
                                     setEconomicProps(prev => ({
                                         ...prev,
-                                        resType: resType
+                                        resType: resType,
+                                        goldCount: resType == ResourceType.Gold ? resAmount : prev.goldCount,
+                                        resCount: resType == ResourceType.RareResource ? resAmount : prev.resCount
                                     }))
                                 }
                             }>
@@ -101,7 +116,14 @@ export function EconomicVictoryElement() {
                             }}
                             value={economicProps.resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount} 
                             onChange={
-                                (e) => resourcesInfo[economicProps.resType].update(parseInt(e.target.value))
+                                (e) => {
+                                    let newAmount = parseInt(e.target.value);
+                                    setEconomicProps(prev => ({
+                                        ...prev,
+                                        goldCount: prev.resType == ResourceType.Gold ? newAmount : prev.goldCount,
+                                        resCount: prev.resType == ResourceType.RareResource ? newAmount : prev.resCount
+                                    }))
+                                }
                             }>
                             {resourcesInfo[economicProps.resType].values.map((value, index) => (
                                 <option key={index} value={value}>{value.toString()}</option>
