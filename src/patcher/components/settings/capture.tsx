@@ -3,73 +3,67 @@ import { invoke } from "@tauri-apps/api";
 import { PatcherSettingsProps } from "./main";
 import { useState, useEffect } from "react";
 import { PatchState, usePatchStateContext } from "../../contexts/patch_state";
-
-const captureTemplates: string[] = ["BTD-Universe", "BTD-UniverseX6", "BTD-KingsBounty", "BTD-JebusCross-Castle", "BTD-JebusCross-2x2-Castle"];
-
-class CaptureProps {
-    checked: boolean = false;
-    delay: number = 3;
-}
+import { useMapModesContext } from "../../contexts/map_mode";
+import { MapMode } from "../map_mode";
 
 export default function CaptureElement(props: PatcherSettingsProps) {
 
     const patcherStateContext = usePatchStateContext();
+    const mapModeContext = useMapModesContext();
 
-    const [captureProps, setCaptureProps] = useState<CaptureProps>(new CaptureProps());
+    const [enabled, setEnabled] = useState<boolean>();
+    const [delay, setDelay] = useState<number>(3);
 
     useEffect(() => {
         if (patcherStateContext?.state == PatchState.MapPicked) {
-            setCaptureProps(new CaptureProps());
+            setDelay(3);
         }
     }, [patcherStateContext?.state])
 
+    useEffect(() => {
+        if (enabled == false) {
+            if (mapModeContext?.state.includes(MapMode.CaptureObject)) {
+                setEnabled(true);
+                invoke("add_capture_object_mode", {label: "capture_object", delay: delay});
+            }
+        }
+        else {
+            if (mapModeContext?.state.includes(MapMode.CaptureObject) == false) {
+                setEnabled(false);
+                invoke("remove_game_mode", {label: "capture_object"});
+            }
+        }
+    }, [mapModeContext?.state]);
+
+    useEffect(() => {
+        if (enabled == true) {
+            invoke("add_capture_object_mode", {label: "capture_object", delay: delay});
+        }
+    }, [delay]);
+
     return (
         <div>
-            <div hidden={!captureTemplates.includes(props.template)}>
-                <Checkbox size="xs" labelPosition="left" label = "Победа при удержании объекта"
-                    checked={captureProps.checked}
-                    onChange={(event) => {
-                        let checked = event.currentTarget.checked;
-                        setCaptureProps(prev => ({
-                            ...prev,
-                            checked: checked
-                        }));
-                        if (checked == true) {
-                            invoke("update_capture_object_setting", {isEnabled: true, delay: captureProps.delay});
+            <div hidden={!enabled}>
+                <Text size="xs">Число дней удержания замка до победы</Text>
+                <select value={delay} style={{
+                        width: 40, 
+                        height: 20, 
+                        fontSize: 12, 
+                        position: "relative", 
+                        left: 120
+                    }}
+                    onChange={
+                        (e) => {
+                            let newDelay = parseInt(e.currentTarget.value);
+                            setDelay(newDelay);
                         }
-                        else {
-                            invoke("update_capture_object_setting", {isEnabled: false});
-                        }
-                    }}/>
-                <div hidden={!captureProps.checked} style={{
-                        position: "relative",
-                        left: -40
-                    }}>
-                    <Text align="center" size={10}>Число дней удержания до победы</Text>
-                    <select value={captureProps.delay} style={{
-                            width: 40, 
-                            height: 20, 
-                            fontSize: 12, 
-                            position: "relative", 
-                            left: 120
-                        }}
-                        onChange={
-                            (e) => {
-                                let newDelay = parseInt(e.currentTarget.value);
-                                setCaptureProps(prev => ({
-                                    ...prev,
-                                    delay: newDelay
-                                }));
-                                invoke("update_capture_object_setting", {isEnabled: true, delay: newDelay});
-                            }
-                        }>
-                        <option>3</option>
-                        <option>7</option>
-                        <option>10</option>
-                        <option>14</option>
-                        <option>21</option>
-                    </select>
-                </div>
+                    }>
+                    <option>3</option>
+                    <option>7</option>
+                    <option>10</option>
+                    <option>14</option>
+                    <option>21</option>
+                </select>
             </div>
         </div>
     )
