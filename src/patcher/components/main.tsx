@@ -211,6 +211,7 @@ export default function PatcherMain(props: PatcherMainProps) {
                                 desc={MapModeInfo.get(mode)?.desc}
                                 mode={mode}
                                 disableable={mainMapMode != null && mainMapMode != mode}
+                                configurable={MapModeInfo.get(mode)?.configurable}
                             />
                         ))}
                     </Flex>

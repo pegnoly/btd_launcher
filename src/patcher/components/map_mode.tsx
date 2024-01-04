@@ -2,6 +2,7 @@ import { useState } from "react";
 import { HoverCard, Text } from "@mantine/core";
 
 import { useMapModesContext } from "../contexts/map_mode";
+import { invoke } from "@tauri-apps/api";
 
 export enum MapMode {
     Blitz = "Blitz",
@@ -14,12 +15,13 @@ export enum MapMode {
 type MapModeProps = {
     name: string | undefined,
     //url: string | undefined,
-    desc: string | undefined
+    desc: string | undefined,
+    configurable: boolean | undefined
 }
 
 type MapModeType = {
     mode: MapMode,
-    disableable: boolean
+    disableable: boolean,
 }
 
 type MapModeElementProps = MapModeProps & MapModeType;
@@ -50,9 +52,17 @@ export function MapModeElement(props: MapModeElementProps) {
                         let new_selected = !selected;
                         if (new_selected == true) {
                             mapModeContext?.setState([...mapModeContext?.state, props.mode]);
+                            // if mode must not be configurable just enable it here
+                            if (props.configurable == false) {
+                                invoke("add_game_mode", {label: props.mode.toString(), mode: props.mode})
+                            }
                         }
                         else {
                             mapModeContext?.setState(mapModeContext?.state.filter(m => m != props.mode));
+                            // if mode must not be configurable just enable it here
+                            if (props.configurable == false) {
+                                invoke("remove_game_mode", {label: props.mode.toString()})
+                            }
                         }
                         setSelected(new_selected);
                     }
@@ -72,26 +82,31 @@ export const MapModeInfo = new Map<MapMode, MapModeProps>([
     [MapMode.Blitz, {
         //url: sd, 
         name: "Blitz-режим", 
-        desc: "Активирует режим ускоренной постройки города и прироста армии"
+        desc: "Активирует режим ускоренной постройки города и прироста армии",
+        configurable: false
     }],
     [MapMode.Economic, {
         //url: sd, 
         name: "Экономическая победа", 
-        desc: "Активирует условие победы при наборе определенного числа золота или редких ресурсов(используйте соотв. настройку)"
+        desc: "Активирует условие победы при наборе определенного числа золота или редких ресурсов(используйте соотв. настройку)",
+        configurable: true
     }],
     [MapMode.FinalBatte, {
         //url: sd, 
         name: "Финальная битва", 
-        desc: "Позволяет установить дату принудительной финальной битвы(используйте соотв. настройку)"
+        desc: "Позволяет установить дату принудительной финальной битвы(используйте соотв. настройку)",
+        configurable: true
     }],
     [MapMode.Outcast, {
         //url: sd, 
         name: "Outcast-режим", 
-        desc: "Активирует режим игры только одним героем"
+        desc: "Активирует режим игры только одним героем",
+        configurable: false
     }],
     [MapMode.CaptureObject, {
         //url: sd, 
         name: "Захват замка", 
-        desc: "Активирует условие победы при захвате и удержании нейтрального замка(используйте соотв. настройку)"
+        desc: "Активирует условие победы при захвате и удержании нейтрального замка(используйте соотв. настройку)",
+        configurable: true
     }]
 ])
