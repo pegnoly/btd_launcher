@@ -13,19 +13,25 @@ export type PatcherSettingsProps = {
     template: string;
 }
 
+// actually means settings not dependent on any mode etc
+class MapAdditionalSettings {
+    useNightLights: boolean = false;
+    disableWeeks: boolean = false;
+    disableNeutralTownsDwells: boolean = false;
+    enableNewArts: boolean = false;
+}
+
 export default function PatcherSettings(props: PatcherSettingsProps) {
     const {classes} = patcherStyles();
 
     const patcherStateContext = usePatchStateContext();
 
     const [visible, setVisible] = useState<boolean>(false);
-    const [nightLightsChecked, setNightLightsChecked] = useState<boolean>(false);
-    const [weeksOnlyChecked, setWeeksOnlyChecked] = useState<boolean>(false);
+    const [settings, setSettings] = useState<MapAdditionalSettings>(new MapAdditionalSettings());
 
     useEffect(() => {
         if (patcherStateContext?.state == PatchState.MapPicked) {
-            setNightLightsChecked(false);
-            setWeeksOnlyChecked(false);
+            setSettings(new MapAdditionalSettings());
         }
     }, [patcherStateContext?.state])
 
@@ -70,16 +76,28 @@ export default function PatcherSettings(props: PatcherSettingsProps) {
                 <ScrollArea w={290} h={150} type="hover">
                     <Stack spacing={5} w={280}>
                         <Checkbox size="xs" labelPosition="left" label="Использовать ночное освещение карты"
-                            checked={nightLightsChecked}
+                            checked={settings.useNightLights}
                             onChange={(event) => {
-                                setNightLightsChecked(event.currentTarget.checked);
+                                setSettings({...settings, useNightLights: event.currentTarget.checked});
                                 invoke("set_night_lights_setting", {useNightLights: event.currentTarget.checked});
                         }}/>
                         <Checkbox size="xs" labelPosition="left" label="Отключить эффекты недель"
-                            checked={weeksOnlyChecked}
+                            checked={settings.disableWeeks}
                             onChange={(event) => {
-                                setWeeksOnlyChecked(event.currentTarget.checked);
+                                setSettings({...settings, disableWeeks: event.currentTarget.checked});
                                 invoke("set_weeks_only_setting", {weeksOnly: event.currentTarget.checked});
+                        }}/>
+                        <Checkbox size="xs" labelPosition="left" label="Запретить постройку жилищ в нейтральных городах"
+                            checked={settings.disableNeutralTownsDwells}
+                            onChange={(event) => {
+                                setSettings({...settings, disableNeutralTownsDwells: event.currentTarget.checked});
+                                invoke("set_neutral_towns_dwells_setting", {isDisabled: event.currentTarget.checked});
+                        }}/>
+                        <Checkbox size="xs" labelPosition="left" label="Разрешить генерацию эксперементальных артефактов"
+                            checked={settings.enableNewArts}
+                            onChange={(event) => {
+                                setSettings({...settings, enableNewArts: event.currentTarget.checked});
+                                invoke("set_enable_new_arts_setting", {isEnabled: event.currentTarget.checked});
                         }}/>
                         <FinalBattleElement/>
                         <EconomicVictoryElement/>
