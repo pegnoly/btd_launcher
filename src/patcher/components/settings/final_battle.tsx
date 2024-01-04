@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { Checkbox, Grid, Text } from "@mantine/core";
+import { Grid, Text } from "@mantine/core";
 import { invoke } from "@tauri-apps/api";
 import { PatchState, usePatchStateContext } from "../../contexts/patch_state";
+import { useMapModesContext } from "../../contexts/map_mode";
+import { MapMode } from "../map_mode";
 
-class FinalBattleTiming {
+export class FinalBattleTiming {
     month: number = 1;
     week: number = 1;
     day: number = 1;
@@ -22,40 +24,44 @@ function generateMonths() {
 export function FinalBattleElement() {
 
     const patcherStateContext = usePatchStateContext();
+    const mapModeContext = useMapModesContext();
 
-    const [checked, setChecked] = useState<boolean>(false);
+    const [enabled, setEnabled] = useState<boolean>(false);
     const [timing, setTiming] = useState<FinalBattleTiming>(new FinalBattleTiming());
 
     useEffect(() => {
         if (patcherStateContext?.state == PatchState.MapPicked) {
-            setChecked(false)
+            setEnabled(false)
             setTiming(new FinalBattleTiming());
         }
-    }, [patcherStateContext?.state])
+    }, [patcherStateContext?.state]);
+
+    useEffect(() => {
+        console.log("map mode context changed: ", mapModeContext?.state)
+        if (enabled == false) {
+            if (mapModeContext?.state.includes(MapMode.FinalBatte)) {
+                setEnabled(true);
+                invoke("add_final_battle_mode", {label: "final_battle", timing: timing});
+            }
+        }
+        else {
+            if (mapModeContext?.state.includes(MapMode.FinalBatte) == false) {
+                setEnabled(false);
+                invoke("remove_game_mode", {label: "final_battle"});
+            }
+        }
+    }, [mapModeContext?.state]);
+
+    useEffect(() => {
+        if (enabled == true) {
+            invoke("add_final_battle_mode", {label: "final_battle", timing: timing});
+        }
+    }, [timing]);
 
     return (
         <>
-            <Checkbox size="xs" labelPosition="left" label = "Назначить дату финальной битвы"
-            checked={checked}
-            onChange={(event) => {
-                let checked = event.currentTarget.checked;
-                setChecked(checked)
-                if (checked == true) {
-                    invoke("update_final_battle_setting", {
-                        isEnabled: true, 
-                        finalBattleTime: {
-                            month: timing.month, 
-                            week: timing.week,
-                            day: timing.day
-                    }});
-                }
-                else {
-                    invoke("update_final_battle_setting", {
-                        isEnabled: false
-                    });
-                }
-        }}/>
-        <div hidden={!checked}>
+        <div hidden={!enabled}>
+            <Text size="xs">Дата финальной битвы</Text>
             <Grid>
                 <Grid.Col span={1} offset={1}>
                     <Text align = "center" size={10}>Месяц</Text>
@@ -72,13 +78,6 @@ export function FinalBattleElement() {
                                 ...timing,
                                 month: parseInt(event.currentTarget.value),
                             })
-                            invoke("update_final_battle_setting", {
-                                isEnabled: true, 
-                                finalBattleTime: {
-                                    month: parseInt(event.currentTarget.value), 
-                                    week: timing.week,
-                                    day: timing.day
-                                }})
                         }}>
                         {generateMonths()}
                     </select>
@@ -96,13 +95,6 @@ export function FinalBattleElement() {
                                 ...timing,
                                 week: parseInt(event.currentTarget.value),
                             })
-                            invoke("update_final_battle_setting", {
-                                isEnabled: true, 
-                                finalBattleTime: {
-                                    month: timing.month, 
-                                    week: parseInt(event.currentTarget.value),
-                                    day: timing.day
-                                }})
                         }}>
                         <option>1</option>
                         <option>2</option>
@@ -125,14 +117,7 @@ export function FinalBattleElement() {
                             ...timing,
                             day: parseInt(event.currentTarget.value),
                         })
-                        invoke("update_final_battle_setting", {
-                            isEnabled: true, 
-                            finalBattleTime: {
-                                month: timing.month, 
-                                week: timing.week,
-                                day: parseInt(event.currentTarget.value)
-                            }})
-                        }}>
+                    }}>
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
