@@ -12,10 +12,11 @@ pub mod win_condition;
 /// This mod presents all types of possible patch strategies that can be applied to map files.
 
 pub trait PatchModifyable {
+    type Modifyable;
     /// Deserializes xml text to homm5 data struct and applies modifications to them.
     /// text: text parsed from xml document
     /// writer: quick-xml Writer to write modified elements into
-    fn try_modify(&mut self, text: &String, writer: &mut quick_xml::Writer<&mut Vec<u8>>);
+    fn try_modify(&mut self, object: &mut Self::Modifyable);
 }
 
 pub trait PatchCreatable {
@@ -26,7 +27,8 @@ pub trait PatchCreatable {
 
 // TODO! impl this to only get information from map. But somehow i want to get rid of duplications(get map structure one time and perfom all possible operations on one instance)
 pub trait PatchGetter {
-    fn try_get(&mut self);
+    type Gettable;
+    fn try_get(&self, object: Self::Gettable);
 }
 
 pub trait GenerateLuaCode {
@@ -43,4 +45,11 @@ pub trait WriteAdditional {
 pub trait ProcessText {
     /// Modifies given text. This trait is only useful cause of stupid encoding of homm5 text files.
     fn try_process(&self, text: &mut String) -> String;
+}
+
+pub trait PatchGroup {
+    type Patchable;
+
+    fn get_patchable_object(&self, text: &String) -> Self::Patchable;
+    fn run(&mut self, object: &Self::Patchable);
 }
