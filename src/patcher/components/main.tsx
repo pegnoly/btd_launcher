@@ -1,14 +1,12 @@
-import { Flex, Group, HoverCard, Tooltip, UnstyledButton, createStyles } from "@mantine/core";
+import { Flex, createStyles } from "@mantine/core";
 import { Box, Button, Text, Grid } from "@mantine/core";
-import { event, invoke } from "@tauri-apps/api";
-import { useContext, useEffect, useState } from "react";
-import {useDisclosure} from "@mantine/hooks";
+import { invoke } from "@tauri-apps/api";
+import { useEffect, useState } from "react";
 
 import patcherBack from "../assets/patcher_back.png"
 import patcherButtonActive from "../assets/patcher_button_active.png"
 import patcherButtonPushed from "../assets/patcher_button_pushed.png"
 import patcherButtonDisabled from "../assets/patcher_button_disabled.png"
-import sd from "../assets/btd_logo.png"
 
 import PatcherSettings from "./settings/main";
 import TeamSelector from "./team_selector/main";

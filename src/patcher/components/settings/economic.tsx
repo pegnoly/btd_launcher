@@ -35,7 +35,7 @@ export function EconomicVictoryElement() {
         if (enabled == false) {
             if (mapModeContext?.state.includes(MapMode.Economic)) {
                 setEnabled(true);
-                invoke("add_economic_mode", {label: "economic", resourceInfo: {
+                invoke("add_economic_mode", {label: "Economic", resourceInfo: {
                     type: economicProps.resType,
                     count: economicProps.resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount
                 }});
@@ -44,14 +44,14 @@ export function EconomicVictoryElement() {
         else {
             if (mapModeContext?.state.includes(MapMode.Economic) == false) {
                 setEnabled(false);
-                invoke("remove_game_mode", {label: "economic"});
+                invoke("remove_game_mode", {label: "Economic"});
             }
         }
     }, [mapModeContext?.state]);
 
     useEffect(() => {
         if (enabled == true) {
-            invoke("add_economic_mode", {label: "economic", resourceInfo: {
+            invoke("add_economic_mode", {label: "Economic", resourceInfo: {
                 type: economicProps.resType,
                 count: economicProps.resType == ResourceType.Gold ? economicProps.goldCount : economicProps.resCount
             }});

@@ -24,20 +24,20 @@ export default function CaptureElement(props: PatcherSettingsProps) {
         if (enabled == false) {
             if (mapModeContext?.state.includes(MapMode.CaptureObject)) {
                 setEnabled(true);
-                invoke("add_capture_object_mode", {label: "capture_object", delay: delay});
+                invoke("add_capture_object_mode", {label: "CaptureObject", delay: delay});
             }
         }
         else {
             if (mapModeContext?.state.includes(MapMode.CaptureObject) == false) {
                 setEnabled(false);
-                invoke("remove_game_mode", {label: "capture_object"});
+                invoke("remove_game_mode", {label: "CaptureObject"});
             }
         }
     }, [mapModeContext?.state]);
 
     useEffect(() => {
         if (enabled == true) {
-            invoke("add_capture_object_mode", {label: "capture_object", delay: delay});
+            invoke("add_capture_object_mode", {label: "CaptureObject", delay: delay});
         }
     }, [delay]);
 

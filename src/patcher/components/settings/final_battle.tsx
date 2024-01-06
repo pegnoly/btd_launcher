@@ -41,20 +41,20 @@ export function FinalBattleElement() {
         if (enabled == false) {
             if (mapModeContext?.state.includes(MapMode.FinalBatte)) {
                 setEnabled(true);
-                invoke("add_final_battle_mode", {label: "final_battle", timing: timing});
+                invoke("add_final_battle_mode", {label: "FinalBattle", timing: timing});
             }
         }
         else {
             if (mapModeContext?.state.includes(MapMode.FinalBatte) == false) {
                 setEnabled(false);
-                invoke("remove_game_mode", {label: "final_battle"});
+                invoke("remove_game_mode", {label: "FinalBattle"});
             }
         }
     }, [mapModeContext?.state]);
 
     useEffect(() => {
         if (enabled == true) {
-            invoke("add_final_battle_mode", {label: "final_battle", timing: timing});
+            invoke("add_final_battle_mode", {label: "FinalBattle", timing: timing});
         }
     }, [timing]);
 
