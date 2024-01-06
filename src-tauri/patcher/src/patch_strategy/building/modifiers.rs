@@ -26,7 +26,15 @@ impl PatchModifyable for BuildingNameApplier {
 
 /// Replaces taverns with dens of thieves in outcast mode.
 pub struct OutcastTavernReplacer {
-    pub can_be_applied: bool
+    can_be_applied: bool
+}
+
+impl OutcastTavernReplacer {
+    pub fn new(can_be_applied: bool) -> Self {
+        OutcastTavernReplacer { 
+            can_be_applied: can_be_applied
+        }
+    }
 }
 
 impl PatchModifyable for OutcastTavernReplacer {
