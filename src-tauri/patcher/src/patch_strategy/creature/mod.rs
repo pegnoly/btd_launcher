@@ -1,51 +1,56 @@
-use std::{collections::HashMap, io::Write};
+pub mod modifiers;
 
-use homm5_types::{
-    common::Pos,
-    creature::AdvMapMonster
-};
+use std::io::Write;
+use homm5_types::creature::AdvMapMonster;
+use super::{PatchModifyable, GenerateLuaCode, PatchGroup};
 
-use super::{PatchModifyable, GenerateLuaCode};
-
-pub struct CreatureModifier {
-    count: u32,
-    creature_pos_info: HashMap<String, Pos>
+/// CreaturePatchesGroup combines all necessary patches for AdvMapMonster game type.
+pub struct CreaturePatchesGroup<'a> {
+    patches: Vec<&'a dyn PatchModifyable<Modifyable = AdvMapMonster>>,
+    // getters: Vec<&'a dyn PatchGetter<Patchable = AdvMapMonster, Additional = CreatureGameInfo>>,
+    lua_strings: Vec<String>
 }
 
-impl CreatureModifier {
+impl<'a> CreaturePatchesGroup<'a> {
     pub fn new() -> Self {
-        CreatureModifier {
-            count: 0,
-            creature_pos_info: HashMap::new()
+        CreaturePatchesGroup { 
+            patches: vec![], 
+            lua_strings: vec![] 
         }
     }
 }
 
-impl PatchModifyable for CreatureModifier {
-    fn try_modify(&mut self, text: &String, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
-        let actual_string = format!("<AdvMapMonster>{}</AdvMapMonster>", text);
-        let creature_info: Result<AdvMapMonster, quick_xml::DeError> = quick_xml::de::from_str(&actual_string);
-        match creature_info {
+impl<'a> PatchGroup for CreaturePatchesGroup<'a> {
+    fn with_modifyable(&mut self, patch: &dyn PatchModifyable<Modifyable = impl homm5_types::Homm5Type>) -> &mut Self {
+        self.patches.push(patch)
+    }
+
+    fn run(&mut self, text: &String) {
+        let creature_de: Result<AdvMapMonster, quick_xml::DeError> = quick_xml::de::from_str(text);
+        match creature_de {
             Ok(mut creature) => {
-                self.count += 1;
-                let name = format!("btd_creature_{}", &self.count);
-                creature.name = Some(name.clone());
-                if creature.additional_stacks.as_ref().unwrap().items.is_none() {
-                    creature.additional_stacks = None;
+                for patch in self.patches {
+                    patch.try_modify(&mut creature);
                 }
-                self.creature_pos_info.insert(name, creature.pos.clone());
-                writer.write_serializable("AdvMapMonster", &creature).unwrap();
-            }
-            Err(err) => println!("Error deserializing creature: {}", err.to_string())
+                self.lua_strings.push(
+                    format!(
+                        "\t[\"{}\"] = {{ x = {}, y = {} }},\n", 
+                        creature.name.as_ref().unwrap(),
+                        creature.pos.x,
+                        creature.pos.y
+                    )
+                )
+            },
+            Err(e) => println!("Error deserializing creature: {}", e.to_string())
         }
     }
 }
 
-impl GenerateLuaCode for CreatureModifier {
+impl<'a> GenerateLuaCode for CreaturePatchesGroup<'a> {
     fn to_lua(&self, path: & std::path::PathBuf) {
         let mut output = "BTD_Stacks = {\n".to_string();
-        for stack_info in &self.creature_pos_info {
-            output += &format!("[\"{}\"] = {{ x = {}, y = {} }},\n", stack_info.0, stack_info.1.x, stack_info.1.y);
+        for s in self.lua_strings {
+            output += &s;
         }
         output.push_str("}");
         let mut file = std::fs::File::create(path.join("stacks.lua")).unwrap();
