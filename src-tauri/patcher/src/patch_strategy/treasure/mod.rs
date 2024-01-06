@@ -1,10 +1,10 @@
-use std::{path::PathBuf, fs, io::Write, collections::HashMap};
+pub mod modifiers;
+pub mod getters;
 
+use std::{path::PathBuf, io::Write, collections::HashMap};
 use homm5_types::treasure::AdvMapTreasure;
-use quick_xml::Writer;
-use super::{PatchModifyable, GenerateLuaCode};
-
-/// Treasure patcher founds items of type AdvMapTreasure, give them script names and writes these names to lua code.
+use self::getters::TreasureGameInfo;
+use super::{PatchModifyable, GenerateLuaCode, PatchGetter, PatchGroup};
 
 #[derive(Debug, serde::Deserialize, serde::Serialize, strum_macros::EnumString, Hash, PartialEq, Eq, Clone, Copy)]
 enum TreasureType {
@@ -19,84 +19,92 @@ enum TreasureType {
     CAMPFIRE
 }
 
-struct TreasureGameInfo {
-    pub _type: TreasureType,
-    pub amount: u32
+/// Provides information that can be used across different patches in TownPatchesGroup
+pub struct TreasureInfoProvider<'a> {
+    /// Maps treasure type to its xdb file
+    treasures_xdbs: &'a HashMap<TreasureType, String>
 }
 
-pub struct TreasurePatcher {
-    treasures_xdbs: HashMap<TreasureType, String>,
-    treasure_number: u32,
-    treasures: HashMap<String, TreasureGameInfo>,
-    // test only purpose
-    treasures_types_count: HashMap<TreasureType, HashMap<u32, u16>>
-}
-
-impl TreasurePatcher {
-    pub fn new(config_path: &PathBuf) -> Self {
+impl<'a> TreasureInfoProvider<'a> {
+    pub fn new(config: &PathBuf) -> Self {
         let xdbs_de: HashMap<TreasureType, String> = serde_json::from_str(
-            std::fs::read_to_string(config_path.join("treasures_xdbs.json")).unwrap().as_str()
+            &std::fs::read_to_string(config.join("treasures_xdbs.json")).unwrap()
         ).unwrap();
-        TreasurePatcher {
-            treasures_xdbs: xdbs_de,
-            treasure_number: 0,
-            treasures: HashMap::new(),
-            treasures_types_count: HashMap::new()
+        TreasureInfoProvider { 
+            treasures_xdbs: &xdbs_de 
+        }
+    }
+
+    /// Returns treasure type based on its shared string.
+    pub fn get_treasure_type(&self, shared: &String) -> Option<TreasureType> {
+        if let Some(treasure_type) = self.treasures_xdbs.iter()
+            .find(|t| t.1 == shared) {
+            Some(treasure_type.0)
+        }
+        else {
+            None
         }
     }
 }
 
-impl PatchModifyable for TreasurePatcher {
-    fn try_modify(&mut self, text: &String, writer: &mut Writer<&mut Vec<u8>>) {
-        let actual_string = format!("<AdvMapTreasure>{}</AdvMapTreasure>", text);
-        let treasure_info: Result<AdvMapTreasure, quick_xml::DeError> = quick_xml::de::from_str(actual_string.as_str());
-        match treasure_info {
+pub struct TreasurePatchesGroup<'a> {
+    patches: Vec<&'a dyn PatchModifyable<Modifyable = AdvMapTreasure>>,
+    getters: Vec<&'a dyn PatchGetter<Patchable = AdvMapTreasure, Additional = TreasureGameInfo>>,
+    lua_strings: Vec<String>
+}
+
+impl<'a> TreasurePatchesGroup<'a> {
+    pub fn new() -> Self {
+        TreasurePatchesGroup { 
+            patches: vec![],
+            getters: vec![],
+            lua_strings: vec![]
+        }
+    }
+}
+
+impl<'a> PatchGroup for TreasurePatchesGroup<'a> {
+    fn with_getter(&mut self, patch: &dyn PatchGetter<Patchable = AdvMapTreasure, Additional = TreasureGameInfo>) -> &mut Self {
+        self.getters.push(patch)
+    }
+    
+    fn with_modifyable(&mut self, patch: &dyn PatchModifyable<Modifyable = AdvMapTreasure>) -> &mut Self {
+        self.patches.push(patch)
+    }
+
+    fn run(&mut self, text: &String) {
+        let treasure_de: Result<AdvMapTreasure, quick_xml::DeError> = quick_xml::de::from_str(text);
+        match treasure_de {
             Ok(mut treasure) => {
-                let no_xpointer_shared = treasure.shared.href.as_ref().unwrap().replace("#xpointer(/AdvMapTreasureShared)", "");
-                let treasure_type = self.treasures_xdbs.iter()
-                    .find(|t| *t.1 == no_xpointer_shared)
-                    .unwrap().0;
-                self.treasure_number += 1;
-                treasure.name = format!("Treasure_{}", self.treasure_number);
-                self.treasures.insert(treasure.name.clone(), TreasureGameInfo { _type: *treasure_type, amount: treasure.amount });
-                // types-amount counting
-                if self.treasures_types_count.contains_key(treasure_type) == false {
-                    self.treasures_types_count.insert(*treasure_type, HashMap::new());
+                let mut treasure_game_info = TreasureGameInfo{_type: TreasureType::CHEST, amount: 0};
+                for patch in self.patches {
+                    patch.try_modify(&mut treasure);
                 }
-                //
-                let treasure_counts_info = self.treasures_types_count.get_mut(&treasure_type).unwrap();
-                if treasure_counts_info.contains_key(&treasure.amount) == false {
-                    treasure_counts_info.insert(treasure.amount, 1);
+                for getter in self.getters {
+                    getter.try_get(&treasure, &mut treasure_game_info);
                 }
-                else {
-                    let curr_count = treasure_counts_info.get(&treasure.amount).unwrap();
-                    treasure_counts_info.insert(treasure.amount, curr_count + 1).unwrap();
-                }
-                writer.write_serializable("AdvMapTreasure", &treasure).unwrap();
+                self.lua_strings.push(
+                    format!(
+                        "\t[\"{}\"] = {{type = TREASURE_{:?}, amount = {}}},\n",
+                        &treasure.name,
+                        treasure_game_info._type,
+                        treasure_game_info.amount
+                    )
+                )
             }
-            Err(_e) => {
-            }
+            Err(e) => println!("Error deserializing treasure: {}", e.to_string())
         }
     }
 }
 
-impl GenerateLuaCode for TreasurePatcher {
-    fn to_lua(&self, path: &PathBuf) {
-        let mut output = String::from("TREASURES = {\n");
-        for treasure in &self.treasures {
-            output += &format!(
-                "\t[\"{}\"] = {{type = TREASURE_{:?}, amount = {}}},\n", 
-                treasure.0, 
-                treasure.1._type,
-                treasure.1.amount 
-            )
+impl<'a> GenerateLuaCode for TreasurePatchesGroup<'a> {
+    fn to_lua(&self, path: &PathBuf) -> String {
+        let mut treasures_info_output = "BTD_Treasures = {\n".to_string();
+        for s in self.lua_strings {
+            treasures_info_output += &s;
         }
-        output.push_str("}");
-        let mut out_file = fs::File::create(path.join("treasures.lua")).unwrap();
-        out_file.write_all(&mut output.as_bytes()).unwrap();
-        //
-        let mut log = serde_json::to_string_pretty(&self.treasures_types_count).unwrap();
-        let mut out_log = fs::File::create(path.join("treasures_log.json")).unwrap();
-        out_log.write_all(&mut log.as_bytes()).unwrap();
+        treasures_info_output.push_str("}");
+        let mut file = std::fs::File::create(path.join("treasures_info.lua")).unwrap();
+        file.write_all(&mut treasures_info_output.as_bytes()).unwrap();   
     }
 }
