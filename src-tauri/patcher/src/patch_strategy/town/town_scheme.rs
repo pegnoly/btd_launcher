@@ -1,6 +1,5 @@
 use homm5_types::town::{TownType, TownBuilding, TownBuildingType, TownBuildingLevel};
 use serde::{Serialize, Deserialize};
-use crate::map::template::TemplateModeType;
 
 /// This mod presents TownBuildingScheme a preconfigured list of buildings 
 /// that can be applied to the town if map has needed template and town has needed type
