@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 pub mod base;
 pub mod building;
 pub mod quest;
@@ -6,8 +8,10 @@ pub mod player;
 pub mod creature;
 pub mod town;
 pub mod treasure;
-pub mod misc;
-pub mod win_condition;
+pub mod objects;
+pub mod mechanics;
+pub mod modes;
+pub mod terrain;
 
 /// This mod presents all types of possible patch strategies that can be applied to map files.
 
@@ -19,22 +23,26 @@ pub trait PatchModifyable {
     fn try_modify(&mut self, object: &mut Self::Modifyable);
 }
 
+pub trait PatchAdditional {
+}
+
 pub trait PatchCreatable {
     /// Responsive to create new xml elements.
     /// writer: quick-xml Writer to write xml events into
     fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>, label: &str);
 }
 
-// TODO! impl this to only get information from map. But somehow i want to get rid of duplications(get map structure one time and perfom all possible operations on one instance)
+/// PatchGetter strategies use patchable object to get some information and write it into a getter. 
 pub trait PatchGetter {
-    type Gettable;
-    fn try_get(&self, object: Self::Gettable);
+    type Patchable;
+    type Additional;
+    fn try_get(&mut self, object: &Self::Patchable, getter: &mut Self::Additional);
 }
 
 pub trait GenerateLuaCode {
     /// Generates lua code from insides of implementor
     /// path: map directory to put lua file(s) into
-    fn to_lua(&self, path: & std::path::PathBuf);
+    fn to_lua(&self, path: &PathBuf);
 }
 
 pub trait WriteAdditional {
@@ -48,8 +56,10 @@ pub trait ProcessText {
 }
 
 pub trait PatchGroup {
-    type Patchable;
+    //fn get_patchable_object(&self, text: &String);
+    fn run(&mut self, text: &String, writer: &mut quick_xml::Writer<&mut Vec<u8>>);
 
-    fn get_patchable_object(&self, text: &String) -> Self::Patchable;
-    fn run(&mut self, object: &Self::Patchable);
+    // fn with_modifyable(&mut self, patch: &dyn PatchModifyable<Modifyable = Self::Patchable>);
+
+    // fn with_getter(&mut self, patch: &dyn PatchGetter<Patchable = Self::Patchable, Additional = Self::Additional>);
 }
