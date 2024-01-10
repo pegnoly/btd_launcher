@@ -15,6 +15,7 @@ pub enum TemplateModeName {
     Krypt,
     CaptureObject,
     Economic,
+    #[strum(serialize = "Final_Battle")]
     FinalBattle
 }
 

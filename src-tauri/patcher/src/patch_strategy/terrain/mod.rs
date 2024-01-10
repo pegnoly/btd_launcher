@@ -50,12 +50,18 @@ pub struct UndergroundEnabler {
     is_active: bool
 }
 
+impl UndergroundEnabler {
+    pub fn new(active: bool) -> Self {
+        UndergroundEnabler { 
+            is_active: active 
+        }
+    }
+}
+
 impl PatchCreatable for UndergroundEnabler {
     fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
-        if self.is_active == false {
-            return;
-        }
-        writer.create_element("HasUnderground").write_text_content(BytesText::new("true")).unwrap();
+        writer.create_element("HasUnderground")
+            .write_text_content(BytesText::new(if self.is_active {"true"} else {"false"})).unwrap();
     }
 }
 
@@ -64,13 +70,18 @@ pub struct UndergroundTerrainNameApplier {
     is_active: bool
 }
 
+impl UndergroundTerrainNameApplier {
+    pub fn new(active: bool) -> Self {
+        UndergroundTerrainNameApplier { 
+            is_active: active 
+        }
+    }
+}
+
 impl PatchCreatable for UndergroundTerrainNameApplier {
     fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
-        if self.is_active == false {
-            return;
-        }
         writer.create_element("UndergroundTerrainFileName")
-            .with_attribute(("href", "UndergroundTerrain.bin"))
+            .with_attribute(("href", if self.is_active {"UndergroundTerrain.bin"} else {""}))
             .write_empty().unwrap();
     }
 }

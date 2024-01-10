@@ -77,7 +77,7 @@ impl<'a> Patcher<'a> {
     /// executes patch process and writes patched info when it is done.
     pub fn run(&mut self) {
         let mut output: Vec<u8> = Vec::new();
-        let mut writer = Writer::new_with_indent(&mut output, b' ', 4);
+        let mut writer = Writer::new(&mut output);
         writer.write_event(Event::Decl(BytesDecl::new("1.0", Some("UTF-8"), None))).unwrap();
         self.process(&mut writer);
         let mut out_file = fs::File::create(self.path.unwrap()).unwrap();

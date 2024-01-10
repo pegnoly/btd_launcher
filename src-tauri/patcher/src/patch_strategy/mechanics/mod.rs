@@ -23,7 +23,39 @@ impl<'a> MoonCalendarWriter<'a> {
 impl<'a> WriteAdditional for MoonCalendarWriter<'a> {
     fn try_write(&self) {
         if self.neutral_weeks_only == true {
-            let path_to = self.write_dir.join("Default.xdb");
+            let path_to = self.write_dir.join("MoonCalendar\\Default.xdb");
+            std::fs::create_dir_all(&path_to.parent().unwrap()).unwrap();
+            let copy_result = std::fs::copy(&self.file_path, &path_to);
+            match copy_result {
+                Ok(_num) => {},
+                Err(_e) => {
+                    println!("error copying file from {:?} to {:?}", &self.file_path, &path_to);
+                }
+            }
+        }
+    }
+}
+
+pub struct NewArtifactsEnabler<'a> {
+    use_new_arts: bool,
+    write_dir: &'a PathBuf,
+    file_path: &'a PathBuf
+}
+
+impl<'a> NewArtifactsEnabler<'a> {
+    pub fn new(use_new_arts_setting: bool, dir: &'a PathBuf, path: &'a PathBuf) -> Self {
+        NewArtifactsEnabler { 
+            use_new_arts: use_new_arts_setting, 
+            write_dir: dir, 
+            file_path: path 
+        }
+    }
+}
+
+impl<'a> WriteAdditional for NewArtifactsEnabler<'a> {
+    fn try_write(&self) {
+        if self.use_new_arts == true {
+            let path_to = self.write_dir.join("RefTables\\Artifacts.xdb");
             std::fs::create_dir_all(&path_to.parent().unwrap()).unwrap();
             let copy_result = std::fs::copy(&self.file_path, &path_to);
             match copy_result {

@@ -4,21 +4,31 @@ pub mod economic;
 pub mod outcast;
 
 use std::{collections::HashMap, path::PathBuf, io::Write};
-use crate::map::template::TemplateModeType;
+use crate::map::template::{TemplateModeType, TemplateModeName};
 use super::{WriteAdditional, GenerateLuaCode};
 
 pub struct ModesInfoGenerator<'a> {
-    modes: &'a HashMap<String, TemplateModeType>,
+    modes: &'a HashMap<TemplateModeName, TemplateModeType>,
     config_path: &'a PathBuf,
     write_dir: &'a PathBuf
 }
 
+impl<'a> ModesInfoGenerator<'a> {
+    pub fn new(modes: &'a HashMap<TemplateModeName, TemplateModeType>, config: &'a PathBuf, dir: &'a PathBuf) -> Self {
+        ModesInfoGenerator {
+            modes: modes,
+            config_path: config,
+            write_dir: dir
+        }
+    }
+}
+
 impl<'a> GenerateLuaCode for ModesInfoGenerator<'a> {
     fn to_lua(&self, path: &PathBuf) {
-        let mut file = std::fs::File::create(path.join("template_info.lua")).unwrap();
+        let mut file = std::fs::File::create(path.join("modes_info.lua")).unwrap();
         let mut modes_string = "MCCS_GAME_MODES = {\n".to_string();
         for mode in self.modes.keys() {
-            modes_string += &format!("{}, ", mode.to_uppercase());
+            modes_string += &format!("\t[GAME_MODE_{}] = {},\n", mode.to_string().to_uppercase(), &self.modes.get(mode).unwrap().to_game_mode());
         }
         modes_string.push('}');
         file.write_all(modes_string.as_bytes()).unwrap();

@@ -1,4 +1,4 @@
-use std::{cell::RefCell, vec};
+use std::{vec, sync::RwLock};
 
 use homm5_types::player::{Player, PlayerID, BannedHeroesRaces, AllowedHeroes};
 use strum::IntoEnumIterator;
@@ -35,13 +35,13 @@ impl<'a> PatchModifyable for PlayerTeamSelector<'a>  {
 pub struct OutcastPlayerHeroSelector<'a> {
     is_enabled: bool,
     player_info_provider: &'a mut PlayersInfoProvider,
-    player_race_provider: &'a RefCell<PlayerRaceCrossPatchInfo>,
-    player_cross_patch_provider: &'a mut PlayersCrossPatchInfo,
+    player_race_provider: &'a RwLock<PlayerRaceCrossPatchInfo>,
+    player_cross_patch_provider: &'a RwLock<PlayersCrossPatchInfo>,
     active_players_count: usize
 }
 
 impl<'a> OutcastPlayerHeroSelector<'a> {
-    pub fn new(pip: &'a mut PlayersInfoProvider, prp: &'a RefCell<PlayerRaceCrossPatchInfo>, pcpp: &'a mut PlayersCrossPatchInfo, enabled: bool) -> Self  {
+    pub fn new(pip: &'a mut PlayersInfoProvider, prp: &'a RwLock<PlayerRaceCrossPatchInfo>, pcpp: &'a RwLock<PlayersCrossPatchInfo>, enabled: bool) -> Self  {
         OutcastPlayerHeroSelector { 
             is_enabled: enabled, 
             player_info_provider: pip,
@@ -60,13 +60,13 @@ impl<'a> PatchModifyable for OutcastPlayerHeroSelector<'a> {
             self.active_players_count += 1;
             // detect player's race
             let player_id = PlayerID::iter().enumerate().find(|p| p.0 == self.active_players_count).unwrap().1;
-            let provider_borrowed = self.player_race_provider.borrow();
+            let provider_borrowed = self.player_race_provider.read().unwrap();
             let race = provider_borrowed.players_race_info.get(&player_id);
             match race {
                 Some(actual_race) => {
                     // select random hero of this race
                     let hero = self.player_info_provider.get_random_hero_by_race(actual_race);
-                    self.player_cross_patch_provider.avaliable_heroes.push(hero.1.clone());
+                    self.player_cross_patch_provider.write().unwrap().avaliable_heroes.push(hero.1.clone());
                     // let mut banned_races = vec![];
                     // TownType::iter().for_each(|t| {
                     //     if t != TownType::TownNoType {

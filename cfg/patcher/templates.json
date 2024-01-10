@@ -2,164 +2,13 @@
   "templates": [
     {
       "name": "S0-1P2Z2K3.1T",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Square",
-      "type": "Common"
-    },
-    {
-      "name": "S0-1P2Z2K3T",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-K1S",
-      "type": "Common"
-    },
-    {
-      "name": "S1-2P2-8Z8K2S",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Universe",
-      "type": "Common",
-      "settings": ["Capture"]
-    },
-    {
-      "name": "S1-3P2-4Z5V",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Test",
-      "type": "Common"
-    },
-    {
-      "name": "S1P2Z3K5.1",
-      "type": "Common"
-    },
-    {
-      "name": "S2-3P2Z7N2",
-      "type": "Common"
+      "main_mode": "Common",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle"]
     },
     {
       "name": "BTD-RMS",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Pirate(W)",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-JebusCross",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-KingsBounty",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Circles",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-ClashOfDragons",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-KingsBounty",
-      "type": "Common",
-      "settings": ["Capture"]
-    },
-    {
-      "name": "BTD-SandGlass",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-2x2",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Hexagonal",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-1deal",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-RMS-GIGA",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Dynamite",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-UniverseX6",
-      "type": "Common",
-      "settings": ["Capture"]
-    },
-    {
-      "name": "BTD-MightMagic",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Double",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Anarchy",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Lemon",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-KingsBounty+MT",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-Tourmaline",
-      "type": "Common"
-    },
-    {
-      "name": "JebusOutcast",
-      "type": "Outcast"
-    },
-    {
-      "name": "JebusOutcastP6",
-      "type": "Outcast"
-    },
-    {
-      "name": "BTD-Blitz",
-      "type": "Blitz"
-    },
-    {
-      "name": "BTD-Krypt",
-      "type": "Krypt"
-    },
-    {
-      "name": "BTD-Duel",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-DuelBlitz",
-      "type": "Blitz"
-    },
-    {
-      "name": "BTD-JebusCross-Castle",
-      "type": "Common",
-      "settings": ["Capture"]
-    },
-    {
-      "name": "BTD-JebusCross-2x2",
-      "type": "Common"
-    },
-    {
-      "name": "BTD-JebusCross-2x2-Castle",
-      "type": "Common",
-      "settings": ["Capture"]
+      "main_mode": "Blitz",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
     }
   ],
 
@@ -168,9 +17,5 @@
     "Outcast": "Невозможен найм второстепенных героев, внешние таверны заменяются воровскими логовами. В городах изначально построены двеллинги 1 уровня, а 'Вызов подкреплений' доступен с 1 уровня гильдии магии",
     "Blitz": "Город отстроен до 10 уровня со старта игры, а постройка двеллингов существ мгновенно приносит дополнительный базовый прирост",
     "Krypt": "63 локации. В середине карты имеется Утёс Драконов, а также полностью отстроенный замок, включая Грааль. В каждой 8-ой локации имеется замок с гильдией магии 3 уровня и таверной, остальные здания заблокированы"
-  },
-
-  "settings_descs": {
-    "Capture": "Можно назначить захват и удержание объекта условием победы"
   }
 }

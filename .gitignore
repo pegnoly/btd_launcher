@@ -31,3 +31,5 @@ BTD_Launcher-cache/part2/BTD_Launcher1.cab
 cfg/update/local.db
 src-tauri/scaner/target/.rustc_info.json
 cfg/update/local.db
+cfg/patcher/adds/win_conditions/capture_object_desc.txt
+cfg/patcher/adds/win_conditions/capture_object_desc.txt

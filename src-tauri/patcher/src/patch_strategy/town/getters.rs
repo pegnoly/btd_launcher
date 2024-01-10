@@ -1,4 +1,4 @@
-use std::{collections::HashMap, path::PathBuf, cell::RefCell};
+use std::{collections::HashMap, path::PathBuf, sync::RwLock};
 
 use homm5_types::{town::{TownType, AdvMapTown}, player::PlayerID};
 use serde::{Serialize, Deserialize};
@@ -74,12 +74,12 @@ impl<'a> PatchGetter for TownActiveTilesDetector<'a> {
 
 /// Unfortunately, only way to detect player's race
 pub struct PlayerRaceDetector<'a> {
-    cross_patch_info: &'a RefCell<PlayerRaceCrossPatchInfo>,
+    cross_patch_info: &'a RwLock<PlayerRaceCrossPatchInfo>,
     town_provider: &'a TownInfoProvider
 }
 
 impl<'a> PlayerRaceDetector<'a> {
-    pub fn new(pi_provider: &'a RefCell<PlayerRaceCrossPatchInfo>, ti_provider: &'a TownInfoProvider) -> Self {
+    pub fn new(pi_provider: &'a RwLock<PlayerRaceCrossPatchInfo>, ti_provider: &'a TownInfoProvider) -> Self {
         PlayerRaceDetector { 
             cross_patch_info: pi_provider, 
             town_provider: ti_provider 
@@ -94,7 +94,7 @@ impl<'a> PatchGetter for PlayerRaceDetector<'a> {
     fn try_get(&mut self, object: &Self::Patchable, _getter: &mut Self::Additional) {
         let no_xpointer_shared = object.shared.href.as_ref().unwrap().replace("#xpointer(/AdvMapTownShared)", "");
         if let Some(town_type) = self.town_provider.get_town_type(&no_xpointer_shared) {
-            self.cross_patch_info.borrow_mut().add_race_info(object.player_id.clone(), *town_type);
+            self.cross_patch_info.write().unwrap().add_race_info(object.player_id.clone(), *town_type);
         };
     }
 }

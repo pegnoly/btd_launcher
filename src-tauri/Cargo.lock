@@ -1598,9 +1598,9 @@ dependencies = [
 
 [[package]]
 name = "homm5-types"
-version = "0.1.0"
+version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "28e839eb859c0e783704b57eb9adb10ca12d34689d99f328b38d459cb128080f"
+checksum = "5591b4e806f294d46a50e75b81218fd4daea0760b44978dcab620eecfd98f3a1"
 dependencies = [
  "quick-xml 0.30.0",
  "serde",

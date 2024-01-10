@@ -36,7 +36,7 @@ impl PlayersInfoProvider {
 /// Provides players-related information that can be shared between other groups.
 pub struct PlayersCrossPatchInfo {
     /// In outcast these heroes must be written into avaliableHeroes tag
-    avaliable_heroes: Vec<String>
+    pub avaliable_heroes: Vec<String>
 }
 
 impl PlayersCrossPatchInfo {

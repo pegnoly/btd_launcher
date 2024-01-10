@@ -8,6 +8,15 @@ pub struct CaptureObjectModeTextProcessor<'a> {
     town_cross_patch_info: &'a NeutralTownCrossPatchInfo
 }
 
+impl<'a> CaptureObjectModeTextProcessor<'a> {
+    pub fn new(delay: Option<&'a TemplateModeType>, town_info: &'a NeutralTownCrossPatchInfo) -> Self {
+        CaptureObjectModeTextProcessor {
+            delay_info: delay,
+            town_cross_patch_info: town_info
+        }
+    }
+}
+
 impl<'a> ProcessText for CaptureObjectModeTextProcessor<'a> {
     fn try_process(&self, text: &mut String) -> String {
         if self.delay_info.is_some() {

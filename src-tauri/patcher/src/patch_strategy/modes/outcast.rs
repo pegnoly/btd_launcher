@@ -1,6 +1,6 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, sync::RwLock};
 
-use crate::patch_strategy::WriteAdditional;
+use crate::patch_strategy::{WriteAdditional, player::PlayersCrossPatchInfo, PatchCreatable};
 
 /// OutcastFilesWriter is a file add strategy that puts files for Outcast game mode if current map has such mode.
 pub struct OutcastTextWriter<'a> {
@@ -10,7 +10,7 @@ pub struct OutcastTextWriter<'a> {
 }
 
 impl<'a> OutcastTextWriter<'a> {
-    pub fn new(dir: &'a PathBuf, path: &'a PathBuf, enabled: bool) -> Self {
+    pub fn new(enabled: bool, dir: &'a PathBuf, path: &'a PathBuf) -> Self {
         OutcastTextWriter {  
             write_dir: dir, 
             file_path: path,
@@ -66,6 +66,39 @@ impl<'a> WriteAdditional for OutcastMechanicsWriter<'a> {
                     }
                 }
             }
+        }
+    }
+}
+
+pub struct AvailableHeroesWriter<'a> {
+    is_enabled: bool,
+    heroes_info: &'a RwLock<PlayersCrossPatchInfo>
+}
+
+impl<'a> AvailableHeroesWriter<'a> {
+    pub fn new(enabled: bool, hi: &'a RwLock<PlayersCrossPatchInfo>) -> Self {
+        AvailableHeroesWriter {
+            is_enabled: enabled,
+            heroes_info: hi
+        }
+    }
+}
+
+impl<'a> PatchCreatable for AvailableHeroesWriter<'a> {
+    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
+        if self.is_enabled == true {
+            writer.create_element("AvailableHeroes")
+                .write_inner_content(|w| {
+                    for hero in self.heroes_info.read().unwrap().avaliable_heroes.iter() {
+                        w.create_element("Item")
+                            .with_attribute(("href", hero.as_str()))
+                            .write_empty().unwrap();
+                    }
+                    Ok(())
+                }).unwrap();
+        }
+        else {
+            writer.create_element("AvailableHeroes").write_empty().unwrap();
         }
     }
 }
