@@ -1,7 +1,7 @@
 pub mod patch_strategy;
 pub mod map;
 
-use patch_strategy::{GenerateLuaCode, PatchModifyable, PatchCreatable, WriteAdditional, ProcessText};
+use patch_strategy::{GenerateLuaCode, PatchCreatable, WriteAdditional, ProcessText, PatchGroup};
 
 use std::collections::HashMap;
 use std::io::{Read, Write};
@@ -30,7 +30,7 @@ pub struct Patcher<'a> {
     /// list of modidiable tags
     modifyables: Vec<String>,
     /// [tag: patch object]
-    modifyable_patches: HashMap<String, &'a mut dyn PatchModifyable>,
+    modifyable_patches: HashMap<String, &'a mut dyn PatchGroup>,
 }
 
 impl<'a> Patcher<'a> {
@@ -68,16 +68,16 @@ impl<'a> Patcher<'a> {
     }
 
     /// adds modifiable patch strategy
-    pub fn with_modifyable(&mut self, label: &str, patch: &'a mut dyn PatchModifyable) -> &mut Self {
+    pub fn with_modifyables(&mut self, label: &str, group: &'a mut dyn PatchGroup) -> &mut Self {
         self.modifyables.push(label.to_string());
-        self.modifyable_patches.insert(label.to_string(), patch);
+        self.modifyable_patches.insert(label.to_string(), group);
         self
     }
 
     /// executes patch process and writes patched info when it is done.
     pub fn run(&mut self) {
         let mut output: Vec<u8> = Vec::new();
-        let mut writer = Writer::new(&mut output);
+        let mut writer = Writer::new_with_indent(&mut output, b' ', 4);
         writer.write_event(Event::Decl(BytesDecl::new("1.0", Some("UTF-8"), None))).unwrap();
         self.process(&mut writer);
         let mut out_file = fs::File::create(self.path.unwrap()).unwrap();
@@ -104,14 +104,14 @@ impl<'a> Patcher<'a> {
                         }
                         //println!("creatable tag found: {}", &actual_tag);
                         let actual_strategy = self.creatable_patches.get_mut(&actual_tag).unwrap();
-                        actual_strategy.try_create(writer, &actual_tag);
+                        actual_strategy.try_create(writer);
                     }
                     else if self.modifyables.contains(&actual_tag) {
                         //println!("modifyable tag found: {}", &actual_tag);
                         let end = e.to_end().into_owned();
                         let text = reader.read_text(end.name()).unwrap().to_string();
-                        let actual_strategy = self.modifyable_patches.get_mut(&actual_tag).unwrap();
-                        actual_strategy.try_modify(&text, writer)
+                        let strategy = self.modifyable_patches.get_mut(&actual_tag).unwrap();
+                        strategy.run(&text, writer);
                     }
                     else {
                         let mut elem = BytesStart::new(str::from_utf8(e.name().0).unwrap());
