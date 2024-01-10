@@ -1,11 +1,11 @@
-use std::{collections::HashMap, path::PathBuf};
+use std::{collections::HashMap, path::PathBuf, cell::RefCell};
 
 use homm5_types::{town::{TownType, AdvMapTown}, player::PlayerID};
 use serde::{Serialize, Deserialize};
 
 use crate::patch_strategy::{PatchAdditional, PatchGetter};
 
-use super::{TownInfoProvider, TownCrossPatchInfo};
+use super::{TownInfoProvider, PlayerRaceCrossPatchInfo, NeutralTownCrossPatchInfo};
 
 /// Getter patch strategies for TownPatchesGroup.
 
@@ -43,7 +43,7 @@ impl<'a> TownActiveTilesDetector<'a> {
 impl<'a> PatchGetter for TownActiveTilesDetector<'a> {
     type Patchable = AdvMapTown;
     type Additional = TownGameInfo;
-    fn try_get(&self, object: &AdvMapTown, getter: &mut TownGameInfo) {
+    fn try_get(&mut self, object: &AdvMapTown, getter: &mut TownGameInfo) {
         let no_xpointer_shared = object.shared.href.as_ref().unwrap().replace("#xpointer(/AdvMapTownShared)", "");
         if let Some(town_type) = self.provider.get_town_type(&no_xpointer_shared) {
             let active_point = self.towns_active_tiles.get(&town_type).unwrap();
@@ -74,12 +74,12 @@ impl<'a> PatchGetter for TownActiveTilesDetector<'a> {
 
 /// Unfortunately, only way to detect player's race
 pub struct PlayerRaceDetector<'a> {
-    cross_patch_info: &'a TownCrossPatchInfo,
+    cross_patch_info: &'a RefCell<PlayerRaceCrossPatchInfo>,
     town_provider: &'a TownInfoProvider
 }
 
 impl<'a> PlayerRaceDetector<'a> {
-    pub fn new(pi_provider: &TownCrossPatchInfo, ti_provider: &TownInfoProvider) -> Self {
+    pub fn new(pi_provider: &'a RefCell<PlayerRaceCrossPatchInfo>, ti_provider: &'a TownInfoProvider) -> Self {
         PlayerRaceDetector { 
             cross_patch_info: pi_provider, 
             town_provider: ti_provider 
@@ -91,10 +91,10 @@ impl<'a> PatchGetter for PlayerRaceDetector<'a> {
     type Patchable = AdvMapTown;
     type Additional = TownGameInfo;
 
-    fn try_get(&mut self, object: &Self::Patchable, getter: &mut Self::Additional) {
+    fn try_get(&mut self, object: &Self::Patchable, _getter: &mut Self::Additional) {
         let no_xpointer_shared = object.shared.href.as_ref().unwrap().replace("#xpointer(/AdvMapTownShared)", "");
         if let Some(town_type) = self.town_provider.get_town_type(&no_xpointer_shared) {
-            self.cross_patch_info.add_race_info(&object.player_id, &town_type);
+            self.cross_patch_info.borrow_mut().add_race_info(object.player_id.clone(), *town_type);
         };
     }
 }
@@ -102,12 +102,12 @@ impl<'a> PatchGetter for PlayerRaceDetector<'a> {
 
 pub struct CapturableTownDetector<'a> {
     town_info_provider: &'a TownInfoProvider,
-    cross_patch_info: &'a TownCrossPatchInfo,
+    cross_patch_info: &'a mut NeutralTownCrossPatchInfo,
     must_be_detected: bool
 }
 
 impl<'a> CapturableTownDetector<'a>  {
-    pub fn new(tip: &TownInfoProvider, info: &TownCrossPatchInfo, mbd: bool) -> Self {
+    pub fn new(tip: &'a TownInfoProvider, info: &'a mut NeutralTownCrossPatchInfo, mbd: bool) -> Self {
         CapturableTownDetector {
             town_info_provider: tip, 
             cross_patch_info: info, 
@@ -120,7 +120,7 @@ impl<'a> PatchGetter for CapturableTownDetector<'a>  {
     type Patchable = AdvMapTown;
     type Additional = TownGameInfo;
 
-    fn try_get(&self, object: &Self::Patchable, getter: &mut Self::Additional) {
+    fn try_get(&mut self, object: &Self::Patchable, _getter: &mut Self::Additional) {
         if self.must_be_detected == true && object.player_id == PlayerID::PlayerNone {
             let no_xdb_town_spec = object.specialization.href.as_ref().unwrap()
                 .replace("#xpointer(/TownSpecialization)", "")
@@ -129,7 +129,7 @@ impl<'a> PatchGetter for CapturableTownDetector<'a>  {
             let possible_town_name = self.town_info_provider.get_town_name(&no_xdb_town_spec);
             match possible_town_name {
                 Some(town_name) => {
-                    self.neutral_town_name = town_name.clone();
+                    self.cross_patch_info.neutral_town_name = Some(town_name.clone());
                 },
                 None => {}
             }

@@ -1,6 +1,8 @@
 use homm5_types::town::{TownType, TownBuilding, TownBuildingType, TownBuildingLevel};
 use serde::{Serialize, Deserialize};
 
+use crate::map::template::TemplateModeName;
+
 /// This mod presents TownBuildingScheme a preconfigured list of buildings 
 /// that can be applied to the town if map has needed template and town has needed type
 
@@ -18,14 +20,14 @@ pub struct SchemedTownBuilding {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TownBuildingScheme {
     buildings: Vec<SchemedTownBuilding>,
-    modes: Option<Vec<String>>,
-    town_types: Option<Vec<TownType>>,
+    modes: Option<Vec<TemplateModeName>>,
+    town_types: Option<Vec<TownType>>
 }
 
 impl TownBuildingScheme {
     /// Checks if scheme can be applied to the concrete town.
-    pub fn can_be_applied<'a>(&self, modes: &Vec<String>, town: &TownType) -> bool {
-        return (self.modes.is_none() || self.modes.as_ref().unwrap().iter().any(|m| *modes.contains(m))) &&
+    pub fn can_be_applied<'a>(&self, modes: &Vec<TemplateModeName>, town: &TownType) -> bool {
+        return (self.modes.is_none() || self.modes.as_ref().unwrap().iter().any(|m| modes.contains(m))) &&
             (self.town_types.is_none() || self.town_types.as_ref().unwrap().iter().any(|t | *t == *town))
     }
 
@@ -33,7 +35,7 @@ impl TownBuildingScheme {
     pub fn apply(&self, town_builds: &mut Vec<TownBuilding>) {
         for build in self.buildings.iter() {
             // check if building already in town
-            let current_building = town_builds.iter()
+            let current_building = town_builds.iter_mut()
                 .find(|b| b.Type == build.Type);
             match current_building {
                 Some(building) => {

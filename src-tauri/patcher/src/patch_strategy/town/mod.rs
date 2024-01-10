@@ -2,9 +2,9 @@ mod town_scheme;
 pub mod modifiers;
 pub mod getters;
 
-use std::{collections::HashMap, path::PathBuf};
+use std::{collections::HashMap, path::PathBuf, io::Write, vec};
 use homm5_types::{
-    town::{TownType, AdvMapTown},
+    town::{TownType, AdvMapTown, TownBuildings},
     player::PlayerID
 };
 
@@ -41,41 +41,43 @@ impl TownInfoProvider {
         }
     }
     /// Returns town's type based on its shared string.
-    pub fn get_town_type(&self, shared: &String) -> Option<TownType> {
+    pub fn get_town_type(&self, shared: &String) -> Option<&TownType> {
         self.town_shareds.get(shared)
     }
     /// Returns town's in-game name based on its specialization string.
-    pub fn get_town_name(&self, spec: &String) -> Option<String> {
+    pub fn get_town_name(&self, spec: &String) -> Option<&String> {
         self.town_specs.get(spec)
     }
 }
 
 /// Provides town related information that can be shared between other patch groups.
-pub struct TownCrossPatchInfo {
+pub struct PlayerRaceCrossPatchInfo {
     /// Needed for PlayerPatchesGroup.
     pub players_race_info: HashMap<PlayerID, TownType>,
-    /// Needed to setup capture mode in-game description.
-    pub neutral_town_name: Option<String>
 }
 
-impl TownCrossPatchInfo {
+impl PlayerRaceCrossPatchInfo {
     pub fn new() -> Self {
-        TownCrossPatchInfo {
+        PlayerRaceCrossPatchInfo {
             players_race_info: HashMap::new(),
-            neutral_town_name: None
         }
     }
 
-    pub fn add_race_info(&mut self, player: &PlayerID, town: &TownType) {
-        self.players_race_info.insert(player, town)
+    pub fn add_race_info(&mut self, player: PlayerID, town: TownType) {
+        self.players_race_info.insert(player, town);
     }
+}
+
+pub struct NeutralTownCrossPatchInfo {
+    /// Needed to setup capture mode in-game description.
+    pub neutral_town_name: Option<String>
 }
 
 
 /// TownPatchesGroup combines all necessary patches for AdvMapTown game type.
 pub struct TownPatchesGroup<'a> {
-    patches: Vec<&'a dyn PatchModifyable<Modifyable = AdvMapTown>>,
-    getters: Vec<&'a dyn PatchGetter<Patchable = AdvMapTown, Additional = TownGameInfo>>,
+    patches: Vec<&'a mut dyn PatchModifyable<Modifyable = AdvMapTown>>,
+    getters: Vec<&'a mut dyn PatchGetter<Patchable = AdvMapTown, Additional = TownGameInfo>>,
     lua_strings: Vec<String>
 }
 
@@ -87,45 +89,52 @@ impl<'a> TownPatchesGroup<'a> {
             lua_strings: vec![]
         }
     }
+
+    pub fn with_modifyable(mut self, patch: &'a mut dyn PatchModifyable<Modifyable = AdvMapTown>) -> Self {
+        self.patches.push(patch);
+        self
+    }
+
+    pub fn with_getter(mut self, patch: &'a mut dyn PatchGetter<Patchable = AdvMapTown, Additional = TownGameInfo>) -> Self {
+        self.getters.push(patch);
+        self
+    }
 }
 
 impl<'a> PatchGroup for TownPatchesGroup<'a> {
-    fn run(&mut self, text: &String) {
-        let town_de: Result<AdvMapTown, quick_xml::DeError> = quick_xml::de::from_str(&text);
+    fn run(&mut self, text: &String, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
+        let town_de: Result<AdvMapTown, quick_xml::DeError> = quick_xml::de::from_str(&format!("<AdvMapTown>{}</AdvMapTown>", text));
         match town_de {
             Ok(mut town) => {
+                town.buildings = TownBuildings{items: vec![]};
                 let mut town_game_info = TownGameInfo {
                     active_tile: Point {x: 0, y: 0}
                 };
-                for getter in self.getters {
+                for getter in self.getters.iter_mut() {
                     getter.try_get(&town, &mut town_game_info);
                 }     
-                for patch in self.patches {
+                for patch in self.patches.iter_mut() {
                     patch.try_modify(&mut town);
                 }
                 self.lua_strings.push(format!(
-                    "\t[\"{}\"] = {{rot = {}, x = {}, y = {}}},\n", &town.name, town.rot, town_game_info.active_tile.x, town_game_info.active_tile.y
+                    "\t[\"{}\"] = {{rot = {}, x = {}, y = {}}},\n", 
+                    &town.name, town.rot, 
+                    town_game_info.active_tile.x, 
+                    town_game_info.active_tile.y
                 ));
+                writer.write_serializable("AdvMapTown", &town).unwrap();
             },
             Err(e) => {
                 println!("Error deserializing town: {}", e.to_string())
             }
         }
     }
-
-    fn with_modifyable(&mut self, patch: &dyn PatchModifyable<Modifyable = AdvMapTown>) {
-        self.patches.push(patch)
-    }
-
-    fn with_getter(&mut self, patch: &dyn PatchGetter<Patchable = AdvMapTown, Additional = TownGameInfo>) {
-        self.getters.push(patch)
-    }
 }
 
 impl<'a> GenerateLuaCode for TownPatchesGroup<'a>  {
     fn to_lua(&self, path: &PathBuf) {
         let mut towns_info_output = "BTD_Towns = {\n".to_string();
-        for s in self.lua_strings {
+        for s in self.lua_strings.iter() {
             towns_info_output += &s;
         }
         towns_info_output.push_str("}");

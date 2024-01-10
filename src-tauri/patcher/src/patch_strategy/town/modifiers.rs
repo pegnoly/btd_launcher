@@ -1,6 +1,6 @@
 use homm5_types::{town::AdvMapTown, player::PlayerID};
 
-use crate::patch_strategy::PatchModifyable;
+use crate::{patch_strategy::PatchModifyable, map::template::TemplateModeName};
 
 use super::TownInfoProvider;
 
@@ -42,11 +42,11 @@ impl PatchModifyable for TownNameApplier {
 /// Applies default schemes to town's buildings.
 pub struct DefaultTownSchemesApplier<'a> {
     town_info_provider: &'a TownInfoProvider,
-    map_modes: &'a Vec<String>
+    map_modes: &'a Vec<TemplateModeName>
 }
 
 impl<'a> DefaultTownSchemesApplier<'a> {
-    pub fn new(provider: &TownInfoProvider, modes: &Vec<String>) -> Self {
+    pub fn new(provider: &'a TownInfoProvider, modes: &'a Vec<TemplateModeName>) -> Self {
         DefaultTownSchemesApplier { 
             town_info_provider: provider, 
             map_modes: modes 
@@ -60,9 +60,9 @@ impl<'a> PatchModifyable for DefaultTownSchemesApplier<'a> {
     fn try_modify(&mut self, object: &mut Self::Modifyable) {
         let no_xpointer_shared = object.shared.href.as_ref().unwrap().replace("#xpointer(/AdvMapTownShared)", "");
         if let Some(town_type) = self.town_info_provider.get_town_type(&no_xpointer_shared) {
-            for scheme in self.town_info_provider.town_building_schemes {
+            for scheme in self.town_info_provider.town_building_schemes.iter() {
                 if scheme.1.can_be_applied(self.map_modes, &town_type) == true {
-                    scheme.1.apply(&mut object.buildings);
+                    scheme.1.apply(&mut object.buildings.items);
                 }
             }
         };
@@ -81,7 +81,7 @@ impl<'a> PatchModifyable for NeutralTownDwellingsDisabler<'a> {
     fn try_modify(&mut self, object: &mut Self::Modifyable) {
         if self.can_be_applied && object.player_id == PlayerID::PlayerNone {
             let scheme = self.town_info_provider.town_building_schemes.get("neutral_town_dwells_disabled").unwrap();
-            scheme.apply(&mut object.buildings);
+            scheme.apply(&mut object.buildings.items);
         }       
     }
 }
