@@ -1,59 +1,88 @@
 use std::path::PathBuf;
-use rand::Rng;
+use rand::seq::IteratorRandom;
 use super::PatchCreatable;
 
 /// LightPatcher is a creatable patch strategy that adds lights to map and sets current light.
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
-pub struct LightsInfo {
+pub struct LightsModel {
     pub day_lights: Vec<String>,
     pub night_lights: Vec<String>
 }
 
-#[derive(serde::Deserialize)]
-pub struct LightPatcher {
-    lights_info: LightsInfo,
-    use_night_lights: bool
+pub struct LightsInfoProvider {
+    current_lights: Vec<String>,
+    current_light: String,
 }
 
-impl LightPatcher {
-    pub fn new(lights_config: PathBuf, night_lights_setting: bool) -> Self {
-        let lights_se = std::fs::read_to_string(
-            std::path::PathBuf::from(lights_config)
+impl LightsInfoProvider {
+    pub fn new(config: &PathBuf, use_night_lights: bool) -> Self {
+        let lights_de: LightsModel = serde_json::from_str(
+            &std::fs::read_to_string(config.join("lights.json")).unwrap()
         ).unwrap();
-        let lights_de: LightsInfo = serde_json::from_str(&lights_se).unwrap();
-        LightPatcher { 
-            lights_info: lights_de,
-            use_night_lights: night_lights_setting
+        let mut rng = rand::thread_rng();
+        match use_night_lights {
+            true => {
+                let current_light = lights_de.night_lights.iter().choose(&mut rng).unwrap();
+                LightsInfoProvider {
+                    current_lights: lights_de.night_lights.clone(),
+                    current_light: current_light.clone()
+                }
+            },
+            false => {
+                let current_light = lights_de.day_lights.iter().choose(&mut rng).unwrap();
+                LightsInfoProvider {
+                    current_lights: lights_de.day_lights.clone(),
+                    current_light: current_light.clone()
+                }
+            }
         }
     }
 }
 
-impl PatchCreatable for LightPatcher {
-    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>, label: &str) {
-        let possible_lights = if self.use_night_lights == true {&self.lights_info.night_lights} else {&self.lights_info.day_lights};
-        match label {
-            // sets current light randomly from possible lights
-            "AmbientLight" => {
-                let mut rng = rand::thread_rng();
-                let index = rng.gen_range(0..possible_lights.len());
-                let mut elem = quick_xml::events::BytesStart::new("AmbientLight");
-                let light: &String = possible_lights.get(index).unwrap();
-                elem.push_attribute(("href", light.as_str()));
-                writer.write_event(quick_xml::events::Event::Start(elem)).unwrap();
-            },
-            // adds all possible lights to map(think we gonna implement lights changes sometime so we need it)
-            "GroundAmbientLights" => {
-                let elem = quick_xml::events::BytesStart::new("GroundAmbientLights");
-                writer.write_event(quick_xml::events::Event::Start(elem)).unwrap();
-                for light in possible_lights {
-                    let mut light_item = quick_xml::events::BytesStart::new("Item");
-                    light_item.push_attribute(("href", light.as_str()));
-                    writer.write_event(quick_xml::events::Event::Start(light_item)).unwrap();
-                    writer.write_event(quick_xml::events::Event::End(quick_xml::events::BytesEnd::new("Item"))).unwrap();
-                }
-            }
-            _ => {}
+pub struct AmbientLightCreator<'a> {
+    lights_info_provider: &'a LightsInfoProvider
+}
+
+impl<'a> AmbientLightCreator<'a> {
+    pub fn new(lip: &'a LightsInfoProvider) -> Self {
+        AmbientLightCreator { 
+            lights_info_provider: lip
         }
+    }
+}
+
+impl<'a> PatchCreatable for AmbientLightCreator<'a>  {
+    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
+        writer.create_element("AmbientLight")
+            .with_attribute(("href", self.lights_info_provider.current_light.as_str()))
+            .write_empty().unwrap();
+    }
+}
+
+pub struct GroundAmbientLightsCreator<'a> {
+    lights_info_provider: &'a LightsInfoProvider
+}
+
+impl<'a> GroundAmbientLightsCreator<'a>  {
+    pub fn new(lip: &'a LightsInfoProvider) -> Self {
+        GroundAmbientLightsCreator {
+            lights_info_provider: lip
+        }
+    }
+}
+
+impl<'a> PatchCreatable for GroundAmbientLightsCreator<'a> {
+    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
+        writer.create_element("GroundAmbientLigts").
+            write_inner_content(|w| {
+                for light in self.lights_info_provider.current_lights.iter() {
+                    w.create_element("Item")
+                        .with_attribute(("href", light.as_str()))
+                        .write_empty().unwrap(); 
+                }
+                Ok(())
+            }
+        ).unwrap();
     }
 }

@@ -1,61 +1,70 @@
-use crate::map::template::TemplateType;
-use super::{PatchCreatable, WriteAdditional, GenerateLuaCode};
-use std::{path::PathBuf, io::Write};
+/// Base patches for every map
 
-/// Some common patches necessary for every map.
+use super::{PatchCreatable, WriteAdditional, ProcessText};
+use std::path::PathBuf;
 
-pub struct BaseCreator<'a> {
-    write_dir: &'a PathBuf,
-    path: &'a PathBuf
+/// Sets CustomTeams tag to true.
+pub struct CustomTeamsCreator {
 }
 
-impl<'a> BaseCreator<'a> {
-    pub fn new(dir: &'a PathBuf, path: &'a PathBuf) -> Self {
-        BaseCreator { 
-            write_dir: dir, 
-            path: path 
+impl PatchCreatable for CustomTeamsCreator {
+    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
+        writer.create_element("CustomTeams").write_text_content(quick_xml::events::BytesText::new("true")).unwrap();
+    }
+}
+
+
+const MAP_SCRIPT_FILES_NAMES: [&'static str; 2] = [
+    "MapScript.lua", "MapScript.xdb"
+];
+
+/// Creates main scripts files and writes its name into MapScript tag.
+pub struct MapScriptCreator<'a> {
+    config_path: &'a PathBuf,
+    write_path: &'a PathBuf
+}
+
+impl<'a> MapScriptCreator<'a> {
+    pub fn new(config: &'a PathBuf, write_dir: &'a PathBuf) -> Self {
+        MapScriptCreator {
+            config_path: config,
+            write_path: write_dir
         }
     }
 }
 
-impl<'a> PatchCreatable for BaseCreator <'a>{
-    /// Sets settings map can't work properly without.
-    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>, label: &str) {
-        match label {
-            "CustomTeams" => {
-                writer.create_element("CustomTeams").write_text_content(quick_xml::events::BytesText::new("true")).unwrap();
-            },
-            "MapScript" => {
-                writer.create_element("MapScript")
-                    .with_attribute(("href", "MapScript.xdb#xpointer(/Script)"))
-                    .write_empty().unwrap();
-            },
-            "RMGmap" => {
-                writer.create_element("RMGmap").write_text_content(quick_xml::events::BytesText::new("false")).unwrap();
-            }
-            _=> {}
-        }
+impl<'a> PatchCreatable for MapScriptCreator<'a> {
+    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
+        writer.create_element("MapScript")
+            .with_attribute(("href", "MapScript.xdb#xpointer(/Script)"))
+            .write_empty().unwrap();
     }
 }
 
-impl<'a> WriteAdditional for BaseCreator<'a> {
-    /// Writes preconfigured script files into map
+impl<'a> WriteAdditional for MapScriptCreator<'a> {
     fn try_write(&self) {
-        let path_to = self.write_dir.join("MapScript.lua");
-        std::fs::copy(&self.path.join("MapScript.lua"), &path_to).unwrap();
-        let path_to = self.write_dir.join("MapScript.xdb");
-        std::fs::copy(&self.path.join("MapScript.xdb"), &path_to).unwrap();
+        for file_name in MAP_SCRIPT_FILES_NAMES {
+            std::fs::copy(self.config_path.join(file_name), self.write_path.join(file_name)).unwrap();
+        }
     }
 }
 
-pub struct TemplateInfoGenerator<'a> {
-    pub template: &'a TemplateType
+/// Sets RMGMap tag to false.
+pub struct RMGmapRemover {
 }
 
-impl<'a> GenerateLuaCode for TemplateInfoGenerator<'a> {
-    /// Writes template info into lua
-    fn to_lua(&self, path: &std::path::PathBuf) {
-        let mut file = std::fs::File::create(path.join("template_info.lua")).unwrap();
-        file.write_all(format!("MCCS_TEMPLATE_TYPE = TEMPLATE_TYPE_{:?}", self.template).as_bytes()).unwrap();
+impl PatchCreatable for RMGmapRemover {
+    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
+        writer.create_element("RMGmap").write_text_content(quick_xml::events::BytesText::new("false")).unwrap();
+    }
+}
+
+/// Changes map name to BTD_{map_name}
+pub struct MapNameChanger {
+}
+
+impl ProcessText for MapNameChanger {
+    fn try_process(&self, text: &mut String) -> String {
+        format!("<color=DAA520>BTD_{}", text)
     }
 }
