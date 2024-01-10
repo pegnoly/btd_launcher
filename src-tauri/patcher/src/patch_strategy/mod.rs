@@ -29,7 +29,7 @@ pub trait PatchAdditional {
 pub trait PatchCreatable {
     /// Responsive to create new xml elements.
     /// writer: quick-xml Writer to write xml events into
-    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>, label: &str);
+    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>);
 }
 
 /// PatchGetter strategies use patchable object to get some information and write it into a getter. 
