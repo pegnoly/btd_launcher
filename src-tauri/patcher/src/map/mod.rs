@@ -10,14 +10,15 @@ pub mod template;
 use std::{path::PathBuf, collections::HashMap, io::{Read, BufReader}};
 use quick_xml::{Reader, events::Event};
 use serde::{Serialize, Deserialize};
-use self::template::{Template, TemplateTransferable, TemplatesInfoModel};
-use crate::patch_strategy::win_condition::MapWinCondition;
+use self::template::{TemplateTransferable, TemplatesInfoModel, TemplateModeType, TemplateModeName};
 
 /// Currently presented map settings(mb also better to turn this into enum?)
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct MapSettings {
     pub use_night_lights: bool,
-    pub only_neutral_weeks: bool
+    pub only_neutral_weeks: bool,
+    pub disable_neutral_towns_dwells: bool,
+    pub enable_new_arts: bool
 }
 
 #[derive(Serialize, Deserialize)]
@@ -28,7 +29,12 @@ pub struct MapTeamsCount {
 
 impl Default for MapSettings {
     fn default() -> Self {
-        MapSettings { use_night_lights: false, only_neutral_weeks: false }
+        MapSettings { 
+            use_night_lights: false, 
+            only_neutral_weeks: false,
+            disable_neutral_towns_dwells: false,
+            enable_new_arts: false
+        }
     }
 }
 
@@ -49,16 +55,14 @@ pub struct Map {
     pub map_name: PathBuf,
     /// path to mapdesc-text-0.txt in unpacked dir.
     pub map_desc: PathBuf,
-    /// template of this map.
-    pub template: Template,
+    /// modes can be added by user
+    pub modes: HashMap<TemplateModeName, TemplateModeType>,
     /// size in tiles of this map.
     pub size: usize,
     /// information about teams of this map.
     pub teams_info: Vec<usize>,
     /// this map's additional settings.
     pub settings: MapSettings,
-    /// this map's additional win conditions.
-    pub conds: HashMap<String, MapWinCondition>,
     /// directory that contains map.xdb file(for additional files writing)
     pub main_dir: PathBuf,
     /// GameMechanics/ dir for additional files writing
@@ -83,13 +87,10 @@ impl Map {
             map_tag: PathBuf::default(),
             map_name: PathBuf::default(),
             map_desc: PathBuf::default(),
-            template: Template::default(),
+            modes: HashMap::new(),
             size: 0,
             teams_info: vec![0, 0, 0, 0, 0, 0, 0, 0, 0],
             settings: MapSettings::default(),
-            conds: HashMap::from([
-                ("default".to_string(), MapWinCondition::Default),
-            ]),
             main_dir: PathBuf::default(),
             game_mechanics_dir: PathBuf::default(),
             text_dir: PathBuf::default()
@@ -154,17 +155,13 @@ impl Map {
         );
         match s {
             Some(template) => {
-                self.template = template.clone();
-                let mut settings_desc = String::new();
-                if template.settings.is_some() {
-                    for setting in template.settings.as_ref().unwrap() {
-                        settings_desc += &possible_templates.settings_descs.get(setting).unwrap().to_string();
-                    }
+                if template.main_mode.is_some() {
+                    self.add_mode(*template.main_mode.as_ref().unwrap(), template.possible_modes.as_ref().unwrap().first().unwrap().clone())
                 }
                 Some(TemplateTransferable { 
                     name: template.name.clone(), 
-                    desc: possible_templates.descs.get(&template._type).unwrap().to_owned(),
-                    settings_desc
+                    main_mode: template.main_mode.clone(),
+                    possible_modes: template.possible_modes.clone()
                 })
             }
             None => {
@@ -173,22 +170,21 @@ impl Map {
         }
     }
 
-    /// Adds new win condition to the map
-    pub fn set_win_condition(&mut self, label: &str, cond: MapWinCondition) {
-        self.conds.insert(label.to_string(), cond);
+    pub fn add_mode(&mut self, key: TemplateModeName, mode: TemplateModeType) {
+        let ok = self.modes.insert(key, mode);
+        match ok {
+            Some(_) => println!("Mode inserted correctly"),
+            None => println!("Error inserting mode")
+        }
     }
 
-    /// Remove win condition from the map
-    pub fn remove_win_condition(&mut self, label: &str) {
-        self.conds.remove(label);
-        println!("Conditions after remove: {:?}", &self.conds);
+    pub fn remove_mode(&mut self, label: TemplateModeName) {
+        self.modes.remove(&label).unwrap();
     }
 
-    /// Checks if map has concrete win condition
-    pub fn has_win_condition(&self, label: &str) -> bool {
-        self.conds.get(label).is_some()
+    pub fn get_mode(&self, label: &TemplateModeName) -> Option<&TemplateModeType> {
+        self.modes.get(label)
     }
-
 }
 
 /// Used to unpack base map archive.
