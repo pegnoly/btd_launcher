@@ -11,11 +11,11 @@ pub struct BuildingGameInfo {
 
 /// Detects useful types of buildings.
 pub struct BuildingTypeDetector<'a> {
-    building_info_provider: &'a BuildingInfoProvider<'a>
+    building_info_provider: &'a BuildingInfoProvider
 }
 
 impl<'a> BuildingTypeDetector<'a>  {
-    pub fn new(bip: &BuildingInfoProvider) -> Self {
+    pub fn new(bip: &'a BuildingInfoProvider) -> Self {
         BuildingTypeDetector { 
             building_info_provider: bip
         }
@@ -26,7 +26,7 @@ impl<'a> PatchGetter for BuildingTypeDetector<'a> {
     type Patchable = AdvMapBuilding;
     type Additional = BuildingGameInfo;
 
-    fn try_get(&self, object: &Self::Patchable, getter: &mut Self::Additional) {
+    fn try_get(&mut self, object: &Self::Patchable, getter: &mut Self::Additional) {
         let no_xpointer_shared = object.shared.href.as_ref().unwrap().replace("#xpointer(/AdvMapBuildingShared)", "");
         if self.building_info_provider.is_bank(&no_xpointer_shared) {
             if let Some(bank_type) = self.building_info_provider.get_bank_type(&no_xpointer_shared) {
@@ -34,7 +34,7 @@ impl<'a> PatchGetter for BuildingTypeDetector<'a> {
                 getter.type_name = Some(bank_type.to_string());
             }
         }
-        else if self.building_info_pBuildingTypebuilding(&no_xpointer_shared) {
+        else if self.building_info_provider.is_new_building(&no_xpointer_shared) {
             if let Some(building_type) = self.building_info_provider.get_new_building_type(&no_xpointer_shared) {
                 if building_type == NewBuildingType::BTD_DWARVEN_MINE {
                     getter._type = BuildingType::DwarvenMine;

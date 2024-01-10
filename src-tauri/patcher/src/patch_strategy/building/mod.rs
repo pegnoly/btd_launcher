@@ -23,7 +23,7 @@ pub struct Bank {
 }
 
 /// This type is for in-game output actually
-enum BuildingType {
+pub enum BuildingType {
     Default,
     NewBuilding,
     Bank,
@@ -32,14 +32,14 @@ enum BuildingType {
 }
 
 /// Provides information that can be used across different patches in BuildingPatchesGroup
-pub struct BuildingInfoProvider<'a> {
+pub struct BuildingInfoProvider {
     /// Information about possible banks
-    banks_info: &'a Vec<Bank>,
+    banks_info: Vec<Bank>,
     /// Information about possible new buildings("new" means introduced in BTD)
-    buildings_info: &'a Vec<NewBuilding>,
+    buildings_info: Vec<NewBuilding>,
 }
 
-impl<'a> BuildingInfoProvider<'a>  {
+impl BuildingInfoProvider {
     pub fn new(config: &PathBuf) -> Self {
         let banks_de: Vec<Bank> = serde_json::from_str(
             &std::fs::read_to_string(config.join("banks_types.json")).unwrap()
@@ -48,8 +48,8 @@ impl<'a> BuildingInfoProvider<'a>  {
             &std::fs::read_to_string(config.join("new_buildings_types.json")).unwrap()
         ).unwrap();
         BuildingInfoProvider { 
-            banks_info: &banks_de, 
-            buildings_info: &buildings_de
+            banks_info: banks_de, 
+            buildings_info: buildings_de
         }
     }
 
@@ -86,8 +86,8 @@ impl<'a> BuildingInfoProvider<'a>  {
 
 /// BuildingPatchesGroup combines all necessary patches for AdvMapBuilding game type.
 pub struct BuildingPatchesGroup<'a> {
-    patches: Vec<&'a dyn PatchModifyable<Modifyable = AdvMapBuilding>>,
-    getters: Vec<&'a dyn PatchGetter<Patchable = AdvMapBuilding, Additional = BuildingGameInfo>>,
+    patches: Vec<&'a mut dyn PatchModifyable<Modifyable = AdvMapBuilding>>,
+    getters: Vec<&'a mut dyn PatchGetter<Patchable = AdvMapBuilding, Additional = BuildingGameInfo>>,
     banks_lua_string: Vec<String>,
     new_buildings_lua_string: Vec<String>,
     dwarven_mines_lua_string: Vec<String>,
@@ -105,29 +105,31 @@ impl<'a> BuildingPatchesGroup<'a> {
             portals_lua_string: vec![] 
         }
     }
+
+    pub fn with_getter(mut self, patch: &'a mut dyn PatchGetter<Patchable = AdvMapBuilding, Additional = BuildingGameInfo>) -> Self {
+        self.getters.push(patch);
+        self
+    }
+
+    pub fn with_modifyable(mut self, patch: &'a mut dyn PatchModifyable<Modifyable = AdvMapBuilding>) -> Self {
+        self.patches.push(patch);
+        self
+    }
 }
 
 impl<'a> PatchGroup for BuildingPatchesGroup<'a> {
-    fn with_getter(&mut self, patch: &dyn PatchGetter<Patchable = impl homm5_types::Homm5Type, Additional = impl super::PatchAdditional>) -> &mut Self {
-        self.getters.push(patch)
-    }
-
-    fn with_modifyable(&mut self, patch: &dyn PatchModifyable<Modifyable = impl homm5_types::Homm5Type>) -> &mut Self {
-        self.patches.push(patch)
-    }
-
-    fn run(&mut self, text: &String) {
-        let building_de: Result<AdvMapBuilding, quick_xml::DeError> = quick_xml::de::from_str(&text);
+    fn run(&mut self, text: &String, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
+        let building_de: Result<AdvMapBuilding, quick_xml::DeError> = quick_xml::de::from_str(&format!("<AdvMapBuilding>{}</AdvMapBuilding>", text));
         match building_de {
             Ok(mut building) => {
                 let mut building_game_info = BuildingGameInfo {
                     _type: BuildingType::Default,
                     type_name: None
                 };
-                for patch in self.patches {
+                for patch in self.patches.iter_mut() {
                     patch.try_modify(&mut building);
                 }
-                for getter in self.getters {
+                for getter in self.getters.iter_mut() {
                     getter.try_get(&building, &mut building_game_info);
                 }
                 match building_game_info._type {
@@ -156,6 +158,7 @@ impl<'a> PatchGroup for BuildingPatchesGroup<'a> {
                     },
                     _=> {}
                 }
+                writer.write_serializable("AdvMapBuilding", &building).unwrap();
             },
             Err(e) => {
                 println!("Error deserializing building: {}", e.to_string())
@@ -167,23 +170,23 @@ impl<'a> PatchGroup for BuildingPatchesGroup<'a> {
 impl<'a> GenerateLuaCode for BuildingPatchesGroup<'a> {
     fn to_lua(&self, path: &PathBuf) {
         let mut generated_str = String::from("BTD_BanksInfo = \n{\n");
-        for s in self.banks_lua_string {
-            generated_str += &s;
+        for s in self.banks_lua_string.iter() {
+            generated_str += s;
         }
         generated_str.push_str("}\n\n");
         generated_str.push_str("BTD_NewObjects = \n{\n");
-        for s in self.new_buildings_lua_string {
-            generated_str += &s;
+        for s in self.new_buildings_lua_string.iter() {
+            generated_str += s;
         }
         generated_str.push_str("}\n\n");
         generated_str.push_str("BTD_DwarvenMinesRots = \n{\n");
-        for s in self.dwarven_mines_lua_string {
-            generated_str += &s;
+        for s in self.dwarven_mines_lua_string.iter() {
+            generated_str += s;
         }
         generated_str.push_str("}\n\n");
         generated_str.push_str("BTD_Portals = \n{\n");
-        for s in self.portals_lua_string {
-            generated_str += &s;
+        for s in self.portals_lua_string.iter() {
+            generated_str += s;
         }
         generated_str.push_str("}\n\n");
         let mut out_file = fs::File::create(path.join("buildings_info.lua")).unwrap();
