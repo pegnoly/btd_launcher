@@ -1,16 +1,29 @@
+use homm5_types::town;
 use tauri::{Manager, State, AppHandle, api::dialog::FileDialogBuilder, App};
 use patcher::{Patcher,
-    map::{Unpacker, Map, template::{Template, TemplateTransferable, TemplatesInfoModel, TemplateModeType}}, 
+    map::{Unpacker, Map, template::{Template, TemplateTransferable, TemplatesInfoModel, TemplateModeType, TemplateModeName}}, 
     patch_strategy::{
-        base::{BaseCreator, TemplateInfoGenerator}, 
-        building::{BuildingModifyable, CommonBuildingCreator}, 
-        treasure::TreasurePatcher, 
-        player::{PlayersPatcher, TeamsGenerator}, light::LightPatcher, quest::QuestPatcher,
-        town::TownPatcher, misc::{MoonCalendarWriter, MapNameChanger, UndergroundTerrainCreator, OutcastMechanicsWriter, OutcastTextWriter},
-        win_condition::{MapWinCondition, WinConditionWriter, 
-            final_battle::{FinalBattleTime, FinalBattleArenaCreator, WinConditionFinalBattleFileProcessor}, 
-            economic::{ResourceWinInfo, EconomicWinConditionTextProcessor}, 
-            capture::CaptureObjectWinConditionTextProcessor}, creature::CreatureModifier
+        PatchGroup,
+        base::{MapScriptCreator, CustomTeamsCreator, RMGmapRemover}, 
+        building::{BuildingInfoProvider, BuildingPatchesGroup, modifiers::{BuildingNameApplier, OutcastTavernReplacer}, getters::BuildingTypeDetector}, 
+        treasure::{TreasureInfoProvider, TreasurePatchesGroup, modifiers::TreasureNameApplier, getters::TreasurePropsDetector}, 
+        player::{PlayersInfoProvider, PlayersCrossPatchInfo, PlayerPatchesGroup, modifiers::{PlayerTeamSelector, OutcastPlayerHeroSelector, InactivePlayersTavernFilterRemover}}, 
+        light::{LightsInfoProvider, AmbientLightCreator, GroundAmbientLightsCreator}, 
+        quest::{QuestInfoProvider, QuestPatchesGroup, modifiers::{MapInitQuestCreator, MapModesQuestCreator, QuestEmptyItemsFixer}},
+        town::{TownInfoProvider, TownPatchesGroup, 
+            modifiers::{TownNameApplier, DefaultTownSchemesApplier}, 
+            getters::{TownActiveTilesDetector, PlayerRaceDetector, CapturableTownDetector}, 
+            PlayerRaceCrossPatchInfo, NeutralTownCrossPatchInfo
+        }, 
+        modes::{
+            final_battle::{FinalBattleTime, FinalBattleModeTextProcessor}, 
+            economic::{ResourceWinInfo, EconomicModeTextProcessor}, 
+            capture::CaptureObjectModeTextProcessor,
+            outcast::{OutcastMechanicsWriter, OutcastTextWriter}
+        }, 
+        creature::{CreaturePatchesGroup, modifiers::{CreatureNameApplier, AdditionalStackFixer}},
+        terrain::{UndergroundTerrainCreator, UndergroundEnabler, UndergroundTerrainNameApplier},
+        objects::CommonObjectsCreator
     }, CodeGenerator, FileWriter, TextProcessor
 };
 use serde::{Serialize, Deserialize};
@@ -180,7 +193,7 @@ pub async fn set_enable_new_arts_setting(
 #[tauri::command] 
 pub async fn add_game_mode(
     patcher_manager: State<'_, PatcherManager>,
-    label: String,
+    label: TemplateModeName,
     mode: TemplateModeType
 ) -> Result<(), ()> {
     let mut map_holder = patcher_manager.map.lock().await;
@@ -192,7 +205,7 @@ pub async fn add_game_mode(
 #[tauri::command]
 pub async fn remove_game_mode(
     patcher_manager: State<'_, PatcherManager>,
-    label: String
+    label: TemplateModeName
 ) -> Result<(), ()> {
     let mut map_holder = patcher_manager.map.lock().await;
     map_holder.as_mut().unwrap().remove_mode(label);
@@ -203,7 +216,7 @@ pub async fn remove_game_mode(
 #[tauri::command]
 pub async fn add_final_battle_mode(
     patcher_manager: State<'_, PatcherManager>,
-    label: String,
+    label: TemplateModeName,
     timing: FinalBattleTime
 ) -> Result<(), ()> {
     let mut map_holder = patcher_manager.map.lock().await;
@@ -215,7 +228,7 @@ pub async fn add_final_battle_mode(
 #[tauri::command]
 pub async fn add_capture_object_mode(
     patcher_manager: State<'_, PatcherManager>,
-    label: String,
+    label: TemplateModeName,
     delay: u8
 ) -> Result<(), ()> {
     let mut map_holder = patcher_manager.map.lock().await;
@@ -227,7 +240,7 @@ pub async fn add_capture_object_mode(
 #[tauri::command]
 pub async fn add_economic_mode(
     patcher_manager: State<'_, PatcherManager>,
-    label: String,
+    label: TemplateModeName,
     resource_info: ResourceWinInfo
 ) -> Result<(), ()> {
     let mut map_holder = patcher_manager.map.lock().await;
@@ -245,11 +258,103 @@ pub async fn patch_map(
     patcher_manager: State<'_, PatcherManager>,
     path_manager: State<'_, PathManager>
 ) -> Result<(), ()> {
-    // let map_locked = patcher_manager.map.lock().await;
-    // let mut map = map_locked.as_ref().unwrap();
+    let map_locked = patcher_manager.map.lock().await;
+    let mut map = map_locked.as_ref().unwrap();
 
-    // let config = patcher_manager.config_path.clone();
-
+    let config = patcher_manager.config_path.clone();
+    let config_common_dir = config.join("adds\\common\\");
+    let map_modes:Vec<_> = map.modes.clone().into_keys().collect();
+    // Town patches group
+    let town_info_provider = TownInfoProvider::new(&config);
+    let mut player_race_cross_patch_info = RefCell::new(PlayerRaceCrossPatchInfo::new());
+    let mut neutral_town_cross_patch_info = NeutralTownCrossPatchInfo{neutral_town_name: None};
+    let mut town_name_applier = TownNameApplier::new(map.settings.disable_neutral_towns_dwells);
+    let mut default_town_scheme_applier = DefaultTownSchemesApplier::new(&town_info_provider, &map_modes);
+    let mut town_active_tile_detector = TownActiveTilesDetector::new(&config, &town_info_provider);
+    let mut player_race_detector = PlayerRaceDetector::new(&player_race_cross_patch_info, &town_info_provider);
+    let mut capturable_town_detector = CapturableTownDetector::new(
+        &town_info_provider, 
+        &mut neutral_town_cross_patch_info, 
+        map.modes.contains_key(&TemplateModeName::CaptureObject)
+    );
+    let mut town_patch_group = TownPatchesGroup::new()
+        .with_modifyable(&mut town_name_applier)
+        .with_modifyable(&mut default_town_scheme_applier)
+        .with_getter(&mut town_active_tile_detector)
+        .with_getter(&mut player_race_detector)
+        .with_getter(&mut capturable_town_detector);
+    // Player patches group
+    let mut player_info_provider = PlayersInfoProvider::new(&config);
+    let mut player_cross_patch_info = PlayersCrossPatchInfo::new();
+    let mut player_team_selector = PlayerTeamSelector::new(&map.teams_info);
+    let mut outcast_player_hero_selector = OutcastPlayerHeroSelector::new(
+        &mut player_info_provider, 
+        &player_race_cross_patch_info, 
+        &mut player_cross_patch_info, 
+        map.modes.contains_key(&TemplateModeName::Outcast)
+    );
+    let mut inactive_player_tavern_filter_remover = InactivePlayersTavernFilterRemover{};
+    let mut player_patch_group = PlayerPatchesGroup::new()
+        .with_modifyable(&mut player_team_selector)
+        .with_modifyable(&mut outcast_player_hero_selector)
+        .with_modifyable(&mut inactive_player_tavern_filter_remover);
+    // Treasure patches group
+    let treasure_info_provider = TreasureInfoProvider::new(&config);
+    let mut treasure_name_applier = TreasureNameApplier::new();
+    let mut treasure_props_detector = TreasurePropsDetector::new(&treasure_info_provider);
+    let mut treasure_patch_group = TreasurePatchesGroup::new()
+        .with_modifyable(&mut treasure_name_applier)
+        .with_getter(&mut treasure_props_detector);
+    // Building patches group
+    let building_info_provider = BuildingInfoProvider::new(&config);
+    let mut building_name_applier = BuildingNameApplier::new();
+    let mut outcast_tavern_replacer = OutcastTavernReplacer::new(map.modes.contains_key(&TemplateModeName::Outcast));
+    let mut building_type_detector = BuildingTypeDetector::new(&building_info_provider);
+    let mut building_patch_group = BuildingPatchesGroup::new()
+        .with_modifyable(&mut building_name_applier)
+        .with_modifyable(&mut outcast_tavern_replacer)
+        .with_getter(&mut building_type_detector);
+    // Creature patches group
+    let mut creature_name_applier = CreatureNameApplier::new();
+    let mut additional_stack_fixer = AdditionalStackFixer{};
+    let mut creature_patch_group = CreaturePatchesGroup::new()
+        .with_modifyable(&mut creature_name_applier)
+        .with_modifyable(&mut additional_stack_fixer);
+    // Quest patches group
+    let quest_info_provider = QuestInfoProvider::new(&config);
+    let mut map_init_quest_creator = MapInitQuestCreator::new(&quest_info_provider);
+    let mut map_modes_quest_creator = MapModesQuestCreator::new(&quest_info_provider);
+    let mut empty_items_fixer = QuestEmptyItemsFixer{};
+    let mut quest_patch_group = QuestPatchesGroup::new()
+        .with_modifyable(&mut map_init_quest_creator)
+        .with_modifyable(&mut map_modes_quest_creator)
+        .with_modifyable(&mut empty_items_fixer);
+    // Lights patches
+    let light_info_provider = LightsInfoProvider::new(&config, map.settings.use_night_lights);
+    let ambient_light_creator = AmbientLightCreator::new(&light_info_provider);
+    let ground_ambient_lights_creator = GroundAmbientLightsCreator::new(&light_info_provider);
+    //
+    let map_script_creator = MapScriptCreator::new(
+        &config_common_dir,
+        &map.main_dir
+    );
+    //
+    let common_objects_creator = CommonObjectsCreator::new(&config, map.modes.contains_key(&TemplateModeName::FinalBattle));
+    let patcher = Patcher::new()
+        .with_root(&map.map_xdb).unwrap()
+        .with_modifyables("AdvMapTown", &mut town_patch_group)
+        .with_modifyables("players", &mut player_patch_group)
+        .with_modifyables("AdvMapTreasure", &mut treasure_patch_group)
+        .with_modifyables("AdvMapBuilding", &mut building_patch_group)
+        .with_modifyables("AdvMapMonster", &mut creature_patch_group)
+        .with_modifyables("Objectives", &mut quest_patch_group)
+        .with_creatable("AmbientLight", &ambient_light_creator, true)
+        .with_creatable("GroundAmbientLights", &ground_ambient_lights_creator, true)
+        .with_creatable("MapScript", &map_script_creator, true)
+        .with_creatable("CustomTeams", &CustomTeamsCreator{}, true)
+        .with_creatable("RMGmap", &RMGmapRemover{}, true)
+        .with_creatable("objects", &common_objects_creator, false)
+        .run();
     // // ------ PATCHES -------
     // // base
     // let base_creator_path = config.join("adds\\common\\");
