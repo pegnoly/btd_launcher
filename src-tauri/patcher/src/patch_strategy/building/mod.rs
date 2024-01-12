@@ -135,25 +135,25 @@ impl<'a> PatchGroup for BuildingPatchesGroup<'a> {
                 match building_game_info._type {
                     BuildingType::Bank => {
                         self.banks_lua_string.push(
-                            format!("[\"{}\"] = {}", &building.name, &building_game_info.type_name.unwrap())
+                            format!("\t[\"{}\"] = {},\n", &building.name, &building_game_info.type_name.unwrap())
                         );
                     },
                     BuildingType::NewBuilding => {
                         self.new_buildings_lua_string.push(
-                            format!("[\"{}\"] = {}", &building.name, &building_game_info.type_name.unwrap())
+                            format!("\t[\"{}\"] = {},\n", &building.name, &building_game_info.type_name.unwrap())
                         );
                     },
                     BuildingType::DwarvenMine => {
                         self.new_buildings_lua_string.push(
-                            format!("[\"{}\"] = {}", &building.name, &building_game_info.type_name.unwrap())
+                            format!("\t[\"{}\"] = {},\n", &building.name, &building_game_info.type_name.unwrap())
                         );
                         self.dwarven_mines_lua_string.push(
-                            format!("[\"{}\"] = {}", &building.name, &building.rot)
+                            format!("\t[\"{}\"] = {},\n", &building.name, &building.rot)
                         );
                     },
                     BuildingType::Portal => {
                         self.portals_lua_string.push(
-                            format!("[\"{}\"] = {}", &building.name, &building.group_id)
+                            format!("\t[\"{}\"] = {},\n", &building.name, &building.group_id)
                         );
                     },
                     _=> {}
