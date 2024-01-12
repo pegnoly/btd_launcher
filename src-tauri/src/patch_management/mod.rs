@@ -7,11 +7,11 @@ use patcher::{Patcher,
         base::{MapScriptCreator, CustomTeamsCreator, RMGmapRemover, MapNameChanger}, 
         building::{BuildingInfoProvider, BuildingPatchesGroup, modifiers::{BuildingNameApplier, OutcastTavernReplacer}, getters::BuildingTypeDetector}, 
         treasure::{TreasureInfoProvider, TreasurePatchesGroup, modifiers::TreasureNameApplier, getters::TreasurePropsDetector}, 
-        player::{PlayersInfoProvider, PlayersCrossPatchInfo, PlayerPatchesGroup, modifiers::{PlayerTeamSelector, OutcastPlayerHeroSelector, InactivePlayersTavernFilterRemover}}, 
+        player::{PlayersInfoProvider, PlayersCrossPatchInfo, PlayerPatchesGroup, modifiers::{PlayerTeamSelector, OutcastPlayerHeroSelector, InactivePlayersTavernFilterRemover}, TeamsGenerator}, 
         light::{LightsInfoProvider, AmbientLightCreator, GroundAmbientLightsCreator}, 
         quest::{QuestInfoProvider, QuestPatchesGroup, modifiers::{MapInitQuestCreator, MapModesQuestCreator, QuestEmptyItemsFixer}},
         town::{TownInfoProvider, TownPatchesGroup, 
-            modifiers::{TownNameApplier, DefaultTownSchemesApplier}, 
+            modifiers::{TownNameApplier, DefaultTownSchemesApplier, NeutralTownDwellingsDisabler}, 
             getters::{TownActiveTilesDetector, PlayerRaceDetector, CapturableTownDetector}, 
             PlayerRaceCrossPatchInfo, NeutralTownCrossPatchInfo
         }, 
@@ -268,8 +268,12 @@ pub async fn patch_map(
     let town_info_provider = TownInfoProvider::new(&config);
     let mut player_race_cross_patch_info = RwLock::new(PlayerRaceCrossPatchInfo::new());
     let mut neutral_town_cross_patch_info = NeutralTownCrossPatchInfo{neutral_town_name: None};
-    let mut town_name_applier = TownNameApplier::new(map.settings.disable_neutral_towns_dwells);
+    let mut town_name_applier = TownNameApplier::new(map.modes.contains_key(&TemplateModeName::CaptureObject));
     let mut default_town_scheme_applier = DefaultTownSchemesApplier::new(&town_info_provider, &map_modes);
+    let mut neutral_dwellings_disabler = NeutralTownDwellingsDisabler::new(
+        map.settings.disable_neutral_towns_dwells, 
+        &town_info_provider
+    );
     let mut town_active_tile_detector = TownActiveTilesDetector::new(&config, &town_info_provider);
     let mut player_race_detector = PlayerRaceDetector::new(&player_race_cross_patch_info, &town_info_provider);
     let mut capturable_town_detector = CapturableTownDetector::new(
@@ -280,6 +284,7 @@ pub async fn patch_map(
     let mut town_patch_group = TownPatchesGroup::new()
         .with_modifyable(&mut town_name_applier)
         .with_modifyable(&mut default_town_scheme_applier)
+        .with_modifyable(&mut neutral_dwellings_disabler)
         .with_getter(&mut town_active_tile_detector)
         .with_getter(&mut player_race_detector)
         .with_getter(&mut capturable_town_detector);
@@ -365,7 +370,11 @@ pub async fn patch_map(
         .with_creatable("UndergroundTerrainFileName", &underground_name_applier, true)
         .with_creatable("AvailableHeroes", &available_heroes_writer, true)
         .run();
-
+    let map_tag_patcher = Patcher::new()
+        .with_root(&map.map_tag).unwrap()
+        .with_creatable("teams", &TeamsGenerator::new(map.teams_info.clone()), true)
+        .with_creatable("HasUnderground", &underground_enabler, true)
+        .run();
     // File writers.
     let terrain_creator_path = config.join("adds\\terrains\\");
     let underground_terrain_creator = UndergroundTerrainCreator::new(

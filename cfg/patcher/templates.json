@@ -2,13 +2,160 @@
   "templates": [
     {
       "name": "S0-1P2Z2K3.1T",
-      "main_mode": "Common",
-      "possible_modes": ["Blitz", "Economic", "FinalBattle"]
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Square",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "S0-1P2Z2K3T",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-K1S",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "S1-2P2-8Z8K2S",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Universe",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast", "CaptureObject"]
+    },
+    {
+      "name": "S1-3P2-4Z5V",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Test",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "S1P2Z3K5.1",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "S2-3P2Z7N2",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
     },
     {
       "name": "BTD-RMS",
-      "main_mode": "Blitz",
       "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Pirate(W)",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-JebusCross",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Circles",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-ClashOfDragons",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-KingsBounty",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast", "CaptureObject"]
+    },
+    {
+      "name": "BTD-SandGlass",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-2x2",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Hexagonal",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-1deal",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-RMS-GIGA",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Dynamite",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-UniverseX6",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast", "CaptureObject"]
+    },
+    {
+      "name": "BTD-MightMagic",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Double",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Anarchy",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Lemon",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-KingsBounty+MT",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "BTD-Tourmaline",
+      "possible_modes": ["Blitz", "Economic", "FinalBattle", "Outcast"]
+    },
+    {
+      "name": "JebusOutcast",
+      "main_mode": "Outcast",
+      "possible_modes": ["Outcast", "Blitz", "Economic", "FinalBattle"]
+    },
+    {
+      "name": "JebusOutcastP6",
+      "main_mode": "Outcast",
+      "possible_modes": ["Outcast", "Blitz", "Economic", "FinalBattle"]
+    },
+    {
+      "name": "BTD-Blitz",
+      "main_mode": "Blitz",
+      "possible_modes": ["Blitz", "Outcast", "Economic", "FinalBattle"]
+    },
+    {
+      "name": "BTD-Krypt",
+      "main_mode": "Krypt",
+      "possible_modes": ["Krypt", "Blitz", "Outcast", "Economic", "FinalBattle"]
+    },
+    {
+      "name": "BTD-Duel",
+      "possible_modes": ["Blitz", "Outcast", "Economic", "FinalBattle"]
+    },
+    {
+      "name": "BTD-DuelBlitz",
+      "main_mode": "Blitz",
+      "possible_modes": ["Blitz", "Outcast", "Economic", "FinalBattle"]
+    },
+    {
+      "name": "BTD-JebusCross-Castle",
+      "possible_modes": ["Blitz", "Outcast", "Economic", "FinalBattle", "CaptureObject"]
+    },
+    {
+      "name": "BTD-JebusCross-2x2",
+      "type": "Common"
+    },
+    {
+      "name": "BTD-JebusCross-2x2-Castle",
+      "possible_modes": ["Blitz", "Outcast", "Economic", "FinalBattle", "CaptureObject"]
     }
   ],
 

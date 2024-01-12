@@ -93,7 +93,7 @@ export default function PatcherSettings(props: PatcherSettingsProps) {
                                 setSettings({...settings, disableNeutralTownsDwells: event.currentTarget.checked});
                                 invoke("set_neutral_towns_dwells_setting", {isDisabled: event.currentTarget.checked});
                         }}/>
-                        <Checkbox size="xs" labelPosition="left" label="Разрешить генерацию эксперементальных артефактов"
+                        <Checkbox size="xs" labelPosition="left" label="Разрешить генерацию экспериментальных артефактов"
                             checked={settings.enableNewArts}
                             onChange={(event) => {
                                 setSettings({...settings, enableNewArts: event.currentTarget.checked});

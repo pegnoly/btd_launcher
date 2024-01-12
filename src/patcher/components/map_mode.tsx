@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HoverCard, Text } from "@mantine/core";
 
 import { useMapModesContext } from "../contexts/map_mode";
 import { invoke } from "@tauri-apps/api";
+import { PatchState, usePatchStateContext } from "../contexts/patch_state";
 
 export enum MapMode {
     Blitz = "Blitz",
     Economic = "Economic",
     FinalBatte = "FinalBattle",
     Outcast = "Outcast",
-    CaptureObject = "CaptureObject"
+    CaptureObject = "CaptureObject",
+    Krypt = "Krypt"
 }
 
 type MapModeProps = {
@@ -29,11 +31,19 @@ type MapModeElementProps = MapModeProps & MapModeType;
 export function MapModeElement(props: MapModeElementProps) {
     const [selected, setSelected] = useState<boolean>(false);
     const mapModeContext = useMapModesContext();
+    const patchStateContext = usePatchStateContext();
+
+    useEffect(() => {
+        if (patchStateContext?.state == PatchState.Inactive) {
+            setSelected(false);
+        }
+    }, [patchStateContext?.state])
+
     return (
         <>
         <HoverCard width={240} shadow="md" offset={1}>
             <HoverCard.Target>
-                <button style={{
+                <button disabled={patchStateContext?.state == PatchState.Configuring} style={{
                     width: 100,
                     height: 50,
                     borderColor: (props.disableable == false) ? "yellow" : (selected ? "green" : "red"),
@@ -108,5 +118,11 @@ export const MapModeInfo = new Map<MapMode, MapModeProps>([
         name: "Захват замка", 
         desc: "Активирует условие победы при захвате и удержании нейтрального замка(используйте соотв. настройку)",
         configurable: true
+    }],
+    [MapMode.Krypt, {
+        //url: sd, 
+        name: "Krypt-режим", 
+        desc: "На данном шаблоне обязательно присутствует Утёс Драконов и центральный город, полностью отстроенный, включая Грааль",
+        configurable: false
     }]
 ])

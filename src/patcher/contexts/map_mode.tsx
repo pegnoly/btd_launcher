@@ -1,5 +1,5 @@
 import { PropsWithChildren, createContext, useContext, useState } from "react";
-import { MapMode } from "../components/main";
+import { MapMode } from "../components/map_mode";
 
 export type MapModesType = {
     state: MapMode[],

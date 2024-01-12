@@ -14,7 +14,7 @@ import { listen } from "@tauri-apps/api/event";
 import { SingleValuePayload } from "../../App";
 import { AppState, useAppStateContext } from "../../contexts/AppState";
 import { PatchState, usePatchStateContext } from "../contexts/patch_state";
-import MapModesProvider from "../contexts/map_mode";
+import MapModesProvider, { useMapModesContext } from "../contexts/map_mode";
 
 import { MapMode, MapModeElement, MapModeInfo } from "./map_mode";
 
@@ -107,6 +107,7 @@ export default function PatcherMain(props: PatcherMainProps) {
 
     const patchStateContext = usePatchStateContext();
     const appStateContext = useAppStateContext();
+    const mapModesContext = useMapModesContext();
 
     const [currentMapName, setMapName] = useState<string>("");
     const [currentTemplate, setTemplate] = useState<string>("");
@@ -157,11 +158,12 @@ export default function PatcherMain(props: PatcherMainProps) {
     }
 
     useEffect(() => {
-        if (patchStateContext?.state == PatchState.Inactive) {
+        if (patchStateContext?.state == PatchState.MapPicked || patchStateContext?.state == PatchState.Inactive) {
             setMapName("");
             setPlayersCount(0);
             setTemplate("");
-            setPossibleMapModes([])
+            setPossibleMapModes([]);
+            mapModesContext?.setState([]);
         }
     }, [patchStateContext?.state])
 
@@ -201,18 +203,20 @@ export default function PatcherMain(props: PatcherMainProps) {
                     }}>
                     <Text className={classes.button_text} align="center">Шаблон</Text>
                     <Text className={classes.button_text} align="center" color="green">{currentTemplate}</Text>
-                    <Flex style={{position: "relative", top: 5}} justify="center" gap={10}>
+                    <Grid style={{position: "relative", top: 5, right: 0}} justify="center" align="center" gutter={5}>
                         {possibleMapModes.map((mode, index) => (
-                            <MapModeElement 
-                                key={index} 
-                                name={MapModeInfo.get(mode)?.name}
-                                desc={MapModeInfo.get(mode)?.desc}
-                                mode={mode}
-                                disableable={mainMapMode != null && mainMapMode != mode}
-                                configurable={MapModeInfo.get(mode)?.configurable}
-                            />
+                            <Grid.Col span={3}>
+                                <MapModeElement 
+                                    key={index} 
+                                    name={MapModeInfo.get(mode)?.name}
+                                    desc={MapModeInfo.get(mode)?.desc}
+                                    mode={mode}
+                                    disableable={!(mainMapMode != null && mainMapMode == mode)}
+                                    configurable={MapModeInfo.get(mode)?.configurable}
+                                />
+                            </Grid.Col>
                         ))}
-                    </Flex>
+                    </Grid>
                     <Button 
                         name="patcherStartup"
                         disabled={!(patchStateContext?.state == PatchState.Active)}
@@ -220,7 +224,7 @@ export default function PatcherMain(props: PatcherMainProps) {
                         style={{
                             position: "absolute",
                             top: 165,
-                            left: 125
+                            left: 130
                         }}
                         onClick={patchButtonClick}>Обработать
                     </Button>
