@@ -156,7 +156,9 @@ impl Map {
         match s {
             Some(template) => {
                 if template.main_mode.is_some() {
-                    self.add_mode(*template.main_mode.as_ref().unwrap(), template.possible_modes.as_ref().unwrap().first().unwrap().clone())
+                    let main_mode_key = *template.main_mode.as_ref().unwrap();
+                    let main_mode = template.possible_modes.as_ref().unwrap().first().unwrap().clone();
+                    self.modes.insert(main_mode_key, main_mode);
                 }
                 Some(TemplateTransferable { 
                     name: template.name.clone(), 
@@ -171,11 +173,7 @@ impl Map {
     }
 
     pub fn add_mode(&mut self, key: TemplateModeName, mode: TemplateModeType) {
-        let ok = self.modes.insert(key, mode);
-        match ok {
-            Some(_) => println!("Mode inserted correctly"),
-            None => println!("Error inserting mode")
-        }
+        self.modes.insert(key, mode);
     }
 
     pub fn remove_mode(&mut self, label: TemplateModeName) {
