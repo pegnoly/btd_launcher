@@ -37,7 +37,7 @@ impl TemplateModeType {
         match self {
             TemplateModeType::CaptureObject(d) => format!("{{\n\tdelay = {}\n}}", d),
             TemplateModeType::Economic(r) => format!("{{\n\tres_type = {:?},\n\tcount = {}\n}}", &r._type, r.count),
-            TemplateModeType::FinalBattle(t) => format!("{{\n\tmonth = {},\n\tweek = {}\n\tday = {}\n}}", t.month, t.week, t.day),
+            TemplateModeType::FinalBattle(t) => format!("{{\n\tmonth = {},\n\tweek = {},\n\tday = {}\n}}", t.month, t.week, t.day),
             _=> "1".to_string()
         }
     }
