@@ -75,6 +75,15 @@ pub struct NeutralTownDwellingsDisabler<'a> {
     town_info_provider: &'a TownInfoProvider
 }
 
+impl<'a> NeutralTownDwellingsDisabler<'a> {
+    pub fn new(enabled: bool, tip: &'a TownInfoProvider) -> Self {
+        NeutralTownDwellingsDisabler {
+            can_be_applied: enabled,
+            town_info_provider: tip
+        }
+    }
+}
+
 impl<'a> PatchModifyable for NeutralTownDwellingsDisabler<'a> {
     type Modifyable = AdvMapTown;
 
