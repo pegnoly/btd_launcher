@@ -3,7 +3,9 @@ pub mod modifiers;
 use std::{collections::HashMap, path::PathBuf};
 use homm5_types::{player::Player, town::TownType};
 use rand::seq::IteratorRandom;
-use super::{PatchModifyable, PatchGroup};
+use crate::map::MapTeamsCount;
+
+use super::{PatchModifyable, PatchGroup, PatchCreatable};
 
 /// Provides players info that can be used across different patches of PlayersPatchesGroup
 pub struct PlayersInfoProvider {
@@ -89,34 +91,33 @@ impl<'a> PatchGroup for PlayerPatchesGroup<'a> {
     }
 }
 
-// TeamsGenerator is a modifyable patch strategy that maps teams to their players count in map-tag.xdb file.
-// pub struct TeamsGenerator {
-//     teams_info: Vec<usize>
-// }
+/// TeamsGenerator is a modifyable patch strategy that maps teams to their players count in map-tag.xdb file.
+pub struct TeamsGenerator {
+    teams_info: Vec<usize>
+}
 
-// impl TeamsGenerator {
-//     pub fn new(teams_info: Vec<usize>) -> Self {
-//         TeamsGenerator {
-//             teams_info: teams_info 
-//         }
-//     }
-// }
+impl TeamsGenerator {
+    pub fn new(teams_info: Vec<usize>) -> Self {
+        TeamsGenerator {
+            teams_info: teams_info 
+        }
+    }
+}
 
-// impl PatchModifyable for TeamsGenerator {
-//     /// From map's teams info create vec [team] = players_count and write to file only elements with count > 0
-//     fn try_modify(&mut self, _text: &String, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
-//         let mut teams_count = vec![0, 0, 0, 0, 0, 0, 0, 0, 0];
-//         self.teams_info.iter()
-//             .for_each(|t| {
-//                 if *t != 0 {
-//                     teams_count[*t as usize] += 1;
-//                 }
-//             });
-//         let actual_teams = teams_count.into_iter()
-//             .filter(|count| {
-//                 *count > 0 
-//             })
-//             .collect();
-//         writer.write_serializable("teams", &MapTeamsCount { teams: actual_teams }).unwrap();
-//     }
-// }
+impl PatchCreatable for TeamsGenerator {
+    fn try_create(&self, writer: &mut quick_xml::Writer<&mut Vec<u8>>) {
+        let mut teams_count = vec![0, 0, 0, 0, 0, 0, 0, 0, 0];
+        self.teams_info.iter()
+            .for_each(|t| {
+                if *t != 0 {
+                    teams_count[*t as usize] += 1;
+                }
+            });
+        let actual_teams = teams_count.into_iter()
+            .filter(|count| {
+                *count > 0 
+            })
+            .collect();
+        writer.write_serializable("teams", &MapTeamsCount { teams: actual_teams }).unwrap();
+    }
+}
